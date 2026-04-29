@@ -14,7 +14,10 @@ db = mysql.connector.connect(
     user=os.getenv("MYSQLUSER"),
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    port=int(os.getenv("MYSQLPORT", 3306)),
+        connection_timeout=30,
+        autocommit=True
+
 )
 
 cursor = db.cursor(dictionary=True)

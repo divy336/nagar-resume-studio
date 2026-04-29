@@ -12,7 +12,8 @@ db = mysql.connector.connect(
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
     port=int(os.getenv("MYSQLPORT", 3306)),
-        connection_timeout=30
+        connection_timeout=30,
+        autocommit=True
 
 )
 
@@ -41,6 +42,7 @@ def send_email(to_email, otp):
 def signup():
 
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
@@ -84,6 +86,7 @@ def verify_otp():
     email = request.args.get("email")
 
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
         otp = request.form.get("otp")
 
         cursor.execute(
@@ -118,6 +121,8 @@ def verify_otp():
 def login():
 
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
+
         email = request.form.get("email").strip()
         password = request.form.get("password").strip()
 
@@ -154,8 +159,8 @@ def logout():
 def forgot_password():
 
     if request.method == "POST":
-        email = request.form.get("email")
         db.ping(reconnect=True, attempts=3, delay=2)
+        email = request.form.get("email")
         cursor.execute("SELECT id FROM register WHERE email=%s", (email,))
         if not cursor.fetchone():
             return render_template("forgot_password.html", error="Email not found")
@@ -182,6 +187,7 @@ def reset_otp():
     email = request.args.get("email")
 
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
         otp = request.form.get("otp")
 
         cursor.execute(
@@ -212,6 +218,7 @@ def reset_password():
     email = request.args.get("email")
 
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
         password = request.form.get("password")
         confirm = request.form.get("confirm")
 

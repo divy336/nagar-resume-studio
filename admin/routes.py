@@ -13,7 +13,8 @@ db = mysql.connector.connect(
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
     port=int(os.getenv("MYSQLPORT", 3306)),
-        connection_timeout=30
+        connection_timeout=30,
+        autocommit=True
 
 )
 
