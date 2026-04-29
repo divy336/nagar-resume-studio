@@ -443,14 +443,14 @@ def fifth_page():
         user_id = session["user_id"]
 
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="nagar@73",
-            database="flask"
-        )
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
+)
 
-        cursor = conn.cursor()
-
+        cursor = conn.cursor(dictionary=True)
         resume_type = "other"
 
         # ==================================
@@ -684,7 +684,7 @@ def get_it_resumes():
 
     result = []
     for row in rows:
-        data = json.loads(row["resume_data"])
+        data = json.loads(row["resume_data"]) if isinstance(row["resume_data"], str) else row["resume_data"]
 
         result.append({
             "id": row["id"],
@@ -784,7 +784,7 @@ def delete_resume(rtype, id):
             """, (id, session["user_id"]))
         
        
-            db.commit() 
+        db.commit() 
         
         return jsonify({"ok": True, "message": "Resume deleted successfully"})
     

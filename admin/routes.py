@@ -130,7 +130,7 @@ def admin_otp():
         if not row:
             return render_template("admin_otp.html", error="Invalid or expired OTP")
 
-        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row[0],))
+        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
         cursor.execute("UPDATE admin_signup SET is_verified=1 WHERE email=%s", (email,))
         db.commit()
         return redirect(url_for("admin.admin_login"))
@@ -218,7 +218,7 @@ def forgot_admin_otp():
         if not row:
             return render_template("forgot_admin_otp.html", error="Invalid OTP")
 
-        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row[0],))
+        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
         db.commit()
         return redirect(url_for("admin.admin_login"))
 
@@ -241,9 +241,9 @@ def delete_admin(admin_id):
         if not row:
             return jsonify({"success": False, "message": "Admin not found"}), 404
 
-        deleted_id    = row[0]
-        deleted_name  = row[1]
-        deleted_email = row[2]
+        deleted_id    = row["id"]
+        deleted_name  = row["username"]
+        deleted_email = row["email"]
 
         # ❌ BLOCK: Super Admin cannot be deleted
         if deleted_email == SUPER_ADMIN_EMAIL:
@@ -274,184 +274,96 @@ def delete_admin(admin_id):
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-
 @admin.route("/admin_dashboard")
 def admin_dashboard():
     if "admin_id" not in session:
         return redirect(url_for("admin.admin_login"))
 
-    # ── 1. Resume / User data ──
     cursor.execute("SELECT user_id, resume_data FROM user_resume")
     resume_rows = cursor.fetchall()
 
-    users   = []
+    users = []
     resumes = []
 
     for row in resume_rows:
-        user_id = row[0]
+        user_id = row["user_id"]
+
         try:
-            r = json.loads(row[1])
-        except Exception:
+            r = json.loads(row["resume_data"]) if isinstance(row["resume_data"], str) else row["resume_data"]
+        except:
             continue
 
-        first = r.get("first_name") or ""
-        last  = r.get("last_name")  or ""
-        name  = (first + " " + last).strip() or "No Name"
-
-        email    = r.get("email")    or "Not Provided"
-        mobile   = r.get("mobile")   or "Not Provided"
-        major    = r.get("major")    or "Not Provided"
-        github   = r.get("github")   or ""
-        linkedin = r.get("linkedin") or ""
-        summary  = r.get("summary")  or ""
-        photo    = r.get("photo")    or ""
-
-        skills     = r.get("skills")     or []
-        education  = r.get("education")  or []
-        experience = r.get("experience") or []
-        projects   = r.get("projects")   or []
-        languages  = r.get("languages")  or []
-        lang_lvl   = r.get("language_levels") or []
+        name = ((r.get("first_name","") + " " + r.get("last_name","")).strip()) or "No Name"
 
         users.append({
             "user_id": user_id,
-            "name":    name,
-            "email":   email,
-            "mobile":  mobile,
-            "major":   major,
-            "status":  1,
-            "raw":     r
+            "name": name,
+            "email": r.get("email","Not Provided"),
+            "mobile": r.get("mobile","Not Provided"),
+            "major": r.get("major","Not Provided"),
+            "status": 1
         })
 
         resumes.append({
-            "user_id":    user_id,
-            "name":       name,
-            "email":      email,
-            "skills":     ", ".join(skills) if skills else "No skills listed",
-            "experience": len(experience),
-            "projects":   len(projects),
-            "education":  education,
-            "github":     github,
-            "linkedin":   linkedin,
-            "summary":    summary,
-            "photo":      photo,
-            "raw":        r
+            "user_id": user_id,
+            "name": name,
+            "email": r.get("email","Not Provided"),
+            "skills": ", ".join(r.get("skills", [])),
+            "experience": len(r.get("experience", [])),
+            "projects": len(r.get("projects", [])),
+            "raw": r
         })
 
-    # ── 2. Other Resumes from other_resume table ──
-    other_resumes = []
-    try:
-        cursor.execute("SELECT id, user_id, resume_data FROM other_resume")
-        other_rows = cursor.fetchall()
+    # admins
+    cursor.execute("SELECT id, username, email, is_verified, created_at FROM admin_signup")
+    admin_rows = cursor.fetchall()
 
-        for row in other_rows:
-            try:
-                d = json.loads(row[2]) if isinstance(row[2], str) else row[2]
-            except Exception:
-                continue
+    admins = []
+    for row in admin_rows:
+        admins.append({
+            "id": row["id"],
+            "username": row["username"],
+            "email": row["email"],
+            "is_verified": bool(row["is_verified"]),
+            "created_at": str(row["created_at"]),
+            "is_self": row["id"] == session["admin_id"]
+        })
 
-            first = d.get("first_name") or ""
-            last  = d.get("last_name")  or ""
-            name  = (first + " " + last).strip() or d.get("name") or "Unknown"
+    # login activity
+    cursor.execute("SELECT id, username, email, created_at FROM admin_login ORDER BY created_at DESC LIMIT 50")
+    login_rows = cursor.fetchall()
 
-            email  = d.get("email")  or "Not Provided"
-            career = (d.get("career") or d.get("job_title") or
-                      d.get("profession") or d.get("designation") or "")
-
-            raw_skills = d.get("skills") or []
-            if isinstance(raw_skills, list):
-                skills_str = ", ".join(raw_skills) if raw_skills else "No skills listed"
-            else:
-                skills_str = str(raw_skills) if raw_skills else "No skills listed"
-
-            experience = d.get("experience") or []
-            projects   = d.get("projects")   or []
-
-            other_resumes.append({
-                "id":         row[0],
-                "user_id":    row[1],
-                "name":       name,
-                "email":      email,
-                "career":     career,
-                "skills":     skills_str,
-                "experience": len(experience) if isinstance(experience, list) else 0,
-                "projects":   len(projects)   if isinstance(projects,   list) else 0,
-                "raw":        d,
-            })
-    except Exception as e:
-        print(f"[other_resume] Error: {e}")
-        other_resumes = []
-
-    # ── 3. All admins from admin_signup ──
-    try:
-        cursor.execute("SELECT id, username, email, is_verified, created_at FROM admin_signup")
-        admin_rows = cursor.fetchall()
-        admins = [
-            {
-                "id":          row[0],
-                "username":    row[1] or "Unknown",
-                "email":       row[2] or "Not Provided",
-                "is_verified": bool(row[3]),
-                "created_at":  str(row[4]) if row[4] else "—",
-                "is_self":     (row[0] == session["admin_id"])
-            }
-            for row in admin_rows
-        ]
-        verified_admins = sum(1 for a in admins if a["is_verified"])
-    except Exception:
-        admins          = []
-        verified_admins = 0
-
-    # ── 4. Login activity from admin_login ──
-    try:
-        cursor.execute(
-            "SELECT id, username, email, created_at FROM admin_login ORDER BY created_at DESC LIMIT 50"
-        )
-        login_rows = cursor.fetchall()
-        login_activity = []
-        for row in login_rows:
-            raw_username = row[1] or ""
-            if ":" in raw_username:
-                parts  = raw_username.split(":", 1)
-                status = parts[0]
-                uname  = parts[1]
-            else:
-                status = "SUCCESS"
-                uname  = raw_username
-            login_activity.append({
-                "id":         row[0],
-                "username":   uname or "—",
-                "email":      row[2] or "—",
-                "login_time": str(row[3]) if row[3] else "—",
-                "status":     status
-            })
-    except Exception:
-        login_activity = []
+    login_activity = []
+    for row in login_rows:
+        login_activity.append({
+            "id": row["id"],
+            "username": row["username"],
+            "email": row["email"],
+            "login_time": str(row["created_at"])
+        })
 
     cursor.execute("""
-        SELECT COUNT(DISTINCT email)
+        SELECT COUNT(DISTINCT email) AS total
         FROM admin_login
         WHERE username LIKE 'SUCCESS:%'
     """)
-    successful_logins = cursor.fetchone()[0]
+    result = cursor.fetchone()
+    successful_logins = result["total"]
 
     return render_template(
         "admin/dashbord_admin.html",
         users=users,
         resumes=resumes,
-        other_resumes=other_resumes,          # ← NEW
         admins=admins,
         login_activity=login_activity,
         total_users=len(users),
         total_resumes=len(resumes),
-        total_other_resumes=len(other_resumes),  # ← NEW
-        verified_admins=verified_admins,
+        verified_admins=sum(1 for a in admins if a["is_verified"]),
         successful_logins=successful_logins,
         admin_name=session.get("admin_name", "Admin"),
         admin_email=session.get("admin_email", ""),
         current_admin_id=session.get("admin_id"),
     )
-
 @admin.route("/admin_logout")
 def admin_logout():
     session.clear()
