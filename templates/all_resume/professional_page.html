@@ -610,7 +610,8 @@
               {% endif %}
               <div>
                 <div class="profile-name">{{ resume.display_name or resume.name or 'No Name' }}</div>
-                <div class="profile-title">{{ resume.job_title or resume.career or resume.field_name or '' }}</div>
+                <div class="profile-title">        {{ resume.field_name or resume.display_name or resume.name or 'No Name' }}
+</div>
               </div>
             </div>
 
@@ -742,7 +743,8 @@
           <div class="left-column">
             <div class="page-header">
               <h2>{{ resume.display_name or resume.name or 'No Name' }}</h2>
-              <div class="role">{{ resume.job_title or resume.career or resume.field_name or '' }}</div>
+              <div class="role">        {{ resume.field_name or resume.display_name or resume.name or 'No Name' }}
+</div>
             </div>
 
             {% if resume.summary_text %}
@@ -866,7 +868,8 @@
           <div class="left-column">
             <div class="hero-section">
               <h2>{{ resume.display_name or resume.name or 'No Name' }}</h2>
-              <div class="role">{{ resume.job_title or resume.career or resume.field_name or '' }}</div>
+              <div class="role">        {{ resume.field_name or resume.display_name or resume.name or 'No Name' }}
+</div>
               {% if resume.summary_text %}
               <div class="text-muted">{{ resume.summary_text }}</div>
               {% endif %}
@@ -980,7 +983,8 @@
         <div class="layout-4">
           <div class="header-section">
             <h2>{{ resume.display_name or resume.name or 'No Name' }}</h2>
-            <div class="role">{{ resume.job_title or resume.career or resume.field_name or '' }}</div>
+            <div class="role">        {{ resume.field_name or resume.display_name or resume.name or 'No Name' }}
+</div>
             {% if resume.summary_text %}
             <div class="summary">{{ resume.summary_text }}</div>
             {% endif %}
