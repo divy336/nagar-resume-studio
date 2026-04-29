@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Professional Resume</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* PAGE */
+
+body{
+margin:0;
+font-family:Poppins;
+background:#e5e7eb;
+}
+
+/* MAIN LAYOUT */
+
+.page{
+display:flex;
+justify-content:center;
+align-items:flex-start;
+gap:40px;
+padding:40px;
+}
+
+/* RESUME */
+
+.resume{
+width:210mm;
+max-width:210mm;
+background:white;
+padding:20mm;
+box-sizing:border-box;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* HEADER */
+
+.header{
+border-bottom:2px solid #111;
+padding-bottom:8px;
+margin-bottom:15px;
+}
+
+.name{
+font-size:26px;
+font-weight:600;
+}
+
+.contact{
+font-size:13px;
+color:#555;
+}
+
+/* SECTIONS */
+
+.section{
+margin-bottom:18px;
+}
+
+.section-title{
+font-size:15px;
+font-weight:600;
+border-bottom:1px solid #ccc;
+padding-bottom:3px;
+margin-bottom:6px;
+}
+
+.item{
+font-size:13px;
+margin-bottom:8px;
+line-height:1.5;
+word-break:break-word;
+}
+
+/* TAG */
+
+.tag{
+display:inline-block;
+background:#111;
+color:white;
+font-size:11px;
+padding:3px 6px;
+margin:2px;
+border-radius:3px;
+}
+
+/* CONTROL PANEL */
+
+.controls{
+width:200px;
+background:white;
+padding:14px;
+border:2px solid #d1d5db;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+position:sticky;
+top:30px;
+height:fit-content;
+font-size:13px;
+}
+
+.controls button{
+width:100%;
+padding:7px;
+margin-top:6px;
+background:#111;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* LAYOUTS */
+
+.layout1{}
+
+/* two column layout */
+
+.layout3{
+display:grid;
+grid-template-columns:50% 50%;
+gap:20px;
+}
+
+.layout3 .header{
+grid-column:1/3;
+}
+
+.layout3 .left{
+grid-column:1;
+}
+
+.layout3 .right{
+grid-column:2;
+}
+/* PRINT */
+
+@media print{
+
+body{
+background:white;
+}
+
+.controls{
+display:none;
+}
+
+.resume{
+box-shadow:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<!-- RESUME -->
+
+<div id="resume" class="resume layout1">
+
+<div class="header">
+
+<div class="name">
+{{ resume.first_name }} {{ resume.last_name }}
+</div>
+
+<div class="contact">
+{{ resume.email }} | {{ resume.mobile }}
+{% if resume.github %}| {{ resume.github }}{% endif %}
+{% if resume.linkedin %}| {{ resume.linkedin }}{% endif %}
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-title">Skills</div>
+
+{% for s in resume.skills %}
+<span class="tag">{{ s }}</span>
+{% endfor %}
+
+</div>
+
+<div class="section">
+<div class="section-title">Programming Languages</div>
+
+{% for lang in resume.languages %}
+<span class="tag">{{ lang }}</span>
+{% endfor %}
+
+</div>
+
+<div class="section">
+<div class="section-title">Languages</div>
+
+<div class="item">
+{% for l in resume.language_levels %}
+{{ l.language }} - {{ l.level }}{% if not loop.last %}, {% endif %}
+{% endfor %}
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-title">Career Objective</div>
+
+<div class="item">
+{{ resume.summary }}
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-title">Experience</div>
+
+{% for e in resume.experience %}
+<div class="item">
+<b>{{ e.role }}</b> — {{ e.company }} ({{ e.duration }})
+<br>
+{{ e.description }}
+</div>
+{% endfor %}
+
+</div>
+
+<div class="section">
+<div class="section-title">Projects</div>
+
+{% for p in resume.projects %}
+<div class="item">
+<b>{{ p.name }}</b><br>
+<span style="background:#eef1ff;padding:3px 8px;border-radius:5px;font-size:12px;">Languages</span>
+{{ p.technologies }}<br>
+{{ p.description }}
+</div>
+{% endfor %}
+
+</div>
+
+<div class="section">
+<div class="section-title">Education</div>
+
+{% for edu in resume.education %}
+<div class="item">
+<b>{{ edu.qualification }}</b><br>
+{{ edu.institution }} ({{ edu.start }} - {{ edu.end }})<br>
+Grade: {{ edu.grade }}%
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+<!-- CONTROL PANEL -->
+
+<div class="controls">
+
+<h3>Choose Resume Layout</h3>
+
+<button onclick="setLayout('layout1')">Layout 1</button>
+<button onclick="setLayout('layout3')">Layout 2</button>
+
+<br>
+
+<button onclick="downloadPDF()">Download Resume</button>
+
+<button onclick="location.href='{{ url_for('resume.home') }}'">
+Edit Resume
+</button>
+
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+
+function setLayout(layout){
+
+const resume=document.getElementById("resume");
+
+resume.classList.remove("layout1","layout3");
+
+resume.classList.add(layout);
+
+}
+
+function downloadPDF(){
+
+const element = document.getElementById("resume");
+
+html2pdf().set({
+margin:0,
+filename:"resume.pdf",
+image:{type:"jpeg",quality:1},
+html2canvas:{scale:2,scrollY:0},
+jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
+pagebreak:{mode:['css','legacy']}
+}).from(element).save();
+
+}
+
+</script>
+
+</body>
+</html>

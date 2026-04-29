@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chatbot</title>
+
+<style>
+*{box-sizing:border-box;font-family:Arial}
+body{background:#f4f6f8;display:flex;justify-content:center;align-items:center;height:100vh}
+.chat{width:360px;background:#fff;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,.15);display:flex;flex-direction:column}
+.header{background:#10a37f;color:#fff;padding:12px;border-radius:10px 10px 0 0}
+.body{flex:1;padding:10px;overflow-y:auto}
+.user{background:#10a37f;color:#fff;padding:8px;border-radius:8px;margin:6px 0;text-align:right}
+.bot{background:#eee;padding:8px;border-radius:8px;margin:6px 0}
+.input{display:flex;border-top:1px solid #ddd}
+.input input{flex:1;padding:10px;border:none;outline:none}
+.input button{padding:10px 14px;border:none;background:#10a37f;color:#fff;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<div class="chat">
+    <div class="header">Chatbot</div>
+
+    <div class="body" id="chatBody">
+        <div class="bot">Hi 👋 Ask me anything.</div>
+    </div>
+
+    <div class="input">
+        <input id="msg" placeholder="Type a message...">
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+async function send(){
+    const input = document.getElementById("msg");
+    const text = input.value.trim();
+    if(!text) return;
+
+    const body = document.getElementById("chatBody");
+    body.innerHTML += `<div class="user">${text}</div>`;
+    input.value = "";
+
+    const res = await fetch("/chat",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({message:text})
+    });
+
+    const data = await res.json();
+    body.innerHTML += `<div class="bot">${data.reply}</div>`;
+    body.scrollTop = body.scrollHeight;
+}
+</script>
+
+</body>
+</html>

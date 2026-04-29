@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2 - Professional Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; padding: 20px; }
+        
+        .card {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border: 1px solid #f3f4f6;
+        }
+        
+        h2 { color: #1e3a8a; margin: 0 0 5px 0; font-weight: 700; font-size: 1.75rem; letter-spacing: -0.025em; }
+        .subtitle { color: #6b7280; font-size: 0.95rem; margin-bottom: 30px; }
+        .subtitle strong { color: #2563eb; background: #eff6ff; padding: 4px 10px; border-radius: 6px; }
+        
+        .form-group { margin-bottom: 24px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; color: #374151; }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1.5px solid #e5e7eb;
+            background-color: #f9fafb;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            color: #1f2937;
+            transition: all 0.25s ease;
+        }
+        
+        input:focus, select:focus { 
+            background-color: #ffffff;
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
+            outline: none; 
+        }
+        
+        input::placeholder { color: #9ca3af; }
+        
+        /* Suggestion Chips UI */
+        .suggestions { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .suggestions span {
+            background: #ffffff;
+            color: #4b5563;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .suggestions span:hover { 
+            background: #eff6ff; 
+            color: #1d4ed8; 
+            border-color: #bfdbfe;
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Dynamic Field Animation */
+        .dynamic-field { 
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 24px;
+        }
+        .dynamic-field .form-group:last-child { margin-bottom: 0; }
+        
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Submit Button UI */
+        button[type="submit"] {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+        button[type="submit"]:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); 
+        }
+        /* 🔥 MOBILE RESPONSIVE CSS */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px; /* Less outer space */
+            }
+            .card {
+                padding: 25px 20px; /* Less inner space to maximize screen width */
+                margin: 5px auto;
+                border-radius: 16px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+            }
+            .dynamic-field {
+                padding: 15px; /* Tighter layout inside the dynamic box */
+            }
+            .suggestions span {
+                padding: 10px 15px; /* Larger touch targets for thumbs */
+                font-size: 0.9rem;
+            }
+            button[type="submit"] {
+                padding: 18px; /* Taller button for easy clicking */
+                font-size: 1.1rem;
+            }
+        }
+        .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.step {
+    text-align: center;
+    cursor: pointer;
+}
+
+.step span {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.step.active span {
+    background: #3b82f6;
+    color: white;
+}
+
+.step p {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.line {
+    width: 50px;
+    height: 3px;
+    background: #e5e7eb;
+}
+    </style>
+</head>
+<body>
+
+<div class="card">
+        <h2>Professional Details</h2>
+            <p class="subtitle">Customizing fields for the <strong>{{ session.get('group', 'Design') }}</strong> sector.</p>
+
+
+<div class="step-nav">
+<div class="step" onclick="goDashboard()">
+        <span>🏠</span>
+        <p>Dashboard     </p>
+    </div>
+        <div class="line"></div>
+    <div class="step {{ 'active' if current_step == 1 else '' }}" onclick="goStep(1)">
+        <span>1</span><p>Basic</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 2 else '' }}" onclick="goStep(2)">
+        <span>2</span><p>Details</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 3 else '' }}" onclick="goStep(3)">
+        <span>3</span><p>Education</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 4 else '' }}" onclick="goStep(4)">
+        <span>4</span><p>Upload</p>
+    </div>
+
+
+    <!-- Optional: disable click on current step -->
+   
+</div>
+<form method="POST" action="{{ url_for('resume.second_page') }}">
+        <input type="hidden" name="next_step" id="nextStep">
+
+        <div class="form-group">
+            <label>Core Skills</label>
+            <input type="text" id="skills" name="skills" placeholder="Leadership, Teamwork..." value="{{ resume.get('skills', '') }}">
+            <div class="suggestions" id="skillSuggestions"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Notable Projects</label>
+            <input type="text" id="projects" name="projects" placeholder="Recent major project..." value="{{ resume.get('projects', '') }}">
+            <div class="suggestions" id="projectSuggestions"></div>
+        </div>
+
+        <div id="dynamicFields"></div>
+
+        <div class="form-group">
+            <label>Experience Level</label>
+            <select name="experience" >
+            
+    <option value="" disabled {% if not resume.get('experience') %}selected{% endif %}>
+        Select your experience...
+    </option>
+
+    <option value="Fresher / Student"
+        {% if resume.get('experience') == 'Fresher / Student' %}selected{% endif %}>
+        Fresher / Student
+    </option>
+
+    <option value="Internship Experience"
+        {% if resume.get('experience') == 'Internship Experience' %}selected{% endif %}>
+        Internship Experience
+    </option>
+
+    <option value="Freelance / Contract"
+        {% if resume.get('experience') == 'Freelance / Contract' %}selected{% endif %}>
+        Freelance / Contract
+    </option>
+
+    <option value="1-3 Years Experience"
+        {% if resume.get('experience') == '1-3 Years Experience' %}selected{% endif %}>
+        1-3 Years Experience
+    </option>
+
+    <option value="3+ Years Experience"
+        {% if resume.get('experience') == '3+ Years Experience' %}selected{% endif %}>
+        3+ Years Experience
+    </option>
+
+            </select>
+        </div>
+
+        <button type="submit">Save and Continue →</button>
+    </form>
+</div>
+
+<script>
+
+    function goDashboard() {
+    window.location.href = "/dashbord";
+}
+let resume = {{ resume | tojson }};
+
+function goStep(step) {
+    const form = document.querySelector("form");
+
+    if (!form) {
+        // no form → just navigate
+        window.location.href = getRoute(step);
+        return;
+    }
+
+    // 🔥 set next step
+    document.getElementById("nextStep").value = step;
+
+    // 🔥 submit normally (BEST)
+    form.submit();
+}
+
+function getRoute(step) {
+    const routes = {
+        1: "/first_page",
+        2: "/second_page",
+        3: "/third_page",
+        4: "/forth_page"
+    };
+    return routes[step] || "/second_page";
+}
+// Mocking the Flask session variable. Replace 'Design' with "{{ session.get('group') }}"
+const career = "{{ session.get('group', 'Design') }}"; 
+const dynamicDiv = document.getElementById("dynamicFields");
+
+// 🔥 1. THE DATA BANK
+const careerData = {
+    "Design": {
+        fields: `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label>Design Specialization</label>
+                    <input name="design_type" id="d_type" placeholder="e.g. UI/UX, Graphic Design" value="{{ resume.get('design_type', '') }}">
+                    <div class="suggestions" id="typeSug"></div>
+                </div>
+                <div class="form-group">
+                    <label>Software & Tools</label>
+                    <input name="tools" id="d_tools" placeholder="e.g. Figma, Adobe Illustrator" value="{{ resume.get('tools', '') }}">
+                    <div class="suggestions" id="toolSug"></div>
+                </div>
+            </div>`,
+        skills: ["UI/UX Design", "Wireframing", "Prototyping", "Typography", "Color Theory", "Interaction Design", "Responsive Design"],
+        projects: ["E-commerce App Design", "Brand Identity System", "SaaS Dashboard", "Landing Page Redesign"],
+        types: ["UI/UX", "Graphic Design", "Web Design", "Product Design"],
+        tools: ["Figma", "Adobe XD", "Photoshop", "Illustrator", "Canva"]
+    },
+    "Finance": {
+        fields: `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label>Finance Domain</label>
+                    <input name="finance_type" id="f_type" placeholder="e.g. Accounting, Audit" value="{{ resume.get('finance_type', '') }}">
+                    <div class="suggestions" id="typeSug"></div>
+                </div>
+                <div class="form-group">
+                    <label>Financial Software</label>
+                    <input name="tools" id="f_tools" placeholder="e.g. Tally, Advanced Excel" value="{{ resume.get('tools', '') }}">
+                    <div class="suggestions" id="toolSug"></div>
+                </div>
+            </div>`,
+        skills: ["Financial Analysis", "Taxation (GST)", "Auditing", "Budget Forecasting", "Bookkeeping", "Compliance"],
+        projects: ["Annual Audit Report", "Tax Optimization Strategy", "Financial Model", "Investment Portfolio Audit"],
+        types: ["Accounting", "Investment Banking", "Stock Analysis", "Audit & Assurance"],
+        tools: ["Advanced Excel", "Tally Prime", "SAP FICO", "QuickBooks", "Power BI"]
+    },
+    "Business": {
+        fields: `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label>Business Vertical</label>
+                    <input name="business_type" id="b_type" placeholder="e.g. Marketing, HR, Sales" value="{{ resume.get('business_type', '') }}">
+                    <div class="suggestions" id="typeSug"></div>
+                </div>
+                <div class="form-group">
+                    <label>Management Tools</label>
+                    <input name="tools" id="b_tools" placeholder="e.g. CRM, Salesforce" value="{{ resume.get('tools', '') }}">
+                    <div class="suggestions" id="toolSug"></div>
+                </div>
+            </div>`,
+        skills: ["Market Research", "Project Management", "Digital Marketing", "Business Development", "Team Leadership", "Strategic Planning"],
+        projects: ["Market Expansion Plan", "Social Media Campaign", "Team Performance Review", "Client Acquisition Strategy"],
+        types: ["Marketing Executive", "Human Resources", "Sales Lead", "Operations Manager"],
+        tools: ["Salesforce", "Microsoft Excel", "HubSpot CRM", "Trello", "Google Analytics"]
+    },
+    "Other": {
+        fields: `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label>Specialization / Field</label>
+                    <input name="field_type" id="o_type" placeholder="e.g. Education, Administration" value="{{ resume.get('field_type', '') }}">
+                    <div class="suggestions" id="typeSug"></div>
+                </div>
+            </div>`,
+        skills: ["Effective Communication", "Problem Solving", "Customer Support", "Time Management", "Office Administration", "Adaptability"],
+        projects: ["Process Improvement Project", "Community Volunteer Event", "Customer Satisfaction Survey"],
+        types: ["Administrative Assistant", "Customer Support", "Operations Coordinator", "General Manager"]
+    }
+};
+
+// 🔥 2. INJECT HTML BASED ON CAREER
+const currentData = careerData[career] || careerData["Other"];
+dynamicDiv.innerHTML = currentData.fields;
+
+// 🔥 fill dynamic fields
+if (resume) {
+    if (career === "Design") {
+        document.getElementById("d_type").value = resume.design_type || "";
+        document.getElementById("d_tools").value = resume.tools || "";
+    }
+
+    if (career === "Finance") {
+        document.getElementById("f_type").value = resume.finance_type || "";
+        document.getElementById("f_tools").value = resume.tools || "";
+    }
+
+    if (career === "Business") {
+        document.getElementById("b_type").value = resume.business_type || "";
+        document.getElementById("b_tools").value = resume.tools || "";
+    }
+
+    if (career === "Other") {
+        document.getElementById("o_type").value = resume.field_type || "";
+    }
+}
+
+// 🔥 3. SMART CLICK-TO-ADD LOGIC
+function setupSuggestions(data, containerId, inputId) {
+    const container = document.getElementById(containerId);
+    const input = document.getElementById(inputId);
+    if (!container || !input) return;
+
+    data.forEach(item => {
+        const span = document.createElement("span");
+        span.innerHTML = `➕ ${item}`; // Added small icon
+        span.onclick = () => {
+            let currentVal = input.value.trim();
+            if (currentVal === "") {
+                input.value = item;
+            } else if (!currentVal.includes(item)) {
+                // Smart comma placement
+                input.value += currentVal.endsWith(",") ? ` ${item}` : `, ${item}`;
+            }
+            input.focus(); // Keep focus on input after clicking
+        };
+        container.appendChild(span);
+    });
+}
+
+// 🔥 4. DEPLOY SUGGESTIONS
+setupSuggestions(currentData.skills, "skillSuggestions", "skills");
+setupSuggestions(currentData.projects, "projectSuggestions", "projects");
+
+// Deploy dynamic field suggestions based on which career is active
+if(career === "Design") {
+    setupSuggestions(currentData.types, "typeSug", "d_type");
+    setupSuggestions(currentData.tools, "toolSug", "d_tools");
+} else if(career === "Finance") {
+    setupSuggestions(currentData.types, "typeSug", "f_type");
+    setupSuggestions(currentData.tools, "toolSug", "f_tools");
+} else if(career === "Business") {
+    setupSuggestions(currentData.types, "typeSug", "b_type");
+    setupSuggestions(currentData.tools, "toolSug", "b_tools");
+} else {
+    setupSuggestions(currentData.types, "typeSug", "o_type");
+}
+
+// 🔥 Auto-fill fields for edit
+if (resume) {
+
+    // skills (array → string)
+    if (Array.isArray(resume.skills)) {
+        document.getElementById("skills").value = resume.skills.join(", ");
+    } else {
+        document.getElementById("skills").value = resume.skills || "";
+    }
+
+    // projects (array → names)
+    if (Array.isArray(resume.projects)) {
+        let projectNames = resume.projects.map(p => p.name || "").join(", ");
+        document.getElementById("projects").value = projectNames;
+    } else {
+        document.getElementById("projects").value = resume.projects || "";
+    }
+
+    // experience
+    if (resume.experience) {
+        document.querySelector("select[name='experience']").value = resume.experience;
+    }
+}
+</script>
+
+</body>
+</html>

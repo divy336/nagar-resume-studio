@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Animated Login</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* PAGE */
+
+body{
+background:#ffffff;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:50px 20px;
+}
+
+/* MAIN CARD */
+
+.container{
+width:100%;
+max-width:720px;
+background:#ffffff;
+padding:45px;
+border-radius:16px;
+border:1px solid #e5e7eb;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+transition:.3s;
+}
+
+/* hover depth */
+
+.container:hover{
+box-shadow:0 20px 60px rgba(0,0,0,0.12);
+}
+
+/* TITLE */
+
+.container h2{
+text-align:center;
+font-size:28px;
+color:#111827;
+margin-bottom:5px;
+}
+
+/* subtitle */
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:35px;
+font-size:14px;
+}
+
+/* SECTION TITLE */
+
+h3{
+margin-top:25px;
+margin-bottom:10px;
+color:#4f46e5;
+font-size:16px;
+font-weight:500;
+border-left:4px solid #4f46e5;
+padding-left:10px;
+}
+
+/* LANGUAGE INPUT AREA */
+
+.language-box{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.language-box input{
+flex:1;
+padding:12px 14px;
+border-radius:8px;
+border:1px solid #d1d5db;
+font-size:14px;
+outline:none;
+transition:.2s;
+}
+
+/* focus effect */
+
+.language-box input:focus{
+border-color:#4f46e5;
+box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+}
+
+/* ADD BUTTON */
+
+.language-box button{
+background:#4f46e5;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+transition:.2s;
+}
+
+.language-box button:hover{
+background:#4338ca;
+}
+
+/* LANGUAGE TAGS */
+
+#languageList{
+list-style:none;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:25px;
+}
+
+#languageList li{
+background:#eef2ff;
+padding:7px 12px;
+border-radius:20px;
+font-size:13px;
+display:flex;
+align-items:center;
+gap:6px;
+color:#4338ca;
+border:1px solid #e0e7ff;
+transition:.2s;
+}
+
+#languageList li:hover{
+background:#e0e7ff;
+transform:scale(1.03);
+}
+
+#languageList span{
+cursor:pointer;
+color:#ef4444;
+font-weight:600;
+}
+
+/* PHOTO AREA */
+
+input[type="file"]{
+border:1px dashed #d1d5db;
+padding:10px;
+border-radius:8px;
+width:100%;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+/* IMAGE PREVIEW */
+
+#previewBox{
+margin-top:10px;
+display:flex;
+justify-content:center;
+}
+
+.preview-img{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid #4f46e5;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
+transition:0.3s;
+}
+
+.preview-img:hover{
+transform:scale(1.05);
+}
+
+/* EXISTING IMAGE */
+
+img{
+border-radius:50%;
+border:3px solid #e5e7eb;
+}
+
+/* NEXT BUTTON */
+
+button[type="submit"]{
+width:100%;
+padding:14px;
+background:#4f46e5;
+border:none;
+color:white;
+font-size:16px;
+border-radius:10px;
+cursor:pointer;
+transition:.25s;
+margin-top:10px;
+}
+
+button[type="submit"]:hover{
+background:#4338ca;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+transform:translateY(-1px);
+}
+
+/* DIVIDER LINE */
+
+hr{
+border:none;
+height:1px;
+background:#e5e7eb;
+margin:25px 0;
+}
+
+/* TABLET */
+
+@media (max-width:768px){
+
+.container{
+padding:35px;
+}
+
+.container h2{
+font-size:24px;
+}
+
+}
+
+/* MOBILE */
+
+@media (max-width:480px){
+
+body{
+padding:30px 15px;
+}
+
+.container{
+padding:25px;
+border-radius:12px;
+}
+
+.container h2{
+font-size:22px;
+}
+
+.subtitle{
+font-size:13px;
+}
+
+.language-box{
+flex-direction:column;
+}
+
+.language-box button{
+width:100%;
+}
+
+button[type="submit"]{
+font-size:15px;
+}
+
+}
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.step-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2563eb;
+    transition: 0.3s;
+}
+
+.step-text {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.step-line {
+    width: 50px;
+    height: 3px;
+    background: #cbd5f5;
+    border-radius: 10px;
+}
+
+/* ACTIVE */
+.step-item.active .step-circle {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.1);
+}
+
+.step-item.active .step-text {
+    color: #2563eb;
+}
+
+/* HOVER */
+.step-item:hover .step-circle {
+    background: #93c5fd;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .stepper {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+   
+
+<!-- STEP NAVIGATION -->
+<div class="stepper">
+
+    <!-- Dashboard -->
+  
+
+    <!-- Home -->
+    <button type="button"
+            onclick="goStep(2)"
+            class="step-item {{ 'active' if current_step == 2 else '' }}">
+        <div class="step-circle">1</div>
+        <div class="step-text">Home</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Language -->
+    <button type="button"
+            onclick="goStep(3)"
+            class="step-item {{ 'active' if current_step == 3 else '' }}">
+        <div class="step-circle">2</div>
+        <div class="step-text">Language</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Education -->
+    <button type="button"
+            onclick="goStep(4)"
+            class="step-item {{ 'active' if current_step == 4 else '' }}">
+        <div class="step-circle">3</div>
+        <div class="step-text">Education</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Projects -->
+    <button type="button"
+            onclick="goStep(5)"
+            class="step-item {{ 'active' if current_step == 5 else '' }}">
+        <div class="step-circle">4</div>
+        <div class="step-text">Projects</div>
+    </button>
+
+</div>
+    <h2>Resume Builder</h2>
+    <p class="subtitle">Step 2 of 4 — Languages & Profile Photo</p>
+
+<form method="POST" enctype="multipart/form-data"
+      action="{{ url_for('resume.languages_images') }}">
+      <input type="hidden" name="next_step" id="nextStep">
+
+    <h3>Enter Programming Languages You Know</h3>
+
+    
+    <input type="hidden" id="existingLanguages"
+           value="{{ resume.languages | join(',') if resume.languages }}">
+
+    <div class="language-box">
+        <input type="text" id="languageInput" placeholder="Enter language">
+        <button type="button" onclick="addLanguage()">Add</button>
+    </div>
+
+    <ul id="languageList"></ul>
+
+    <input type="hidden" name="languages" id="languagesHidden">
+
+    <h3>Profile Photo</h3>
+
+
+    {% if resume.photo %}
+        <div style="margin-bottom:12px;">
+            <img src="{{ url_for('static', filename='uploads/' ~ resume.photo) }}"
+                 style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+            <p style="font-size:13px;color:#666;">
+                Current photo selected. Upload a new one only if you want to change it.
+            </p>
+        </div>
+    {% endif %}
+
+
+    <input type="file" name="photo" accept="image/*"id="photoInput">
+    <div id="previewBox"></div>
+
+    <button type="submit">Next → Education</button>
+</form>
+</div>
+<script>
+
+function goStep(step) {
+    const form = document.querySelector("form");
+
+    if (!form) return;
+
+    // 🔥 RESET first
+    const input = document.getElementById("nextStep");
+    input.value = "";  
+
+    // 🔥 SET correct step
+    input.value = step;
+
+    form.submit();
+}
+let languages = [];
+
+// Restore from session
+const existing = document.getElementById("existingLanguages").value;
+if (existing) {
+    languages = existing.split(",");
+    renderLanguages();
+}
+
+function addLanguage() {
+    const input = document.getElementById("languageInput");
+    const value = input.value.trim();
+
+    if (!value) return;
+
+    languages.push(value);
+    input.value = "";
+    renderLanguages();
+}
+
+function removeLanguage(index) {
+    languages.splice(index, 1);
+    renderLanguages();
+}
+
+function renderLanguages() {
+    const list = document.getElementById("languageList");
+    const hidden = document.getElementById("languagesHidden");
+
+    list.innerHTML = "";
+
+    languages.forEach((lang, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${lang} <span style="cursor:pointer;color:red;"
+                         onclick="removeLanguage(${index})">✖</span>`;
+        list.appendChild(li);
+    });
+
+    hidden.value = languages.join(",");
+}
+
+//photo viewport
+const photoInput = document.getElementById("photoInput");
+const previewBox = document.getElementById("previewBox");
+
+photoInput.addEventListener("change", function(){
+    const file = this.files[0];
+
+    if(file){
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+            previewBox.innerHTML =
+            `<img src="${e.target.result}" class="preview-img">`;
+        }
+
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+</body>
+</html>

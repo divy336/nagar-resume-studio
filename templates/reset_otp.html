@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+
+<div class="card">
+    <h2>OTP Verification</h2>
+
+    <p style="text-align:center; opacity:.7">
+        Enter the OTP sent to <b>{{ email }}</b>
+    </p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('auth.reset_otp', email=email) }}">
+        <div class="group">
+            <input type="text" name="otp" maxlength="6" required placeholder="Enter OTP">
+            <label>OTP</label>
+        </div>
+
+        <button type="submit">Verify OTP</button>
+    </form>
+
+    <div class="link">
+        <a href="{{ url_for('auth.login') }}">Back to Login</a>
+    </div>
+</div>

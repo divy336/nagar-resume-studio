@@ -1,0 +1,73 @@
+body {
+    background: #f4f6f8;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.resume {
+    width: 900px;
+    margin: 30px auto;
+    background: white;
+    display: flex;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+}
+
+
+/* LEFT */
+
+.left {
+    width: 30%;
+    background: #f7f9fc;
+    padding: 25px;
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.left h2 {
+    margin: 0;
+}
+
+.title {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.section h3 {
+    border-bottom: 2px solid #4a6cf7;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+}
+
+
+/* RIGHT */
+
+.right {
+    width: 70%;
+    padding: 30px;
+}
+
+.item {
+    margin-bottom: 15px;
+}
+
+.download {
+    text-align: center;
+    margin: 20px;
+}
+
+.download a {
+    background: #4a6cf7;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+}

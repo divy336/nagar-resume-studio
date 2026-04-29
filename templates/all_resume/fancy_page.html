@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{ resume.name or 'Resume' }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+/* ================= RESET ================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #e5e7eb;
+}
+
+/* ================= TOP BAR ================= */
+.controls {
+  width: 100%;
+  background: #0f172a;
+  color: #fff;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #111;
+}
+
+/* ================= CONTAINER ================= */
+.resume-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;   /* perfect center */
+  align-items: flex-start;
+  overflow-x: auto;          /* allow scroll if needed */
+  padding: 20px;
+}
+
+/* ================= MAIN CARD ================= */
+#resume-card {
+  width: 794px;        /* A4 width in px */
+  min-height: 1123px;  /* A4 height */
+  background: #fff;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  background: #0f172a;
+  color: #fff;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile {
+  text-align: center;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid #2563eb;
+  overflow: hidden;
+  margin: auto;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.name {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.role {
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+/* ================= BLOCK ================= */
+.block-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  color: #93c5fd;
+}
+
+.contact {
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+/* ================= TAGS ================= */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #1e293b;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main {
+  padding: 25px;
+}
+
+/* ================= SECTION ================= */
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+/* ================= TEXT ================= */
+.about {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* ================= TIMELINE ================= */
+.item {
+  margin-bottom: 10px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sub {
+  font-size: 11px;
+  color: #2563eb;
+}
+
+.desc {
+  font-size: 11px;
+  color: #475569;
+}
+
+/* ================= PROJECT ================= */
+.proj-card {
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.proj-name {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* ================= MOBILE SCALE (STABLE) ================= */
+@media (max-width: 768px){
+  #resume-card{
+    zoom: 0.65;   /* 🔥 perfect scaling */
+  }
+}
+
+@media (max-width: 480px){
+  #resume-card{
+    zoom: 0.55;
+  }
+}
+
+/* ================= PDF ================= */
+@media print {
+  body {
+    background: white;
+  }
+
+  .controls {
+    display: none;
+  }
+
+  #resume-card {
+    box-shadow: none;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="brand">Resume Preview</div>
+  <div class="actions">
+    <div class="theme-bar">
+  <div class="color" onclick="setTheme('blue')" style="background:#2563eb"></div>
+  <div class="color" onclick="setTheme('green')" style="background:#16a34a"></div>
+  <div class="color" onclick="setTheme('purple')" style="background:#7c3aed"></div>
+  <div class="color" onclick="setTheme('orange')" style="background:#ea580c"></div>
+  <div class="color" onclick="setTheme('black')" style="background:#111827"></div>
+</div>
+    <a href="/dashbord" class="btn btn-secondary">Dashboard</a>
+    <button class="btn btn-primary" onclick="downloadPDF()">
+      <i class="fa-solid fa-download"></i> Download PDF
+    </button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div id="resume-card">
+
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">
+          {% if resume.profile_pic or resume.photo %}
+            <img src="{{ url_for('static', filename='uploads/image/' + (resume.profile_pic or resume.photo)) }}" alt="{{ resume.name }}">
+          {% else %}
+            <img src="https://ui-avatars.com/api/?name={{ (resume.name or 'User')|urlencode }}&background=ffffff&color=111827&size=200" alt="{{ resume.name }}">
+          {% endif %}
+        </div>
+
+        <div>
+    <div class="name">{{ resume.name or 'No Name' }}</div>
+
+    {% if resume.field_name %}
+        <div class="role">{{ resume.field_name }}</div>
+
+    {% elif resume.career %}
+        <div class="role">{{ resume.career }}</div>
+
+    {% endif %}
+</div>
+
+      <div class="block">
+        <div class="block-title">Contact</div>
+        {% if resume.email %}
+        <div class="contact"><i class="fa-solid fa-envelope"></i><span>{{ resume.email }}</span></div>
+        {% endif %}
+        {% if resume.phone or resume.mobile %}
+        <div class="contact"><i class="fa-solid fa-phone"></i><span>{{ resume.phone or resume.mobile }}</span></div>
+        {% endif %}
+        {% if resume.address %}
+        <div class="contact"><i class="fa-solid fa-location-dot"></i><span>{{ resume.address }}</span></div>
+        {% endif %}
+        {% if resume.linkedin %}
+        <div class="contact"><i class="fa-brands fa-linkedin"></i><span>{{ resume.linkedin }}</span></div>
+        {% endif %}
+      </div>
+
+      {% if resume.skills %}
+      <div class="block">
+        <div class="block-title">Skills</div>
+        <div class="tags">
+          {% if resume.skills is string %}
+            {% for s in resume.skills.split(',') %}
+              {% if s.strip() %}<span class="tag">{{ s.strip() }}</span>{% endif %}
+            {% endfor %}
+          {% else %}
+            {% for s in resume.skills %}
+              <span class="tag">{{ s }}</span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if resume.languages or resume.language_levels %}
+      <div class="block">
+        <div class="block-title">Languages</div>
+        <div class="tags">
+          {% if resume.language_levels %}
+            {% for ll in resume.language_levels %}
+              <span class="tag">{{ ll.language }}</span>
+            {% endfor %}
+          {% elif resume.languages is string %}
+            {% for l in resume.languages.split(',') %}
+              {% if l.strip() %}<span class="tag">{{ l.strip() }}</span>{% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if resume.tools %}
+      <div class="block">
+        <div class="block-title">Tools</div>
+        <div class="tags">
+          {% if resume.tools is string %}
+            {% for t in resume.tools.split(',') %}
+              {% if t.strip() %}<span class="tag">{{ t.strip() }}</span>{% endif %}
+            {% endfor %}
+          {% else %}
+            {% for t in resume.tools %}
+              <span class="tag">{{ t }}</span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if resume.hobbies %}
+      <div class="block">
+        <div class="block-title">Interests</div>
+        <div class="tags">
+          {% if resume.hobbies is string %}
+            {% for h in resume.hobbies.split(',') %}
+              {% if h.strip() %}<span class="tag">{{ h.strip() }}</span>{% endif %}
+            {% endfor %}
+          {% else %}
+            {% for h in resume.hobbies %}
+              <span class="tag">{{ h }}</span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </aside>
+
+    <main class="main">
+      {% if resume.objective or resume.summary %}
+      <section class="section">
+        <div class="sec-head">
+          <div class="icon"><i class="fa-solid fa-user"></i></div>
+          <h2>About Me</h2>
+          <div class="rule"></div>
+        </div>
+        <p class="about">{{ resume.objective or resume.summary }}</p>
+      </section>
+      {% endif %}
+
+      {% set exp_list = resume.experience if resume.experience is defined and resume.experience is iterable and resume.experience is not string else resume.experience_data if resume.experience_data is defined and resume.experience_data is iterable else [] %}
+      {% if exp_list %}
+      <section class="section">
+        <div class="sec-head">
+          <div class="icon"><i class="fa-solid fa-briefcase"></i></div>
+          <h2>Experience</h2>
+          <div class="rule"></div>
+        </div>
+
+        <div class="timeline">
+          {% for e in exp_list %}
+          <div class="item">
+            <div class="dot"></div>
+            <div>
+              <div class="title">{{ e.role or 'Role' }}</div>
+              <div class="sub">{{ e.company or '' }}</div>
+              {% if e.duration %}
+              <div class="meta"><i class="fa-regular fa-calendar"></i> {{ e.duration }}</div>
+              {% endif %}
+
+              {% set desc = e.description or e.desc or '' %}
+              {% if desc %}
+                <ul class="bullets">
+                  {% for line in desc.replace('•', '\n').split('\n') %}
+                    {% if line.strip() %}
+                      <li>{{ line.strip() }}</li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if resume.education %}
+      <section class="section">
+        <div class="sec-head">
+          <div class="icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h2>Education</h2>
+          <div class="rule"></div>
+        </div>
+
+        <div class="timeline">
+          {% for edu in resume.education %}
+          <div class="item">
+            <div class="dot"></div>
+            <div>
+              <div class="title">{{ edu.degree or edu.qualification or 'Degree' }}</div>
+              <div class="sub">
+                {{ edu.college or edu.institution or '' }}
+                {% if edu.university and edu.university != edu.college %}, {{ edu.university }}{% endif %}
+              </div>
+              <div class="meta">
+                <i class="fa-regular fa-calendar"></i>
+                {{ edu.start or '' }} – {{ edu.end or '' }}
+                {% if edu.cgpa %}&nbsp;·&nbsp;<i class="fa-solid fa-star" style="font-size:8px;"></i> {{ edu.cgpa }}{% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% set proj_list = resume.projects if resume.projects is defined and resume.projects is iterable and resume.projects is not string else [] %}
+      {% if group not in ["Finance", "Business"] and proj_list %}
+      <section class="section">
+        <div class="sec-head">
+          <div class="icon"><i class="fa-solid fa-rocket"></i></div>
+          <h2>Projects</h2>
+          <div class="rule"></div>
+        </div>
+
+        <div class="proj-grid">
+          {% for p in proj_list %}
+          <div class="proj-card">
+            <div class="proj-name">{{ p.name or p.title or 'Project' }}</div>
+
+            {% set pd = p.description or p.desc or '' %}
+            {% if pd %}
+            <div class="proj-desc">{{ pd }}</div>
+            {% endif %}
+
+            {% set tech = p.technologies or p.tech or '' %}
+            {% if tech %}
+            <div class="proj-tech">
+              {% for t in tech.split(',') %}
+                {% if t.strip() %}
+                <span class="chip chip-blue">{{ t.strip() }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if resume.certifications %}
+      <section class="section">
+        <div class="sec-head">
+          <div class="icon"><i class="fa-solid fa-certificate"></i></div>
+          <h2>Certifications</h2>
+          <div class="rule"></div>
+        </div>
+
+        <div class="cert-grid">
+          {% for cert in resume.certifications %}
+          <div class="cert">
+            {% if cert.image %}
+              <img src="{{ url_for('static', filename='uploads/image/' + cert.image) }}" alt="cert">
+            {% else %}
+              <div class="cert-icon"><i class="fa-solid fa-medal"></i></div>
+            {% endif %}
+            <div class="cert-text">{{ cert.desc or cert.title or cert.name or 'Certificate' }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </main>
+  </div>
+</div>
+
+<script>
+  function setTheme(type){
+
+  let sidebar = document.querySelector('.sidebar');
+  let dots = document.querySelectorAll('.dot');
+  let chips = document.querySelectorAll('.chip-blue');
+
+  let color = "#2563eb"; // default
+
+  if(type === "green") color = "#16a34a";
+  if(type === "purple") color = "#7c3aed";
+  if(type === "orange") color = "#ea580c";
+  if(type === "black") color = "#111827";
+
+  // Sidebar color
+  sidebar.style.background = color;
+
+  // Timeline dots
+  dots.forEach(d => {
+    d.style.background = color;
+    d.style.boxShadow = `0 0 0 4px ${color}22`;
+  });
+
+  // Chips
+  chips.forEach(c => {
+    c.style.background = color + "15";
+    c.style.color = color;
+    c.style.borderColor = color;
+  });
+
+  // Buttons
+  document.querySelector('.btn-primary').style.background = color;
+}
+function applyPDFFix(){
+  document.querySelectorAll('*').forEach(el=>{
+    const s = getComputedStyle(el);
+    el.style.backgroundColor = s.backgroundColor;
+    el.style.color = s.color;
+    el.style.borderColor = s.borderColor;
+  });
+}
+function downloadPDF() {
+  const btn = document.querySelector('.btn-primary');
+  const original = btn.innerHTML;
+
+  btn.disabled = true;
+  btn.innerHTML = "Generating...";
+
+  const card = document.getElementById('resume-card');
+
+  // 🔥 FORCE DESKTOP MODE BEFORE RENDER
+  document.body.classList.add("pdf-force");
+
+  // 🔥 WAIT FOR DOM TO APPLY (VERY IMPORTANT)
+  setTimeout(() => {
+
+    const opt = {
+      margin: 0,
+      filename: "resume.pdf",
+      html2canvas: {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: "#ffffff"
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf().set(opt).from(card).save().then(() => {
+      document.body.classList.remove("pdf-force"); // reset
+      btn.innerHTML = original;
+      btn.disabled = false;
+    });
+
+  }, 300); // 🔥 delay is KEY
+}
+
+
+</script>
+</body>
+</html>

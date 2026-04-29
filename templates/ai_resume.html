@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<title>Fancy Resume</title>
+
+<style>
+
+@page{
+    size:A4;
+    margin:0;
+}
+
+body{
+    
+ margin:0;
+    font-family:'Poppins', sans-serif;
+    background:#f3f4f6;
+
+    display:flex;
+    justify-content:center;
+}
+#resume{
+    transform:scale(0.95);
+    transform-origin:top left;
+}
+.resume{
+    width:210mm;
+    min-height:297mm;
+    margin:30px 0;
+    background:white;
+    display:grid;
+    grid-template-columns:33% 67%;
+    box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* LEFT PANEL */
+
+.left{
+    background:linear-gradient(180deg,#0f1b2b,#1c2e45);
+    color:white;
+    padding:30px 25px;
+}
+
+.name{
+    font-size:24px;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.major{
+    font-size:14px;
+    color:#cbd5e1;
+    margin-bottom:25px;
+}
+
+.left-title{
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:1px;
+    color:#facc15;
+    border-bottom:2px solid #facc15;
+    padding-bottom:5px;
+    margin-top:20px;
+}
+
+.left-text{
+    font-size:13px;
+    line-height:1.6;
+}
+
+.tag{
+    background:#facc15;
+    color:black;
+    padding:4px 8px;
+    font-size:12px;
+    margin:3px;
+    display:inline-block;
+}
+
+/* RIGHT SIDE */
+
+.right{
+    padding:35px;
+}
+p, td{
+    word-break:break-word;
+    overflow-wrap:break-word;
+}
+
+.block-title{
+    font-size:18px;
+    font-weight:600;
+    color:#111827;
+    border-bottom:3px solid #facc15;
+    padding-bottom:5px;
+    margin-bottom:15px;
+}
+
+
+/* TABLE STYLE */
+
+.resume-table{
+    width:100%;
+       page-break-inside:auto;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+.resume-table th{
+    background:#facc15;
+    color:#111827;
+    padding:8px;
+    text-align:left;
+    font-weight:600;
+}
+
+.resume-table td{
+    padding:8px;
+    border-bottom:1px solid #e5e7eb;
+    vertical-align:top;
+}
+
+.resume-table tr:nth-child(even){
+        page-break-inside:avoid;
+    page-break-after:auto;
+
+    background:#f9fafb;
+}
+
+
+/* BUTTONS */
+
+.no-print{
+    
+
+    
+    
+    }
+button{
+    padding:10px 18px;
+    background:#facc15;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:500;
+    transition:0.2s;
+}
+
+button:hover{
+    background:#eab308;
+}
+
+.profile-pic{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    border:4px solid #facc15;
+    object-fit:cover;
+    display:block;
+    margin-bottom:15px;
+}
+
+/* PRINT */
+
+@media print{
+
+.no-print{
+    
+}
+
+body{
+    background:white;
+}
+
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="resume" class="resume">
+
+<!-- LEFT PANEL -->
+
+<div class="left">
+
+{% if resume.photo %}
+<img src="{{ url_for('static', filename='uploads/' ~ resume.photo) }}" class="profile-pic">
+{% endif %}
+
+<h2 class="name">{{ resume.first_name }} {{ resume.last_name }}</h2>
+<div class="major">{{ resume.major }}</div>
+
+<div class="left-title">Contact</div>
+<div class="left-text">{{ resume.email }}</div>
+<div class="left-text">{{ resume.mobile }}</div>
+
+{% if resume.github %}
+<div class="left-text">GitHub: {{ resume.github }}</div>
+{% endif %}
+
+{% if resume.linkedin %}
+<div class="left-text">LinkedIn: {{ resume.linkedin }}</div>
+{% endif %}
+
+<div class="left-title">Languages</div>
+{% for l in resume.language_levels %}
+<div class="left-text">{{ l.language }} - {{ l.level }}</div>
+{% endfor %}
+
+<div class="left-title">Skills</div>
+{% for s in resume.skills %}
+<span class="tag">{{ s }}</span>
+{% endfor %}
+
+</div>
+
+
+<!-- RIGHT PANEL -->
+
+<div class="right">
+
+<div class="block">
+<div class="block-title">Career Objective</div>
+<p>{{ resume.summary }}</p>
+</div>
+
+
+<!-- EXPERIENCE TABLE -->
+
+<div class="block">
+<div class="block-title">Experience</div>
+
+<table class="resume-table">
+
+<tr>
+<th>Role</th>
+<th>Company</th>
+<th>Duration</th>
+<th>Description</th>
+</tr>
+
+{% for e in resume.experience %}
+<tr>
+<td>{{ e.role }}</td>
+<td>{{ e.company }}</td>
+<td>{{ e.duration }}</td>
+<td>{{ e.description }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- PROJECT TABLE -->
+
+<div class="block">
+<div class="block-title">Projects</div>
+
+<table class="resume-table">
+
+<tr>
+<th>Project</th>
+<th>Technologies</th>
+<th>Description</th>
+</tr>
+
+{% for p in resume.projects %}
+<tr>
+<td>{{ p.name }}</td>
+<td>{{ p.technologies }}</td>
+<td>{{ p.description }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- EDUCATION TABLE -->
+
+<div class="block">
+<div class="block-title">Education</div>
+
+<table class="resume-table">
+
+<tr>
+<th>Qualification</th>
+<th>Institution</th>
+<th>Duration</th>
+<th>Grade</th>
+</tr>
+
+{% for edu in resume.education %}
+<tr>
+<td>{{ edu.qualification }}</td>
+<td>{{ edu.institution }}</td>
+<td>{{ edu.start }} - {{ edu.end }}</td>
+<td>{{ edu.grade }}%</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="no-print">
+
+<button onclick="downloadPDF()">Download Resume</button>
+
+
+
+
+</div><br><br>
+<div class="no-print">
+    <button onclick="location.href='{{ url_for('resume.resume_type') }}'">
+Change Template
+</button>
+
+</div><br><br>
+<div class="no-print">
+    <button onclick="location.href='{{ url_for('resume.home') }}'">
+Edit Resume
+</button>
+</div>
+<script>
+
+function downloadPDF(){
+
+const element = document.getElementById("resume");
+
+const options = {
+margin:0,
+filename:"resume.pdf",
+image:{ type:"jpeg", quality:1 },
+html2canvas:{ scale:3, useCORS:true },
+jsPDF:{ unit:"mm", format:"a4", orientation:"portrait" }
+};
+
+html2pdf().set(options).from(element).save();
+
+}
+</script>
+
+</body>
+</html>

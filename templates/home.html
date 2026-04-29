@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Animated Login</title>
+<style>
+
+*{
+box-sizing:border-box;
+font-family:"Segoe UI", Arial, sans-serif;
+}
+
+body{
+background:#eef2ff;
+margin:0;
+padding:20px;
+display:flex;
+justify-content:center;
+}
+
+/* MAIN CARD */
+
+.container{
+background:#ffffff;
+width:100%;
+max-width:620px;
+padding:32px;
+border-radius:12px;
+box-shadow:0 15px 35px rgba(0,0,0,0.08);
+animation:fadeUp .6s ease;
+}
+
+/* TITLE */
+
+h2{
+margin-bottom:4px;
+font-weight:600;
+color:#111827;
+}
+
+.subtitle{
+font-size:13px;
+color:#6b7280;
+margin-bottom:26px;
+}
+
+/* FORM GROUP */
+
+.group{
+display:flex;
+flex-direction:column;
+margin-bottom:18px;
+}
+
+.group label{
+font-size:13px;
+margin-bottom:6px;
+color:#374151;
+font-weight:500;
+}
+
+/* INPUT STYLE */
+
+.group input,
+.group textarea{
+padding:12px;
+font-size:14px;
+border:1px solid #d1d5db;
+border-radius:8px;
+width:100%;
+transition:all .2s;
+background:#fafafa;
+}
+
+.group textarea{
+resize:none;
+height:90px;
+}
+
+/* INPUT FOCUS */
+
+.group input:focus,
+.group textarea:focus{
+outline:none;
+border-color:#4a6cf7;
+box-shadow:0 0 0 3px rgba(74,108,247,0.15);
+background:white;
+}
+
+/* ROW LAYOUT */
+
+.row{
+display:flex;
+gap:16px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:13px;
+background:#4a6cf7;
+color:white;
+border:none;
+border-radius:8px;
+font-size:15px;
+cursor:pointer;
+margin-top:10px;
+transition:.25s;
+}
+
+button:hover{
+background:#3554d1;
+transform:translateY(-1px);
+box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* WORD COUNT */
+
+#msg{
+font-size:12px;
+margin-top:4px;
+color:#555;
+text-align:right;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* TABLET */
+
+@media (max-width:768px){
+
+.container{
+padding:26px;
+}
+
+.row{
+gap:12px;
+}
+
+}
+
+/* MOBILE */
+
+@media (max-width:600px){
+
+body{
+padding:15px;
+}
+
+.container{
+padding:22px;
+border-radius:10px;
+}
+
+.row{
+flex-direction:column;
+gap:0;
+}
+
+.group input,
+.group textarea{
+font-size:14px;
+}
+
+button{
+font-size:15px;
+}
+
+}
+/* Suggest Summary Button */
+
+.group button{
+padding:8px 14px;
+background:#4a6cf7;
+color:white;
+border:none;
+border-radius:6px;
+font-size:13px;
+cursor:pointer;
+margin-top:6px;
+width:auto;
+transition:0.2s;
+}
+
+.group button:hover{
+background:#3a5be0;
+}
+
+/* Suggestion list */
+
+#suggestionBox{
+margin-top:8px;
+display:none;
+flex-direction:column;
+gap:6px;
+max-height:180px;
+overflow-y:auto;
+border:1px solid #dbe2ff;
+border-radius:6px;
+padding:6px;
+background:#f7f9ff;
+}
+
+/* Suggestion items */
+
+.suggestion{
+background:#eef2ff;
+border:1px solid #dbe2ff;
+padding:7px 9px;
+border-radius:6px;
+font-size:13px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.suggestion:hover{
+background:#dfe7ff;
+}
+
+/* Scrollbar */
+
+#suggestionBox::-webkit-scrollbar{
+width:5px;
+}
+
+#suggestionBox::-webkit-scrollbar-thumb{
+background:#4a6cf7;
+border-radius:5px;
+}
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 10px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.step-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2563eb;
+    transition: 0.3s;
+}
+
+.step-text {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.step-line {
+    width: 50px;
+    height: 3px;
+    background: #cbd5f5;
+    border-radius: 10px;
+}
+
+/* ACTIVE */
+.step-item.active .step-circle {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.1);
+}
+
+.step-item.active .step-text {
+    color: #2563eb;
+}
+
+/* HOVER */
+.step-item:hover .step-circle {
+    background: #93c5fd;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .stepper {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <form method="POST">
+
+<!-- STEP NAVIGATION -->
+<div class="stepper">
+
+    <!-- Dashboard -->
+  
+    
+
+    <!-- Home -->
+    <button type="button"
+            onclick="goStep(2)"
+            class="step-item {{ 'active' if current_step == 2 else '' }}">
+        <div class="step-circle">1</div>
+        <div class="step-text">Home</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Language -->
+    <button type="button"
+            onclick="goStep(3)"
+            class="step-item {{ 'active' if current_step == 3 else '' }}">
+        <div class="step-circle">2</div>
+        <div class="step-text">Language</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Education -->
+    <button type="button"
+            onclick="goStep(4)"
+            class="step-item {{ 'active' if current_step == 4 else '' }}">
+        <div class="step-circle">3</div>
+        <div class="step-text">Education</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Projects -->
+    <button type="button"
+            onclick="goStep(5)"
+            class="step-item {{ 'active' if current_step == 5 else '' }}">
+        <div class="step-circle">4</div>
+        <div class="step-text">Projects</div>
+    </button>
+
+</div>
+    <h2>Resume Builder</h2>
+    <p class="subtitle">Step 1 of 3 — Personal & Major Information</p>
+
+ <form method="POST" action="{{ url_for('resume.home') }}">
+    <input type="hidden" name="next_step" id="nextStep">
+    <div class="row">
+        <div class="group">
+            <label>First Name</label>
+            <input type="text" name="first_name"
+                   placeholder="Enter first name"
+                   value="{{ resume.first_name if resume.first_name else '' }}"
+                   required>
+        </div>
+
+        <div class="group">
+            <label>Last Name</label>
+            <input type="text" name="last_name"
+                   placeholder="Enter last name"
+                   value="{{ resume.last_name if resume.last_name else '' }}"
+                   required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="group">
+            <label>Email Address</label>
+            <input type="email" name="email"
+                   placeholder="example@gmail.com"
+                   value="{{ resume.email if resume.email else '' }}"
+                   required>
+        </div>
+
+        <div class="group">
+            <label>Mobile Number</label>
+            <input type="tel" name="mobile"
+                   placeholder="10-digit mobile number"
+                   value="{{ resume.mobile if resume.mobile else '' }}"
+                   required>
+        </div>
+    </div>
+
+    <div class="group">
+        <label>Major / Branch</label>
+        <input type="text" name="major"
+               placeholder="e.g. BCA, Computer Science"
+               value="{{ resume.major if resume.major else '' }}"
+               required>
+    </div>
+
+    <div class="group">
+        <label>GitHub Profile</label>
+        <input type="url" name="github"
+               placeholder="https://github.com/username"
+               value="{{ resume.github if resume.github else '' }}">
+                <p id="githubMsg" style="font-size:12px;color:#666;display:none;">
+        Write only your GitHub username (example: johndoe)
+    </div>
+
+    <div class="group">
+        <label>LinkedIn Profile</label>
+        <input type="url" name="linkedin"
+               placeholder="https://linkedin.com/in/username"
+               value="{{ resume.linkedin if resume.linkedin else '' }}">
+                <p id="linkedinMsg" style="font-size:12px;color:#666;display:none;">
+        Write only your LinkedIn username (example: johndoe)
+    </div>
+
+    <div class="group">
+        <label>Professional Summary</label>
+        <textarea name="summary" id="warning" required minlength="20" maxlength="170" oninput="checkmax()"
+                  placeholder="Describe yourself in 100 to 150 words minimum">{{ resume.summary if resume.summary else '' }}</textarea>
+                  <p id="msg">0 / 210</p>
+                  <button type="button" onclick="toggleSuggestions()">✨ Suggest Summary</button>
+<div id="suggestionBox"></div>
+    </div>
+
+    <button type="submit">Next → Education Details</button>
+</form>
+</div>
+<script>
+  function goStep(step) {
+    const form = document.querySelector("form");
+
+    if (!form) return;
+
+    // 🔥 RESET first
+    const input = document.getElementById("nextStep");
+    input.value = "";  
+
+    // 🔥 SET correct step
+    input.value = step;
+
+    form.submit();
+}
+function checkmax(){
+    let textarea = document.getElementById("warning");
+    let warning = document.getElementById("msg");
+
+    let len = textarea.value.length;
+    warning.innerText = len + " / 170";
+
+    if(len >= 170){
+        warning.style.color = "red";
+    }else{
+        warning.style.color = "black";
+    }
+}
+function toggleSuggestions(){
+
+let box = document.getElementById("suggestionBox");
+
+/* toggle open / close */
+
+if(box.style.display === "flex"){
+box.style.display = "none";
+return;
+}
+
+box.style.display = "flex";
+
+/* get user inputs */
+
+let first = document.querySelector("input[name='first_name']").value;
+let last = document.querySelector("input[name='last_name']").value;
+let major = document.querySelector("input[name='major']").value;
+
+/* fallback if empty */
+
+let name = (first + " " + last).trim() || "________";
+let course = major || "________";
+
+/* suggestions */
+
+let suggestions = [
+
+`Hi, my name is ${name}. I am a ${course} student with strong interest in web development and programming. I enjoy learning new technologies and building useful projects.`,
+
+`Hello, my name is ${name}. I am studying ${course} and I enjoy building websites and learning programming concepts while improving my problem-solving skills.`,
+
+`Hi, I am ${name}, a ${course} student interested in software development. I like creating modern web applications and continuously improving my technical skills.`,
+
+`My name is ${name}. I am a ${course} student passionate about web technologies and programming. I enjoy building projects and learning practical development skills.`,
+
+`Hello, I am ${name} currently studying ${course}. I am interested in web development and software technologies and enjoy creating creative and useful applications.`,
+
+`Hi, my name is ${name}. I am a ${course} student who enjoys coding, building websites and exploring new technologies to develop real-world projects.`,
+
+`My name is ${name} and I am studying ${course}. I have a strong interest in web development and enjoy learning programming while building modern applications.`,
+
+`Hi, I am ${name}, a motivated ${course} student with interest in software development. I enjoy learning new technologies and creating practical web projects.`,
+
+`Hello, my name is ${name}. I am currently pursuing ${course} and developing skills in programming, web development and problem solving.`,
+
+`Hi, I am ${name}. As a ${course} student I enjoy coding and building responsive websites while improving my programming and development skills.`,
+
+`My name is ${name}. I am a ${course} student interested in developing modern web applications and learning technologies that help build efficient solutions.`,
+
+`Hello, I am ${name} currently studying ${course}. I enjoy programming and developing creative web solutions while continuously learning new skills.`,
+
+`Hi, my name is ${name} and I am studying ${course}. I enjoy web development, learning new programming tools and building useful applications.`,
+
+`I am ${name}, a ${course} student passionate about programming and web technologies. I enjoy creating projects that improve my technical knowledge.`,
+
+`Hi, I am ${name} currently pursuing ${course}. I enjoy coding and developing modern websites while improving my problem solving and development skills.`,
+
+`My name is ${name}. I am studying ${course} and have strong interest in programming and building web applications that provide practical solutions.`,
+
+`Hello, I am ${name}, a ${course} student interested in technology and software development. I enjoy learning and building creative projects.`,
+
+`Hi, I am ${name}. As a ${course} student I am passionate about web development and learning programming concepts while building useful applications.`,
+
+`My name is ${name} and I am a ${course} student who enjoys exploring new technologies and creating responsive and modern web applications.`,
+
+`Hello, I am ${name} currently studying ${course}. I enjoy programming and web development and I am motivated to grow as a professional developer.`
+
+];
+
+/* clear previous */
+
+box.innerHTML = "";
+
+/* create suggestion items */
+
+suggestions.forEach(text => {
+
+let div = document.createElement("div");
+
+div.className = "suggestion";
+
+div.innerText = text;
+
+/* click fill textarea */
+
+div.onclick = function(){
+
+document.getElementById("warning").value = text;
+
+box.style.display = "none";
+
+};
+
+box.appendChild(div);
+
+});
+
+}
+
+window.onload = function(){
+
+let github = document.querySelector("input[name='github']");
+let linkedin = document.querySelector("input[name='linkedin']");
+
+if(!github.value){
+github.value = "https://github.com/";
+}
+
+if(!linkedin.value){
+linkedin.value = "https://linkedin.com/in/";
+}
+
+};
+//use for suggation 
+let linkedinInput = document.querySelector("input[name='linkedin']");
+let msg = document.getElementById("linkedinMsg");
+
+linkedinInput.addEventListener("focus", function(){
+msg.style.display = "block";
+});
+
+linkedinInput.addEventListener("blur", function(){
+msg.style.display = "none";
+});
+
+//github suggation hwhat we Write
+let githubInput = document.querySelector("input[name='github']");
+let githubMsg = document.getElementById("githubMsg");
+
+githubInput.addEventListener("focus", function(){
+githubMsg.style.display = "block";
+});
+
+githubInput.addEventListener("blur", function(){
+githubMsg.style.display = "none";
+});
+</script>
+</body>
+</html>

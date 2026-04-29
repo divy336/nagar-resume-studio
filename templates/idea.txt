@@ -1,0 +1,680 @@
+Project: Smart Resume Builder
+
+Stack:
+HTML, CSS, JS, Flask, MySQL
+
+Main Idea:
+- Group-based system (business, commerce, design, etc.)
+- Multi-step form
+- Store data in Flask session
+- Final save in database (JSON)
+
+Flow:
+1. Select field → save in session
+2. Step 2 → basic info
+3. Step 3 → skills
+4. Step 4 → field-specific
+5. Preview → generate resume
+6. Save → database
+
+Important:
+- Use group instead of individual fields
+- Dynamic form based on group   
+
+
+
+
+I am building a smart resume builder using Flask.
+
+I use:
+- Group-based logic (business, commerce, design, etc.)
+- Flask session for multi-step form
+- Final data stored in MySQL as JSON
+
+Current step:
+I completed field selection and session storage.
+
+Now help me build next step (dynamic form).
+
+
+
+
+
+@resume.route("/third_page", methods=["GET", "POST"])
+def third_page():
+
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+
+    if "resume" not in session:
+        return redirect(url_for("resume.first_page"))
+
+    if request.method == "POST":
+
+        resume_data = session.get("resume", {})
+
+        # 🔥 EDUCATION (LIST)
+        degrees = request.form.getlist("degree[]")
+        colleges = request.form.getlist("college[]")
+        boards = request.form.getlist("board[]")
+        cgpas = request.form.getlist("cgpa[]")
+        starts = request.form.getlist("edu_start[]")
+        ends = request.form.getlist("edu_end[]")
+
+        education_list = []
+
+        for i in range(len(degrees)):
+            education_list.append({
+                "degree": degrees[i],
+                "college": colleges[i],
+                "board": boards[i],
+                "cgpa": cgpas[i],
+                "start": starts[i],
+                "end": ends[i]
+            })
+
+        # 🔥 EXPERIENCE (LIST)
+        roles = request.form.getlist("exp_role[]")
+        companies = request.form.getlist("exp_company[]")
+        durations = request.form.getlist("exp_duration[]")
+        descs = request.form.getlist("exp_desc[]")
+
+        experience_list = []
+
+        for i in range(len(roles)):
+            experience_list.append({
+                "role": roles[i],
+                "company": companies[i],
+                "duration": durations[i],
+"description": clean_text(descs[i])
+})
+
+        # 🔥 PROJECTS (LIST)
+        titles = request.form.getlist("proj_title[]")
+        techs = request.form.getlist("proj_tech[]")
+        pdescs = request.form.getlist("proj_desc[]")
+
+        project_list = []
+
+        for i in range(len(titles)):
+            project_list.append({
+                "title": titles[i],
+                "tech": techs[i],
+                "description": clean_text(descs[i])
+            })
+
+        # 🔥 EXTRA
+        resume_data["languages"] = request.form.get("languages")
+        resume_data["hobbies"] = request.form.get("hobbies")
+
+        # 🔥 SAVE ALL
+        resume_data["education"] = education_list
+        resume_data["experience"] = experience_list
+        resume_data["projects"] = project_list
+
+        session["resume"] = resume_data
+        session.modified = True
+        print( session["resume"])  # Debugging line
+        return redirect(url_for("resume.forth_page"))  # next page
+
+    return render_template("all_resume/third_page.html", resume=session.get("resume", {}))@resume.route("/third_page", methods=["GET", "POST"])
+def third_page():
+
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+
+    if "resume" not in session:
+        return redirect(url_for("resume.first_page"))
+
+    if request.method == "POST":
+
+        resume_data = session.get("resume", {})
+
+        # 🔥 EDUCATION (LIST)
+        degrees = request.form.getlist("degree[]")
+        colleges = request.form.getlist("college[]")
+        boards = request.form.getlist("board[]")
+        cgpas = request.form.getlist("cgpa[]")
+        starts = request.form.getlist("edu_start[]")
+        ends = request.form.getlist("edu_end[]")
+
+        education_list = []
+
+        for i in range(len(degrees)):
+            education_list.append({
+                "degree": degrees[i],
+                "college": colleges[i],
+                "board": boards[i],
+                "cgpa": cgpas[i],
+                "start": starts[i],
+                "end": ends[i]
+            })
+
+        # 🔥 EXPERIENCE (LIST)
+        roles = request.form.getlist("exp_role[]")
+        companies = request.form.getlist("exp_company[]")
+        durations = request.form.getlist("exp_duration[]")
+        descs = request.form.getlist("exp_desc[]")
+
+        experience_list = []
+
+        for i in range(len(roles)):
+            experience_list.append({
+                "role": roles[i],
+                "company": companies[i],
+                "duration": durations[i],
+"description": clean_text(descs[i])
+})
+
+        # 🔥 PROJECTS (LIST)
+        titles = request.form.getlist("proj_title[]")
+        techs = request.form.getlist("proj_tech[]")
+        pdescs = request.form.getlist("proj_desc[]")
+
+        project_list = []
+
+        for i in range(len(titles)):
+            project_list.append({
+                "title": titles[i],
+                "tech": techs[i],
+                "description": clean_text(descs[i])
+            })
+
+        # 🔥 EXTRA
+        resume_data["languages"] = request.form.get("languages")
+        resume_data["hobbies"] = request.form.get("hobbies")
+
+        # 🔥 SAVE ALL
+        resume_data["education"] = education_list
+        resume_data["experience"] = experience_list
+        resume_data["projects"] = project_list
+
+        session["resume"] = resume_data
+        session.modified = True
+        print( session["resume"])  # Debugging line
+        return redirect(url_for("resume.forth_page"))  # next page
+
+    return render_template("all_resume/third_page.html", resume=session.get("resume", {}))
+
+
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 3 - Academic & Professional</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; padding: 20px; }
+        
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        
+        h2 { color: #1e3a8a; margin: 0 0 20px 0; font-size: 1.5rem; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        .entry-card { 
+            background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; 
+            margin-bottom: 15px; position: relative; animation: fadeIn 0.3s ease;
+        }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.85rem; color: #4b5563; }
+        
+        input, textarea, select {
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; box-sizing: border-box; font-size: 1rem;
+        }
+        
+        .add-btn {
+            background: #eff6ff; color: #2563eb; border: 1px dashed #2563eb; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s;
+        }
+        .add-btn:hover { background: #2563eb; color: white; }
+
+        .remove-btn {
+            position: absolute; top: 10px; right: 10px; background: #fee2e2; color: #ef4444;
+            border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;
+        }
+
+        .save-btn {
+            width: 100%; background: #2563eb; color: white; padding: 18px; border: none;
+            border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form method="POST">
+        
+        <div class="card">
+            <div class="section-header">
+                <h2>Education (Required)</h2>
+                <button type="button" class="add-btn" onclick="addEducation()">+ Add More</button>
+                <p id="eduMsg"></p>
+
+            </div>
+            <div id="educationContainer">
+                <div class="entry-card">
+                    <div class="grid">
+                        <div class="form-group"><label>Degree (BCA, 12th)</label><input name="degree[]" required placeholder="e.g. BCA" value="{{ resume.get('degree', '') }}"></div>
+                        <div class="form-group"><label>Institute Name</label><input name="college[]" required placeholder="College/School Name" value="{{ resume.get('college', '') }}"></div>
+                        <div class="form-group"><label>Board/University</label><input name="board[]" required placeholder="e.g. Gujarat University" value="{{ resume.get('board', '') }}"></div>
+                        <div class="form-group"><label>CGPA / %</label><input name="cgpa[]" required placeholder="e.g. 8.5 or 85%" value="{{ resume.get('cgpa', '') }}"></div>
+                        <div class="form-group"><label>Start Year</label><input type="number" name="edu_start[]" placeholder="2021" value="{{ resume.get('edu_start', '') }}"></div>
+                        <div class="form-group"><label>End Year (or Pursuing)</label><input name="edu_end[]" placeholder="2024" value="{{ resume.get('edu_end', '') }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-header">
+                <h2>Experience / Internships</h2>
+                <button type="button" class="add-btn" onclick="addExperience()">+ Add More</button>
+                <p id="expMsg"></p>
+
+            </div>
+            <div id="experienceContainer">
+                <div class="entry-card">
+                    <div class="grid">
+                        <div class="form-group"><label>Role</label><input name="exp_role[]" placeholder="Intern, Trainee" value="{{ resume.get('exp_role', '') }}"></div>
+                        <div class="form-group"><label>Company</label><input name="exp_company[]" placeholder="Company Name" value="{{ resume.get('exp_company', '') }}"></div>
+                    </div>
+                    <div class="form-group"><label>Duration</label><input name="exp_duration[]" placeholder="Jan 2024 - Mar 2024" value="{{ resume.get('exp_duration', '') }}"></div>
+                    <div class="form-group"><label>Description</label><textarea name="exp_desc[]" rows="2" placeholder="What did you do there?">{{ resume.get('exp_desc', '') }}</textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-header">
+                <h2>Projects (At least one)</h2>
+                <button type="button" class="add-btn" onclick="addProject()">+ Add More</button>
+                <p id="projMsg"></p>
+            </div>
+            <div id="projectContainer">
+                <div class="entry-card">
+                    <div class="form-group"><label>Project Title</label><input name="proj_title[]" required placeholder="Resume Builder" value="{{ resume.get('proj_title', '') }}"></div>
+                    <div class="form-group"><label>Technologies (Comma separated)</label><input name="proj_tech[]" required placeholder="Python, Flask, JS" value="{{ resume.get('proj_tech', '') }}"></div>
+                    <div class="form-group"><label>Project Description</label><textarea name="proj_desc[]" required rows="3" placeholder="Key features and your role...">{{ resume.get('proj_desc', '') }}</textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Extra Details</h2>
+            <div class="form-group">
+                <label>Languages Known</label>
+                <input name="languages" placeholder="English, Hindi, Gujarati" value="{{ resume.get('languages', '') }}">
+            </div>
+            <div class="form-group">
+                <label>Hobbies / Interests</label>
+                <input name="hobbies" placeholder="Coding, Cricket, Traveling" value="{{ resume.get('hobbies', '') }}">
+            </div>
+        </div>
+
+        <button type="submit" class="save-btn">Save and Generate Preview →</button>
+    </form>
+</div>
+
+<script>
+ // counters (1 default entry already exists)
+let eduCount = 1;
+let expCount = 1;
+let projCount = 1;
+
+// max limits
+const MAX_EDU = 2;
+const MAX_EXP = 2;
+const MAX_PROJ = 3;
+
+
+// 🔥 REMOVE BUTTON
+function createRemoveBtn(el, type) {
+    const btn = document.createElement('button');
+    btn.className = 'remove-btn';
+    btn.innerText = 'Remove';
+
+    btn.onclick = () => {
+        el.remove();
+
+        if (type === "edu") eduCount--;
+        if (type === "exp") expCount--;
+        if (type === "proj") projCount--;
+
+        updateButtons();
+    };
+
+    el.appendChild(btn);
+}
+
+
+// 🔥 UPDATE BUTTON + MESSAGE
+function updateButtons() {
+
+    const eduBtn = document.querySelector('[onclick="addEducation()"]');
+    const expBtn = document.querySelector('[onclick="addExperience()"]');
+    const projBtn = document.querySelector('[onclick="addProject()"]');
+
+    const eduMsg = document.getElementById("eduMsg");
+    const expMsg = document.getElementById("expMsg");
+    const projMsg = document.getElementById("projMsg");
+
+    // EDUCATION
+    if (eduCount >= MAX_EDU) {
+        eduBtn.disabled = true;
+        if (eduMsg) eduMsg.innerText = "Max 2 education allowed";
+    } else {
+        eduBtn.disabled = false;
+        if (eduMsg) eduMsg.innerText = "";
+    }
+
+    // EXPERIENCE
+    if (expCount >= MAX_EXP) {
+        expBtn.disabled = true;
+        if (expMsg) expMsg.innerText = "Max 2 internships allowed";
+    } else {
+        expBtn.disabled = false;
+        if (expMsg) expMsg.innerText = "";
+    }
+
+    // PROJECT
+    if (projCount >= MAX_PROJ) {
+        projBtn.disabled = true;
+        if (projMsg) projMsg.innerText = "Max 3 projects allowed";
+    } else {
+        projBtn.disabled = false;
+        if (projMsg) projMsg.innerText = "";
+    }
+}
+
+
+// 🔥 EDUCATION
+function addEducation() {
+    if (eduCount >= MAX_EDU) return;
+
+    eduCount++;
+
+    const container = document.getElementById('educationContainer');
+    const div = document.createElement('div');
+    div.className = 'entry-card';
+
+    div.innerHTML = `
+        <div class="grid">
+            <div class="form-group"><input name="degree[]" placeholder="Degree" value="{{ resume.get('degree', '') }}"></div>
+            <div class="form-group"><input name="college[]" placeholder="Institute" value="{{ resume.get('college', '') }}"></div>
+            <div class="form-group"><input name="board[]" placeholder="Board" value="{{ resume.get('board', '') }}"></div>
+            <div class="form-group"><input name="cgpa[]" placeholder="CGPA" value="{{ resume.get('cgpa', '') }}"></div>
+            <div class="form-group"><input name="edu_start[]" placeholder="Start Year" value="{{ resume.get('edu_start', '') }}"></div>
+            <div class="form-group"><input name="edu_end[]" placeholder="End Year" value="{{ resume.get('edu_end', '') }}">
+        </div>`;
+
+    createRemoveBtn(div, "edu");
+    container.appendChild(div);
+
+    updateButtons();
+}
+
+
+// 🔥 EXPERIENCE
+function addExperience() {
+    if (expCount >= MAX_EXP) return;
+
+    expCount++;
+
+    const container = document.getElementById('experienceContainer');
+    const div = document.createElement('div');
+    div.className = 'entry-card';
+
+    div.innerHTML = `
+        <div class="grid">
+            <div class="form-group"><input name="exp_role[]" placeholder="Role" value="{{ resume.get('exp_role', '') }}"></div>
+            <div class="form-group"><input name="exp_company[]" placeholder="Company" value="{{ resume.get('exp_company', '') }}"></div>
+        </div>
+        <div class="form-group"><input name="exp_duration[]" placeholder="Duration" value="{{ resume.get('exp_duration', '') }}"></div>
+        <div class="form-group"><textarea name="exp_desc[]" placeholder="Description">{{ resume.get('exp_desc', '') }}</textarea></div>`;
+    createRemoveBtn(div, "exp");
+    container.appendChild(div);
+
+    updateButtons();
+}
+
+
+// 🔥 PROJECT
+function addProject() {
+    if (projCount >= MAX_PROJ) return;
+
+    projCount++;
+
+    const container = document.getElementById('projectContainer');
+    const div = document.createElement('div');
+    div.className = 'entry-card';
+
+    div.innerHTML = `
+        <div class="form-group"><input name="proj_title[]" placeholder="Project Title" value="{{ resume.get('proj_title', '') }}"></div>
+        <div class="form-group"><input name="proj_tech[]" placeholder="Technologies"></div>
+        <div class="form-group"><textarea name="proj_desc[]" placeholder="Description"></textarea></div>`;
+
+    createRemoveBtn(div, "proj");
+    container.appendChild(div);
+
+    updateButtons();
+}
+
+
+// 🔥 INITIAL CALL
+updateButtons();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function getProjTemplates(project) {
+    const name = userName;
+    const field = group;
+
+    if (field === "Finance") {
+       return [
+`${name} developed ${project} to automate financial tracking, utilizing Excel and data tools to improve accuracy in budget forecasting.`,
+
+`${name} created ${project}, a dynamic reporting system that streamlines audit preparation and provides clear insights into fiscal health.`,
+
+`${name} engineered ${project} to analyze stock market trends, incorporating statistical models to minimize risk and maximize returns.`,
+
+`${name} built ${project}, a financial dashboard that visualizes income, expenses, and cash flow, enabling better strategic decision-making.`,
+
+`${name} designed ${project} to manage personal and business budgets efficiently, reducing overspending through real-time tracking.`,
+
+`${name} implemented ${project} to perform ratio analysis and evaluate company performance using key financial metrics.`,
+
+`${name} developed ${project}, an automated tax calculation system that ensures compliance and reduces manual errors.`,
+
+`${name} created ${project} to forecast future revenue using historical financial data and predictive analytics.`,
+
+`${name} built ${project}, a portfolio management tool that tracks investments and suggests optimized asset allocation strategies.`,
+
+`${name} designed ${project} to detect anomalies in financial transactions, helping identify potential fraud risks.`,
+
+`${name} engineered ${project} for loan eligibility analysis by evaluating credit scores, income patterns, and risk factors.`,
+
+`${name} developed ${project}, a real-time expense monitoring system that categorizes spending and improves financial discipline.`,
+
+`${name} built ${project} to automate invoice generation and payment tracking, improving financial workflow efficiency.`,
+
+`${name} created ${project}, a financial planning tool that helps users set goals, track savings, and manage investments.`,
+
+`${name} implemented ${project} to analyze business profitability by calculating margins, costs, and revenue trends.`,
+
+`${name} designed ${project} to simulate investment scenarios and predict returns under different market conditions.`,
+
+`${name} developed ${project}, a budgeting application that integrates multiple accounts for unified financial management.`,
+
+`${name} built ${project} to generate financial statements such as balance sheets and income statements automatically.`,
+
+`${name} created ${project}, a risk assessment tool that evaluates financial exposure and suggests mitigation strategies.`,
+
+`${name} engineered ${project} to optimize expense allocation using data-driven insights and cost analysis techniques.`
+];
+    }
+
+    if (field === "Design") {
+      return [
+`${name} designed ${project} focusing on seamless UI/UX, combining modern aesthetics and intuitive navigation to enhance user interaction.`,
+
+`${name} built ${project} as a comprehensive branding identity, focusing on color theory and typography to deliver a professional visual experience.`,
+
+`${name} created ${project}, a responsive web layout that prioritizes mobile-first design and accessibility for a diverse range of users.`,
+
+`${name} developed ${project} with a user-centered design approach, ensuring intuitive workflows and enhanced usability across all devices.`,
+
+`${name} crafted ${project}, a visually engaging interface that balances creativity and functionality to improve overall user satisfaction.`,
+
+`${name} designed ${project} using modern design principles such as minimalism and consistency to create a clean and impactful user experience.`,
+
+`${name} built ${project}, an interactive prototype that demonstrates smooth transitions, animations, and engaging micro-interactions.`,
+
+`${name} created ${project} focusing on accessibility standards, ensuring inclusive design for users with diverse needs.`,
+
+`${name} developed ${project}, a high-fidelity UI prototype showcasing detailed layouts, color palettes, and typography systems.`,
+
+`${name} designed ${project} to enhance brand storytelling through visually compelling graphics and cohesive design elements.`,
+
+`${name} built ${project}, a modern dashboard interface that visualizes data effectively using charts, layouts, and color hierarchy.`,
+
+`${name} created ${project}, a design system that standardizes components, styles, and interactions for consistent user experience.`,
+
+`${name} engineered ${project} with a focus on responsive design, ensuring optimal performance across mobile, tablet, and desktop screens.`,
+
+`${name} designed ${project} to improve user engagement by incorporating interactive elements and intuitive visual feedback.`,
+
+`${name} developed ${project}, a creative portfolio showcasing innovative layouts and unique visual concepts.`,
+
+`${name} built ${project} with emphasis on usability testing and iterative improvements to refine the overall user experience.`,
+
+`${name} created ${project}, a modern landing page optimized for conversions using strategic layout and visual hierarchy.`,
+
+`${name} designed ${project} to deliver a smooth and engaging digital experience through thoughtful animations and transitions.`,
+
+`${name} developed ${project}, a visually appealing interface that integrates branding elements for a strong identity.`,
+
+`${name} built ${project} focusing on clean layouts, whitespace utilization, and readability to enhance user interaction.`
+];
+    }
+
+    if (field === "Business") {
+      return [
+`${name} developed ${project} as a strategic business model, focusing on market penetration and efficient resource allocation for growth.`,
+
+`${name} managed ${project} to optimize sales workflows, implementing CRM logic and data tracking to increase lead conversion rates.`,
+
+`${name} created ${project} to improve team collaboration, featuring an organized system for project tracking and strategic goal setting.`,
+
+`${name} built ${project}, a customer relationship management system designed to enhance client engagement and retention strategies.`,
+
+`${name} designed ${project} to analyze market trends and consumer behavior, enabling data-driven business decisions.`,
+
+`${name} developed ${project}, a business analytics dashboard that tracks KPIs and improves performance monitoring.`,
+
+`${name} created ${project} to streamline supply chain operations, reducing costs and improving delivery efficiency.`,
+
+`${name} managed ${project}, implementing effective marketing strategies to increase brand visibility and customer acquisition.`,
+
+`${name} built ${project}, a sales tracking system that monitors revenue, targets, and performance metrics in real-time.`,
+
+`${name} designed ${project} to improve operational efficiency by automating routine business processes and workflows.`,
+
+`${name} developed ${project}, a startup business plan focusing on scalability, profitability, and competitive positioning.`,
+
+`${name} created ${project} to enhance digital marketing campaigns using analytics and targeted customer segmentation.`,
+
+`${name} built ${project}, a project management tool that improves task allocation, deadlines, and team productivity.`,
+
+`${name} implemented ${project} to optimize pricing strategies based on market demand and competitor analysis.`,
+
+`${name} designed ${project} to improve customer experience by integrating feedback systems and service enhancements.`,
+
+`${name} developed ${project}, a business forecasting tool that predicts sales trends and supports strategic planning.`,
+
+`${name} created ${project} to manage inventory efficiently, reducing waste and improving stock control.`,
+
+`${name} built ${project}, a lead generation system that captures and nurtures potential clients through automated workflows.`,
+
+`${name} engineered ${project} to evaluate business risks and develop mitigation strategies for sustainable growth.`,
+
+`${name} designed ${project} focusing on improving profitability through cost analysis and revenue optimization techniques.`
+];
+    }
+
+    // Default Project Suggestions
+   return [
+`${name} developed ${project} using modern technologies, focusing on functionality, user experience, and performance to solve problems.`,
+
+`${name} created ${project} demonstrating strong problem-solving skills, efficient design, and practical implementation of core concepts.`,
+
+`${name} engineered ${project} to highlight key technical skills, featuring a user-friendly interface and optimized logic to handle data.`,
+
+`${name} built ${project}, a practical application designed to solve real-world problems through efficient coding and structured logic.`,
+
+`${name} designed ${project} focusing on clean architecture and maintainable code, ensuring scalability and performance.`,
+
+`${name} developed ${project} as a full-stack solution, integrating frontend and backend technologies for seamless functionality.`,
+
+`${name} created ${project}, an interactive system that improves user engagement through responsive design and smooth navigation.`,
+
+`${name} implemented ${project} to automate tasks and reduce manual effort, improving efficiency and accuracy.`,
+
+`${name} built ${project}, a data-driven application that processes and displays information effectively using optimized algorithms.`,
+
+`${name} designed ${project} to enhance user experience by combining intuitive UI with robust backend functionality.`,
+
+`${name} developed ${project}, a scalable system capable of handling multiple users and dynamic data efficiently.`,
+
+`${name} engineered ${project} to demonstrate strong logical thinking, incorporating structured workflows and error handling.`,
+
+`${name} created ${project}, a responsive application optimized for performance across devices and platforms.`,
+
+`${name} built ${project} using best coding practices, ensuring readability, reusability, and maintainability of code.`,
+
+`${name} designed ${project} to handle real-time data processing, improving system responsiveness and user interaction.`,
+
+`${name} developed ${project}, a modular application where components are reusable and easy to manage.`,
+
+`${name} implemented ${project} to showcase integration of APIs and external services for enhanced functionality.`,
+
+`${name} built ${project}, focusing on security and data validation to ensure reliable system performance.`,
+
+`${name} engineered ${project} with optimized logic to reduce processing time and improve overall efficiency.`,
+
+`${name} created ${project}, a versatile application adaptable to different use cases and user requirements.`
+];
+  }

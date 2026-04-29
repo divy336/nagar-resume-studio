@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basic Info</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --bg: #f1f5f9;
+}
+
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 600px;
+}
+
+h2 { text-align: center; color: var(--primary); }
+
+.form-group { margin-bottom: 15px; }
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+textarea { resize: none; }
+
+button {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover { background: #1d4ed8; }
+
+/* Suggestions */
+.suggestions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggest-badge {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.suggest-badge:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.feedback {
+    font-size: 13px;
+    color: var(--primary);
+    margin-top: 5px;
+}
+.suggestions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    max-height: 120px;   /* 🔥 control height */
+    overflow-y: auto;    /* 🔥 enable scroll */
+    padding-right: 5px;
+}
+
+/* Optional scrollbar styling */
+.suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+}
+.suggestions {
+    display: block;
+}
+@media (max-width: 600px) {
+
+    .suggestions {
+        max-height: 100px;   /* 🔽 smaller height */
+        overflow-y: auto;
+        gap: 5px;
+    }
+
+    .suggest-badge {
+        font-size: 11px;     /* 🔽 smaller text */
+        padding: 4px 8px;    /* 🔽 compact */
+        max-width: 140px;    /* 🔥 prevent big width */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+  /* keep single line */
+.suggest-badge {
+    background: #eef2ff;
+    color: #2563eb;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+
+    /* 🔥 IMPORTANT FIX */
+    white-space: normal;     /* allow next line */
+    word-break: break-word;  /* break long words */
+    max-width: 100%;
+}
+
+.suggest-badge:hover {
+    background: #2563eb;
+    color: #fff;
+}
+.suggest-btn {
+    background: #eef2ff;
+    color: #2563eb;
+    border: none;
+    padding: 5px 10px;      /* 🔽 smaller */
+    border-radius: 6px;
+    font-size: 12px;        /* 🔽 smaller text */
+    cursor: pointer;
+    margin-top: 8px;
+    display: inline-block;  /* 🔥 prevent full width */
+    width: auto;            /* 🔥 auto size */
+    transition: all 0.2s ease;
+}
+
+.suggest-btn:hover {
+    background: #2563eb;
+   
+    color: white;
+}
+.linkedin-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.linkedin-prefix {
+    padding: 0 10px;
+    font-size: 12px;
+    color: #64748b;
+    background: #f1f5f9;
+    border-right: 1px solid #e2e8f0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.linkedin-wrapper input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    flex: 1;
+    background: transparent;
+}
+
+
+
+
+
+.step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.step {
+    text-align: center;
+    cursor: pointer;
+}
+
+.step span {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.step.active span {
+    background: #3b82f6;
+    color: white;
+}
+
+.step p {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.line {
+    width: 50px;
+    height: 3px;
+    background: #e5e7eb;
+}
+</style>
+</head>
+
+<body> 
+
+<div class="card">
+    <h2>Basic Information</h2>
+<div class="step-nav">
+  <div class="step" onclick="goDashboard()">
+        <span>🏠</span>
+        <p>Dashboard     </p>
+    </div>
+        <div class="line"></div>
+
+
+    <div class="step {{ 'active' if current_step == 1 else '' }}" onclick="goStep(1)">
+        <span>1</span><p>Basic</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 2 else '' }}" onclick="goStep(2)">
+        <span>2</span><p>Details</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 3 else '' }}" onclick="goStep(3)">
+        <span>3</span><p>Education</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 4 else '' }}" onclick="goStep(4)">
+        <span>4</span><p>Upload</p>
+    </div>
+
+
+    <!-- Optional: disable click on current step -->
+   
+</div>
+
+
+<form method="POST">
+<input type="hidden" name="next_step" id="nextStep">
+
+<div class="form-group">
+<label>Choose Career *</label>
+<select id="career" name="career" required>
+
+    <option value="" {% if not resume.get('career') %}selected{% endif %}>
+        Select
+    </option>
+
+    <option value="Business"
+        {% if resume.get('career') == 'Business' %}selected{% endif %}>
+        Business (BBA / MBA / B.Com / M.Com)
+    </option>
+
+    <option value="Design"
+        {% if resume.get('career') == 'Design' %}selected{% endif %}>
+        Design (UI/UX, Graphic, Web, Product, Visual)
+    </option>
+
+    <option value="Finance"
+        {% if resume.get('career') == 'Finance' %}selected{% endif %}>
+        Finance (Accounting, Banking, Analyst, Taxation, Audit)
+    </option>
+
+    <option value="Other"
+        {% if resume.get('career') == 'Other' %}selected{% endif %}>
+        Other (General, Support, Operations, Admin, Other)
+        
+    </option>
+
+</select>
+
+<div id="careerFeedback" class="feedback"></div>
+</div>
+<label>Enter Your Field</label>
+<input type="text"
+       name="field_name"
+       placeholder="Teacher / Chef / Designer"
+       value="{{ resume.field_name or '' }}">
+
+<div class="form-group">
+<label>Name</label>
+<input type="text" name="name"  value="{{ resume.get('name','') }}" placeholder="Full name">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email"  name="email" value="{{ resume.get('email','') }}" >
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input type="text" id="phone" name="phone" value="{{ resume.get('phone','') }}" placeholder="10-digit number">
+</div>
+<div class="form-group">
+    <label>Address</label>
+    <input type="text" name="address" placeholder="City, State" value="{{ resume.get('address','') }}">
+</div>
+<div class="form-group">
+    <label>LinkedIn (Optional)</label>
+    <div class="linkedin-wrapper">
+        <span class="linkedin-prefix">https://linkedin.com/in/</span>
+        <input type="text" name="linkedin" placeholder="your-username" value="{{ resume.get('linkedin','') }}">
+    </div>
+</div>
+<div class="form-group">
+<label>Objective</label>
+<textarea id="objective" name="objective" rows="3" >{{ resume.get('objective','') }}</textarea>
+
+
+<div>
+    Characters: <span id="charCount">0</span> / 180
+</div>
+<button type="button" id="toggleSuggestions" class="suggest-btn">
+    Show Suggestions
+</button>
+
+<div id="objectiveSuggestions" class="suggestions" style="display:none;"></div>
+
+<button type="submit">Save</button>
+</div>
+</form>
+</div>
+
+<script>
+
+function toggleOtherField() {
+    let career = document.getElementById("career").value;
+    let box = document.getElementById("otherBox");
+
+    if(career === "Other"){
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+
+window.onload = toggleOtherField;
+
+
+
+    function goDashboard() {
+    window.location.href = "/dashbord";
+}
+
+function goStep(step) {
+
+    let form = document.querySelector("form");
+
+    if(form){
+        document.getElementById("nextStep").value = step;
+        form.submit(); // 🔥 submit current page form
+    } else {
+        redirectStep(step);
+    }
+}
+
+function redirectStep(step){
+    const routes = {
+        1: "/first_page",
+        2: "/second_page",
+        3: "/third_page",
+        4: "/forth_page",
+        5: "/fifth_page"
+    };
+
+    window.location.href = routes[step];
+}
+
+const careerSelect = document.getElementById("career");
+const suggestionBox = document.getElementById("objectiveSuggestions");
+const objectiveField = document.getElementById("objective");
+const feedback = document.getElementById("careerFeedback");
+const toggleBtn = document.getElementById("toggleSuggestions");
+const nameInput = document.querySelector("input[name='name']");
+const textarea = document.getElementById("objective");
+const charCount = document.getElementById("charCount");
+
+textarea.addEventListener("input", function () {
+    let length = this.value.length;
+    charCount.innerText = length;
+});
+let visible = false;
+
+
+
+// 🔥 DATA MAP
+const dataMap = {
+    Business: [
+        "[NAME] is a motivated professional seeking to apply strong analytical and leadership skills in the [FIELD] field to improve business performance and support growth.",
+        "[NAME] aims to contribute strategic thinking and communication skills within the [FIELD] domain to enhance operations and achieve company goals effectively.",
+        "[NAME] is a results-driven individual looking to utilize problem-solving and management abilities in the [FIELD] sector to drive efficiency and success.",
+        "[NAME] seeks a challenging role in the [FIELD] field to apply leadership and teamwork skills in improving business processes and development.",
+        "[NAME] is passionate about growth in the [FIELD] field and aims to use innovative thinking to support company objectives and productivity.",
+        "[NAME] aims to build a strong career in the [FIELD] sector by applying management and analytical skills to contribute effectively.",
+        "[NAME] is an enthusiastic professional seeking opportunities in the [FIELD] field to apply planning and leadership abilities.",
+        "[NAME] looks forward to contributing to the [FIELD] domain through effective decision-making and teamwork skills.",
+        "[NAME] is a dedicated individual aiming to enhance performance in the [FIELD] field through strong communication and planning skills.",
+        "[NAME] seeks to apply creative and analytical thinking in the [FIELD] field to solve business challenges and support growth.",
+        "[NAME] is committed to delivering value in the [FIELD] sector by utilizing leadership and management skills effectively.",
+        "[NAME] aims to contribute to success in the [FIELD] field by applying strategic thinking and communication skills.",
+        "[NAME] is a proactive individual seeking to apply business knowledge in the [FIELD] field to support company goals.",
+        "[NAME] is eager to use problem-solving skills in the [FIELD] sector to contribute to success and improve efficiency.",
+        "[NAME] aims to grow professionally in the [FIELD] domain by contributing innovative ideas and effective planning skills.",
+        "[NAME] is a goal-oriented professional seeking to enhance processes in the [FIELD] field through leadership abilities.",
+        "[NAME] is passionate about achieving success in the [FIELD] field through teamwork and effective communication.",
+        "[NAME] aims to support growth in the [FIELD] sector by applying decision-making skills and leadership qualities.",
+        "[NAME] is a motivated individual looking to contribute to development in the [FIELD] field through innovative thinking.",
+        "[NAME] seeks to build a successful career in the [FIELD] field by applying management skills and supporting growth."
+    ],
+    Design: [
+"[NAME] is a creative professional in the [FIELD] field focused on delivering visually engaging and user-friendly designs that enhance user experience and brand identity.",
+"[NAME] aims to contribute innovative design thinking and creative skills in the [FIELD] domain to develop impactful visual solutions and improve user interaction.",
+"[NAME] is passionate about creating intuitive and aesthetic designs in the [FIELD] field to enhance usability and deliver meaningful digital experiences.",
+"[NAME] seeks to apply creative problem-solving and visual storytelling skills in the [FIELD] field to build engaging and user-centric design solutions.",
+"[NAME] is a detail-oriented designer aiming to use creativity and innovation in the [FIELD] field to develop modern and functional design concepts.",
+"[NAME] aims to utilize design thinking and creativity in the [FIELD] field to create visually appealing and user-focused digital experiences.",
+"[NAME] is a dedicated professional seeking to enhance user experience through creative design solutions in the [FIELD] field.",
+"[NAME] looks forward to applying artistic and technical skills in the [FIELD] field to deliver high-quality and engaging visual designs.",
+"[NAME] is committed to creating impactful and user-friendly designs in the [FIELD] field that improve engagement and communication.",
+"[NAME] aims to contribute creative and innovative ideas in the [FIELD] field to develop visually appealing and effective design solutions.",
+"[NAME] is passionate about combining creativity and usability in the [FIELD] field to produce engaging and functional design outcomes.",
+"[NAME] seeks to utilize visual design skills and creative thinking in the [FIELD] field to enhance brand identity and user satisfaction.",
+"[NAME] is an enthusiastic designer aiming to apply innovative concepts in the [FIELD] field to create modern and meaningful design experiences.",
+"[NAME] aims to build a strong career in the [FIELD] field by delivering creative and user-centered design solutions.",
+"[NAME] is focused on developing visually attractive and intuitive designs in the [FIELD] field to improve user engagement and experience.",
+"[NAME] seeks to apply creativity and technical design skills in the [FIELD] field to produce impactful and user-friendly designs.",
+"[NAME] is passionate about visual storytelling and aims to create engaging designs in the [FIELD] field that enhance communication and branding.",
+"[NAME] aims to use creativity and innovation in the [FIELD] field to design solutions that are both functional and visually appealing.",
+"[NAME] is a motivated designer seeking to contribute creative ideas and design expertise in the [FIELD] field to support business goals.",
+"[NAME] seeks to develop creative and user-focused design solutions in the [FIELD] field that improve usability and overall experience."
+    ],
+    Finance: [
+       "[NAME] is a detail-oriented professional in the [FIELD] field aiming to apply strong analytical and financial management skills to support organizational growth and stability.",
+"[NAME] seeks to contribute financial analysis and problem-solving skills in the [FIELD] domain to improve decision-making and ensure effective resource management.",
+"[NAME] is passionate about financial planning and aims to utilize analytical skills in the [FIELD] field to enhance business performance and efficiency.",
+"[NAME] is a motivated individual seeking to apply financial knowledge and analytical abilities in the [FIELD] field to support business success and growth.",
+"[NAME] aims to utilize strong numerical and analytical skills in the [FIELD] field to assist in financial planning and strategic decision-making.",
+"[NAME] is committed to delivering accurate financial insights in the [FIELD] field to improve organizational efficiency and support growth.",
+"[NAME] seeks to apply financial analysis and problem-solving skills in the [FIELD] field to enhance operational performance and decision-making.",
+"[NAME] is a dedicated professional aiming to use financial expertise in the [FIELD] field to contribute to business development and stability.",
+"[NAME] aims to build a strong career in the [FIELD] field by applying analytical and financial management skills to support company objectives.",
+"[NAME] is an enthusiastic professional seeking opportunities in the [FIELD] field to apply financial knowledge and improve organizational outcomes.",
+"[NAME] seeks to contribute analytical thinking and financial planning skills in the [FIELD] field to drive efficiency and business success.",
+"[NAME] is focused on delivering accurate financial solutions in the [FIELD] field to enhance business performance and decision-making.",
+"[NAME] aims to apply strong analytical and numerical skills in the [FIELD] field to support financial planning and organizational growth.",
+"[NAME] is passionate about financial analysis and seeks to contribute innovative solutions in the [FIELD] field to improve efficiency.",
+"[NAME] is a goal-oriented professional aiming to apply financial management skills in the [FIELD] field to support strategic business decisions.",
+"[NAME] seeks to utilize financial expertise and analytical skills in the [FIELD] field to contribute to organizational success and growth.",
+"[NAME] aims to enhance business performance by applying financial planning and analysis skills in the [FIELD] field.",
+"[NAME] is committed to using financial knowledge and analytical thinking in the [FIELD] field to improve efficiency and support growth.",
+"[NAME] seeks to build a successful career by applying financial analysis and decision-making skills in the [FIELD] field.",
+"[NAME] is a proactive individual aiming to contribute financial insights and strategic thinking in the [FIELD] field to support business success."
+    ],
+    Other: [
+       "[NAME] is a motivated professional seeking opportunities in the [FIELD] field to apply skills, gain experience, and contribute effectively to organizational growth.",
+"[NAME] aims to build a strong career in the [FIELD] field by utilizing problem-solving and communication skills to support company success and development.",
+"[NAME] is a dedicated individual looking to apply knowledge and skills in the [FIELD] field to contribute to organizational goals and improve performance.",
+"[NAME] seeks to utilize creativity and analytical thinking in the [FIELD] field to support innovation and achieve business objectives effectively.",
+"[NAME] is passionate about learning and growth, aiming to contribute skills and dedication in the [FIELD] field to enhance productivity and success.",
+"[NAME] aims to apply strong work ethics and adaptability in the [FIELD] field to support team goals and improve overall efficiency.",
+"[NAME] is a goal-oriented individual seeking to contribute skills and knowledge in the [FIELD] field to achieve personal and organizational success.",
+"[NAME] seeks to build a successful career in the [FIELD] field by applying dedication, teamwork, and problem-solving skills effectively.",
+"[NAME] is a proactive individual aiming to utilize skills and learning ability in the [FIELD] field to contribute to company growth and innovation.",
+"[NAME] aims to contribute positively in the [FIELD] field by applying strong communication and organizational skills to support business success."
+    ]
+};
+
+
+
+
+// 🔥 FUNCTION: GENERATE + SHOW SUGGESTIONS
+function showSuggestions() {
+
+    const selected = careerSelect.value;
+    const name = nameInput.value || "Your Name";
+
+    suggestionBox.innerHTML = "";
+
+    if (!dataMap[selected]) return;
+
+    dataMap[selected].forEach(text => {
+
+        const finalText = text
+            .replace("[NAME]", name)
+            .replace("[FIELD]", selected);
+
+        const span = document.createElement("span");
+        span.className = "suggest-badge";
+        span.innerText = finalText;
+
+        span.onclick = () => {
+            objectiveField.value = finalText;
+                objectiveField.dispatchEvent(new Event("input"));
+
+        };
+
+        suggestionBox.appendChild(span);
+    });
+}
+
+// 🔥 TOGGLE BUTTON
+toggleBtn.addEventListener("click", () => {
+
+    visible = !visible;
+
+    if (visible) {
+        suggestionBox.style.display = "flex";
+        toggleBtn.innerText = "Hide Suggestions";
+        showSuggestions();
+    } else {
+        suggestionBox.style.display = "none";
+        toggleBtn.innerText = "Show Suggestions";
+    }
+});
+
+// 🔥 CAREER CHANGE
+careerSelect.addEventListener("change", () => {
+    const selected = careerSelect.value;
+    feedback.innerText = "Selected: " + selected;
+
+    if (visible) showSuggestions();
+});
+
+// 🔥 NAME LIVE UPDATE
+nameInput.addEventListener("input", () => {
+    if (visible) showSuggestions();
+});
+
+// 🔥 PHONE VALIDATION
+document.querySelector("form").onsubmit = function() {
+    const phone = document.getElementById("phone").value;
+    if (!/^\d{10}$/.test(phone)) {
+        alert("Enter valid 10-digit phone");
+        return false;
+    }
+};
+
+</script>
+
+</body>
+</html>

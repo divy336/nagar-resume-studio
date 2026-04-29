@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 3 - Education & Experience</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #e8f4fd 0%, #faf8f3 50%, #eef3fb 100%); min-height: 100vh; padding: 30px 16px; }
+        .container { max-width: 900px; margin: auto; background: #ffffff; padding: 36px 40px; border-radius: 20px; box-shadow: 0 4px 32px rgba(59, 130, 246, 0.08), 0 1px 4px rgba(0,0,0,0.04); }
+        .form-header { text-align: center; margin-bottom: 24px; }
+        .form-header h2 { font-size: 24px; font-weight: 700; color: #1a3a5c; margin-bottom: 6px; }
+        .form-header p { font-size: 14px; color: #7b9dbf; }
+        .progress { height: 7px; background: #e2edf8; border-radius: 99px; margin-bottom: 32px; overflow: hidden; }
+        .progress-bar { width: 75%; height: 100%; background: linear-gradient(90deg, #60a5fa, #2563eb); border-radius: 99px; position: relative; animation: shimmer 2.5s infinite; }
+        .progress-bar::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: rgba(255,255,255,0.35); animation: shine 2.5s infinite; border-radius: 99px; }
+        @keyframes shine { 0% { left: -60%; } 100% { left: 130%; } }
+        .section { margin-bottom: 30px; }
+        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1.5px solid #dce9f8; }
+        .section-head .accent { width: 4px; height: 20px; background: linear-gradient(180deg, #60a5fa, #2563eb); border-radius: 99px; flex-shrink: 0; }
+        .section-head h3 { font-size: 16px; font-weight: 600; color: #1a3a5c; }
+        .card { background: linear-gradient(135deg, #f5f9ff 0%, #f9fbff 100%); border: 1px solid #d0e4f8; border-radius: 14px; padding: 18px; margin-bottom: 14px; position: relative; transition: 0.2s; }
+        .card:hover { border-color: #93c5fd; box-shadow: 0 2px 12px rgba(59,130,246,0.1); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        label { font-size: 11.5px; font-weight: 600; color: #6e90b0; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        input, textarea { width: 100%; padding: 10px 13px; border: 1.5px solid #c8ddf5; border-radius: 9px; font-size: 14px; color: #1a3a5c; outline: none; transition: 0.2s; }
+        input:focus, textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3.5px rgba(59,130,246,0.13); }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn { padding: 9px 16px; border: none; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .btn.add { background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe; margin-top: 6px; }
+        .btn.add:hover { background: #dbeafe; border-color: #60a5fa; transform: translateY(-1px); }
+        .btn.remove { background: #fff5f5; color: #ef4444; border: 1.5px solid #fecaca; font-size: 11.5px; padding: 5px 11px; position: absolute; top: 13px; right: 13px; border-radius: 7px; }
+        .btn.remove:hover { background: #fee2e2; border-color: #fca5a5; }
+        .btn.submit { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; width: 100%; padding: 14px; font-size: 15px; font-weight: 700; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); }
+        .btn.submit:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+        .count-badge { margin-left: auto; font-size: 11px; font-weight: 600; color: #7baadb; background: #e8f2fc; padding: 2px 9px; border-radius: 99px; border: 1px solid #c8ddf5; }
+        .suggest-btn { font-size: 10px; color: #2563eb; background: #ffffff; border: 1px solid #bfdbfe; padding: 2px 6px; border-radius: 4px; cursor: pointer; margin-left: 10px; transition: 0.2s; }
+        .suggest-btn:hover { background: #eff6ff; }
+
+        /* ── NEW: bullet button style ── */
+        .bullet-btn { font-size: 10px; color: #059669; background: #f0fdf4; border: 1px solid #6ee7b7; padding: 2px 6px; border-radius: 4px; cursor: pointer; margin-left: 6px; transition: 0.2s; }
+        .bullet-btn:hover { background: #dcfce7; border-color: #34d399; }
+
+        #suggestionModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .suggestion-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 13px; color: #333; }
+        .suggestion-item:hover { background: #f0f7ff; }
+        @media (max-width: 600px) { .grid, .extra-grid { grid-template-columns: 1fr; } }
+
+        .step-nav { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .step { text-align: center; cursor: pointer; }
+        .step span { display: flex; width: 35px; height: 35px; background: #e5e7eb; border-radius: 50%; align-items: center; justify-content: center; margin: auto; font-weight: bold; transition: 0.3s; }
+        .step.active span { background: #3b82f6; color: white; }
+        .step p { font-size: 12px; margin-top: 5px; }
+        .line { width: 50px; height: 3px; background: #e5e7eb; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-header">
+        <h2>Step 3: Education & Experience</h2>
+        <p>Add your academic and professional details</p>
+    </div>
+    <div class="step-nav">
+        <div class="step" onclick="goDashboard()">
+            <span>🏠</span>
+            <p>Dashboard</p>
+        </div>
+        <div class="line"></div>
+        <div class="step {{ 'active' if current_step == 1 else '' }}" onclick="goStep(1)">
+            <span>1</span><p>Basic</p>
+        </div>
+        <div class="line"></div>
+        <div class="step {{ 'active' if current_step == 2 else '' }}" onclick="goStep(2)">
+            <span>2</span><p>Details</p>
+        </div>
+        <div class="line"></div>
+        <div class="step {{ 'active' if current_step == 3 else '' }}" onclick="goStep(3)">
+            <span>3</span><p>Education</p>
+        </div>
+        <div class="line"></div>
+        <div class="step {{ 'active' if current_step == 4 else '' }}" onclick="goStep(4)">
+            <span>4</span><p>Upload</p>
+        </div>
+    </div>
+
+    <form method="POST">
+        <input type="hidden" name="next_step" id="nextStep">
+
+        <!-- EDUCATION SECTION (unchanged) -->
+        <div class="section">
+            <div class="section-head">
+                <div class="accent"></div>
+                <h3 id="educationTitle">Education</h3>
+                <span class="count-badge" id="eduBadge">0 / 2</span>
+            </div>
+            <div id="educationContainer">
+                {% set edu_data = resume.get('education', []) %}
+                {% if not edu_data %}{% set edu_data = [{}] %}{% endif %}
+                
+                {% for edu in edu_data %}
+                <div class="card eduCard">
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid">
+                        <div class="field"><label>Degree</label><input name="degree" placeholder="e.g. B.Tech, MBA" value="{{ edu.degree if edu is mapping else '' }}"></div>
+                        <div class="field"><label>College</label><input name="college" placeholder="College name" value="{{ edu.college if edu is mapping else '' }}"></div>
+                        <div class="field"><label>University</label><input name="university" placeholder="University name" value="{{ edu.university if edu is mapping else '' }}"></div>
+                        <div class="field"><label>CGPA / %</label><input name="cgpa" placeholder="e.g. 8.5" value="{{ edu.cgpa if edu is mapping else '' }}"></div>
+                        <div class="field"><label>Start Year</label><input name="start" placeholder="e.g. 2020" value="{{ edu.start if edu is mapping else '' }}"></div>
+                        <div class="field"><label>End Year</label><input name="end" placeholder="e.g. 2024" value="{{ edu.end if edu is mapping else '' }}"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn add" id="addEdu">＋ Add Education</button>
+        </div>
+
+        <!-- EXPERIENCE SECTION -->
+        <div class="section" id="experienceSection">
+            <div class="section-head">
+                <div class="accent"></div>
+                <h3>Experience / Internship</h3>
+                <span class="count-badge" id="expBadge">0 / 2</span>
+            </div>
+            <div id="expContainer">
+                {% for exp in resume.get('experience_data', []) %}
+                {% set idx = loop.index %}
+                <div class="card">
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid" style="margin-bottom:10px">
+                        <div class="field"><label>Role</label><input name="role" class="role-input" value="{{ exp.role if exp is mapping else '' }}"></div>
+                        <div class="field"><label>Company</label><input name="company" value="{{ exp.company if exp is mapping else '' }}"></div>
+                    </div>
+                    <div class="field" style="margin-bottom:10px">
+                        <label>Duration</label><input name="duration" value="{{ exp.duration if exp is mapping else '' }}">
+                    </div>
+                    <div class="field">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <label style="margin-bottom:0;">
+                                Description
+                                <button type="button" class="suggest-btn" onclick="openSuggestions('exp', 'exp_desc_{{ idx }}', this)">💡 Suggest</button>
+                                <!-- ✅ NEW: Bullet button targeting textarea by ID directly -->
+                                <button type="button" class="bullet-btn" onclick="addBullet('exp_desc_{{ idx }}')">• Add Point</button>
+                            </label>
+                            <span id="exp_count_{{ idx }}" style="font-size: 10px; font-weight: bold; color: #7baadb;">0 / 800</span>
+                        </div>
+                        <textarea id="exp_desc_{{ idx }}" name="exp_desc" oninput="validateDescription(this, 'exp_count_{{ idx }}')" placeholder="Briefly describe your role...">{{ exp.desc if exp is mapping else '' }}</textarea>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn add" id="addExp">＋ Add Experience</button>
+        </div>
+
+        <!-- PROJECTS SECTION -->
+        <div class="section" id="projectSection">
+            <div class="section-head">
+                <div class="accent"></div>
+                <h3 id="projectTitle">Projects</h3>
+                <span class="count-badge" id="projBadge">0 / 3</span>
+            </div>
+            <div id="projectContainer">
+                {% for proj in resume.get('projects', []) %}
+                {% set idx = loop.index %}
+                <div class="card">
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid" style="margin-bottom:10px">
+                        <div class="field"><label>Title</label><input name="project_title" class="role-input" value="{{ proj.title if proj is mapping else '' }}"></div>
+                        <div class="field"><label>Tech Stack</label><input name="project_tech" value="{{ proj.tech if proj is mapping else '' }}"></div>
+                    </div>
+                    <div class="field">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <label style="margin-bottom:0;">
+                                Description
+                                <button type="button" class="suggest-btn" onclick="openSuggestions('proj', 'proj_desc_{{ idx }}', this)">💡 Suggest</button>
+                                <!-- ✅ NEW: Bullet button for project -->
+                                <button type="button" class="bullet-btn" onclick="addBullet('proj_desc_{{ idx }}')">• Add Point</button>
+                            </label>
+                            <span id="proj_count_{{ idx }}" style="font-size: 10px; font-weight: bold; color: #7baadb;">0 / 180</span>
+                        </div>
+                        <textarea id="proj_desc_{{ idx }}" name="project_desc" oninput="validateDescription(this, 'proj_count_{{ idx }}')" placeholder="What did you build (120-180 chars)?">{{ proj.desc if proj is mapping else '' }}</textarea>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn add" id="addProj">＋ Add Project</button>
+        </div>
+
+        <!-- EXTRA DETAILS (unchanged) -->
+        <div class="section">
+            <div class="section-head">
+                <div class="accent"></div>
+                <h3>Extra Details</h3>
+            </div>
+            <div class="extra-grid">
+                <div class="field">
+                    <label>Languages</label>
+                    <input name="languages" placeholder="e.g. English, Hindi" value="{{ resume.get('languages','') }}">
+                </div>
+                <div class="field">
+                    <label>Hobbies</label>
+                    <input name="hobbies" placeholder="e.g. Reading, Cricket" value="{{ resume.get('hobbies','') }}">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn submit" type="submit">Save and Continue →</button>
+    </form>
+</div>
+
+<!-- SUGGESTION MODAL (unchanged) -->
+<div id="suggestionModal">
+    <div class="modal-content">
+        <h3 style="font-size: 16px; margin-bottom: 15px; color: #1a3a5c;">Select a Suggestion</h3>
+        <div id="suggestionList"></div>
+        <button type="button" class="btn" style="width: 100%; margin-top: 15px; background: #eee; color: #333;" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────
+   ✅ NEW: addBullet — targets textarea by ID directly.
+   No DOM traversal. Works for static & dynamic cards.
+───────────────────────────────────────────── */
+function addBullet(textareaId) {
+    var ta = document.getElementById(textareaId);
+    if (!ta) return;
+
+    var bullet = ta.value.length === 0 ? "• " : "\n• ";
+    var start = ta.selectionStart;
+    var end   = ta.selectionEnd;
+
+    // Insert at cursor position (or append if no selection)
+    ta.value = ta.value.substring(0, start) + bullet + ta.value.substring(end);
+
+    // Move cursor to after the inserted bullet
+    var newPos = start + bullet.length;
+    ta.setSelectionRange(newPos, newPos);
+    ta.focus();
+
+    // Trigger input event so character counter updates automatically
+    ta.dispatchEvent(new Event('input'));
+}
+
+/* ─────────────────────────────────────────────
+   All original code below — completely unchanged
+───────────────────────────────────────────── */
+function goDashboard() {
+    window.location.href = "/dashbord";
+}
+function goStep(step) {
+    let form = document.querySelector("form");
+    if(form){
+        document.getElementById("nextStep").value = step;
+        form.submit();
+    } else {
+        redirectStep(step);
+    }
+}
+window.onload = function () {
+    const group = "{{ group }}";
+    if (group === "Finance" || group === "Business") {
+        document.getElementById("projectSection").style.display = "none";
+    }
+};
+function redirectStep(step){
+    const routes = {
+        1: "/first_page",
+        2: "/second_page",
+        3: "/third_page",
+        4: "/forth_page",
+        5: "/fifth_page"
+    };
+    window.location.href = routes[step];
+}
+
+    const group = "{{ group }}";
+    const exp_level = "{{ resume.get('experience','') }}";
+    const userName = "{{ resume.get('name', 'User') }}";
+
+    const MAX_EDU = 2;
+    const MAX_EXP = 2;
+    const MAX_PROJ = 3;
+
+    let eduCount = 0;
+    let expCount = 0;
+    let projCount = 0;
+    let currentTargetArea = null;
+
+    function updateBadge(id, cur, max) {
+        const badge = document.getElementById(id);
+        if (badge) badge.textContent = cur + " / " + max;
+    }
+
+    function getDirectCards(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return [];
+        return Array.from(container.children).filter(el => el.classList && el.classList.contains("card"));
+    }
+
+    function clampSection(containerId, max, badgeId) {
+        const cards = getDirectCards(containerId);
+        while (cards.length > max) {
+            cards.pop().remove();
+        }
+        const finalCount = getDirectCards(containerId).length;
+        updateBadge(badgeId, finalCount, max);
+        return finalCount;
+    }
+
+    function refreshAllCounts() {
+        eduCount = clampSection("educationContainer", MAX_EDU, "eduBadge");
+        expCount = clampSection("expContainer", MAX_EXP, "expBadge");
+        projCount = clampSection("projectContainer", MAX_PROJ, "projBadge");
+    }
+
+    function validateDescription(textarea, counterId) {
+        const maxChars = 800;
+        const minChars = 120;
+        const counter = document.getElementById(counterId);
+
+        if (!counter || !textarea) return;
+
+        if (textarea.value.length > maxChars) {
+            textarea.value = textarea.value.substring(0, maxChars);
+        }
+
+        const currentLength = textarea.value.length;
+        counter.innerText = `${currentLength} / ${maxChars}`;
+
+        if (currentLength < minChars || currentLength > maxChars) {
+            counter.style.color = "#ef4444";
+            textarea.style.borderColor = "#ef4444";
+        } else {
+            counter.style.color = "#22c55e";
+            textarea.style.borderColor = "#3b82f6";
+        }
+    }
+
+    function closeModal() {
+        document.getElementById("suggestionModal").style.display = "none";
+    }
+
+    function openSuggestions(type, targetId, btn) {
+        currentTargetArea = document.getElementById(targetId);
+        const card = btn.closest(".card");
+        const roleOrTitle = card.querySelector(".role-input")?.value || (type === "exp" ? "Role" : "Project");
+        const listDiv = document.getElementById("suggestionList");
+        listDiv.innerHTML = "";
+
+        const templates = type === "exp" ? getExpTemplates(roleOrTitle) : getProjTemplates(roleOrTitle);
+
+        templates.forEach(text => {
+            const item = document.createElement("div");
+            item.className = "suggestion-item";
+            item.innerText = text;
+            item.onclick = () => {
+                currentTargetArea.value = text;
+                const counterId = targetId.replace("desc", "count");
+                validateDescription(currentTargetArea, counterId);
+                closeModal();
+            };
+            listDiv.appendChild(item);
+        });
+
+        document.getElementById("suggestionModal").style.display = "flex";
+    }
+
+    function removeCard(btn) {
+        const card = btn.parentElement;
+        const isEdu = card.classList.contains("eduCard");
+        const isExp = card.closest("#expContainer") !== null;
+        card.remove();
+
+        if (isEdu) {
+            eduCount = Math.max(0, eduCount - 1);
+            updateBadge("eduBadge", eduCount, MAX_EDU);
+        } else if (isExp) {
+            expCount = Math.max(0, expCount - 1);
+            updateBadge("expBadge", expCount, MAX_EXP);
+        } else {
+            projCount = Math.max(0, projCount - 1);
+            updateBadge("projBadge", projCount, MAX_PROJ);
+        }
+    }
+
+    function getExpTemplates(role) {
+        const name = userName;
+            if (group === "Finance") {
+    return [
+
+`• ${name} worked as a ${role}, analyzing financial statements including balance sheets, income reports, and cash flow data to identify trends and performance gaps.
+• Assisted in preparing detailed financial reports and supported budgeting and forecasting activities for better planning.
+• Collaborated with team members to improve reporting accuracy and ensure compliance with financial regulations and internal policies.`,
+
+`• ${name} gained practical experience as a ${role}, managing daily accounting tasks such as ledger entries, reconciliations, and financial documentation.
+• Assisted in preparing monthly and quarterly financial reports, identifying discrepancies and resolving errors effectively.
+• Improved accuracy and efficiency in financial operations while maintaining proper compliance standards and documentation.`,
+
+`• As a ${role}, ${name} utilized advanced Excel tools like Pivot Tables, VLOOKUP, and charts to analyze financial data and generate meaningful insights.
+• Created automated reports and dashboards to track key performance indicators and reduce manual workload.
+• Supported data-driven decision-making by providing accurate and well-structured financial reports.`,
+
+`• ${name} contributed as a ${role} by supporting budgeting processes, analyzing expenses, and identifying cost-saving opportunities.
+• Monitored financial performance against planned budgets and prepared variance analysis reports.
+• Recommended improvements that enhanced financial efficiency and reduced unnecessary operational costs.`,
+
+`• Working as a ${role}, ${name} assisted in internal audits by reviewing financial transactions and verifying supporting documents.
+• Ensured compliance with accounting standards and company policies while maintaining transparency in reporting.
+• Identified inconsistencies and contributed to improving financial accuracy and accountability.`,
+
+`• ${name} performed financial analysis as a ${role}, evaluating business performance using key financial metrics and trends.
+• Prepared comprehensive reports and provided insights to support strategic planning and business growth.
+• Helped management make informed decisions through accurate and timely financial analysis.`,
+
+`• As a ${role}, ${name} supported tax and compliance tasks including GST calculations and financial documentation.
+• Ensured adherence to regulatory requirements and maintained accurate financial records.
+• Contributed to smooth financial operations by minimizing compliance risks and ensuring timely submissions.`,
+
+`• ${name} worked on financial data management as a ${role}, organizing and analyzing large datasets to generate accurate reports.
+• Improved data handling processes and enhanced reporting efficiency across teams.
+• Provided reliable financial insights to support planning and operational decisions.`
+
+    ];
+        } else if (group === "Design") {
+            return [
+                `${name} worked as a ${role}, creating high-fidelity UI/UX designs and interactive prototypes to greatly enhance the digital user experience.`,
+                `${name} gained hands-on experience as a ${role}, developing visual branding assets and collaborating with teams to deliver modern design solutions.`,
+                `As a ${role}, ${name} designed user-centric layouts, focusing on visual hierarchy and typography to improve brand engagement across platforms.`,
+                `${name} contributed to ${role} tasks by conducting user research and applying modern design trends to effectively solve complex usability challenges.`,
+                `During their time as a ${role}, ${name} managed end-to-end design workflows, ensuring pixel-perfect execution and consistent brand identity.`
+            ];
+        } else if (group === "Business") {
+            return[
+`${name} worked as a ${role}, contributing to business growth through strategic planning and client management:
+• Developed and executed business strategies aligned with company goals
+• Built strong client relationships and improved customer retention
+• Analyzed market trends to identify new business opportunities
+• Coordinated with sales and marketing teams to increase revenue
+• Prepared detailed reports and presentations for senior management
+• Improved operational efficiency by optimizing workflow processes`,
+
+`${name} gained experience as a ${role}, focusing on market research and competitive analysis:
+• Conducted in-depth competitor analysis to understand market positioning
+• Identified potential target audiences and growth segments
+• Assisted in developing marketing strategies based on data insights
+• Evaluated business performance using key performance indicators (KPIs)
+• Supported product development decisions with research findings
+• Collaborated with cross-functional teams to improve business outcomes`,
+
+`${name} worked as a ${role}, managing client accounts and business operations effectively:
+• Handled multiple client accounts ensuring timely delivery of services
+• Maintained professional communication with stakeholders
+• Resolved client issues and improved satisfaction rates
+• Monitored project timelines and ensured deadlines were met
+• Prepared documentation and maintained accurate business records
+• Assisted in business negotiations and contract discussions`,
+
+`${name} served as a ${role}, supporting business development and expansion initiatives:
+• Identified new business opportunities through research and networking
+• Assisted in lead generation and conversion strategies
+• Participated in business meetings and strategy discussions
+• Helped design promotional campaigns to increase brand awareness
+• Strengthened partnerships with vendors and stakeholders
+• Contributed ideas for improving business growth strategies`,
+
+`${name} worked as a ${role}, improving operational processes and internal coordination:
+• Streamlined internal processes to enhance productivity
+• Coordinated between departments for smooth workflow execution
+• Monitored daily operations and reported performance metrics
+• Reduced inefficiencies by implementing better process controls
+• Assisted in training team members and improving team collaboration
+• Maintained accurate data records for business analysis`,
+
+`${name} gained hands-on experience as a ${role}, focusing on sales and revenue generation:
+• Assisted in achieving sales targets through effective communication
+• Generated leads and followed up with potential clients
+• Prepared sales reports and analyzed conversion rates
+• Collaborated with marketing team for campaign execution
+• Improved customer engagement through personalized interactions
+• Identified new strategies to increase overall sales performance`,
+
+`${name} worked as a ${role}, contributing to financial planning and budgeting activities:
+• Assisted in preparing financial reports and budget plans
+• Monitored expenses and ensured cost control measures
+• Analyzed financial data to support decision-making
+• Worked with accounting team to maintain financial records
+• Identified opportunities for cost reduction and profit improvement
+• Supported forecasting and financial strategy planning`,
+
+`${name} served as a ${role}, enhancing customer experience and service quality:
+• Handled customer queries and resolved issues efficiently
+• Improved customer satisfaction through timely support
+• Collected feedback and suggested improvements
+• Coordinated with service teams to ensure quality delivery
+• Maintained strong relationships with existing clients
+• Contributed to building a positive brand image`,
+
+`${name} worked as a ${role}, assisting in project management and execution:
+• Planned and tracked project progress using timelines
+• Coordinated tasks among team members
+• Ensured project deliverables met quality standards
+• Managed documentation and reporting for projects
+• Identified risks and implemented mitigation strategies
+• Delivered projects within deadlines and scope`,
+
+`${name} gained valuable experience as a ${role}, focusing on business analytics and decision support:
+• Analyzed business data to identify trends and patterns
+• Created reports and dashboards for performance tracking
+• Supported management with data-driven insights
+• Evaluated business strategies and suggested improvements
+• Used tools like Excel for data analysis and reporting
+• Helped optimize business decisions through analytical thinking`
+];
+        } else {
+            return [
+                `${name} worked as a ${role}, contributing to workflow efficiency, collaborating with team members, and applying practical skills to achieve goals.`,
+                `${name} gained hands-on experience as a ${role}, assisting in daily operations, analyzing data, and supporting team tasks to enhance performance.`,
+                `As a ${role}, ${name} proactively managed project requirements, adapted to new challenges, and leveraged skills to drive continuous improvement.`,
+                `${name} served as a ${role}, where they refined processes, implemented professional standards, and delivered high-quality work for the team.`,
+                `${name} improved operational efficiency as a ${role}, resolving technical problems quickly and collaborating with peers to meet critical deadlines.`
+            ];
+        }
+    }
+
+    function getProjTemplates(project) {
+        const name = userName;
+        const field = group;
+
+        if (field === "Design") {
+            return [
+                `${name} designed ${project} focusing on seamless UI/UX, combining modern aesthetics and intuitive navigation to enhance user interaction.`,
+                `${name} built ${project} as a comprehensive branding identity, focusing on color theory and typography to deliver a professional visual experience.`,
+                `${name} created ${project}, a responsive web layout that prioritizes mobile-first design and accessibility for a diverse range of users.`,
+                `${name} developed ${project} with a user-centered design approach, ensuring intuitive workflows and enhanced usability across all devices.`,
+                `${name} crafted ${project}, a visually engaging interface that balances creativity and functionality to greatly improve overall user satisfaction.`,
+                `${name} designed ${project} using modern design principles such as minimalism and consistency to create a clean and impactful user experience.`,
+                `${name} built ${project}, an interactive prototype that demonstrates smooth transitions, animations, and engaging micro-interactions effectively.`,
+                `${name} created ${project} focusing heavily on accessibility standards, ensuring highly inclusive design for users with diverse physical needs.`,
+                `${name} developed ${project}, a high-fidelity UI prototype clearly showcasing detailed layouts, modern color palettes, and typography systems.`,
+                `${name} designed ${project} to enhance brand storytelling through visually compelling graphics and highly cohesive design elements throughout.`,
+                `${name} built ${project}, a modern dashboard interface that visualizes complex data effectively using charts, layouts, and clear color hierarchy.`,
+                `${name} created ${project}, a robust design system that standardizes components, styles, and interactions for consistent user experiences.`,
+                `${name} engineered ${project} with a strong focus on responsive design, ensuring optimal performance across mobile, tablet, and desktop screens.`,
+                `${name} designed ${project} to drastically improve user engagement by incorporating interactive elements and highly intuitive visual feedback.`,
+                `${name} developed ${project}, a highly creative portfolio showcasing innovative layouts, unique visual concepts, and professional digital work.`,
+                `${name} built ${project} with heavy emphasis on usability testing and iterative design improvements to constantly refine the user experience.`,
+                `${name} created ${project}, a modern landing page specifically optimized for high conversions using strategic layout and visual hierarchy.`,
+                `${name} designed ${project} to deliver a smooth and engaging digital experience through incredibly thoughtful animations and seamless transitions.`,
+                `${name} developed ${project}, a visually appealing interface that perfectly integrates core branding elements for a remarkably strong identity.`,
+                `${name} built ${project} focusing intensely on clean layouts, whitespace utilization, and perfect readability to maximize user interaction.`
+            ];
+        }
+
+        return [
+            `${name} developed ${project} using modern technologies, focusing strictly on functionality, user experience, and performance to solve problems.`,
+            `${name} created ${project} perfectly demonstrating strong problem-solving skills, highly efficient design, and practical implementation of core concepts.`,
+            `${name} engineered ${project} to proudly highlight key technical skills, featuring a user-friendly interface and highly optimized logic to handle data.`,
+            `${name} built ${project}, a highly practical application designed to effectively solve real-world problems through efficient coding and structured logic.`,
+            `${name} designed ${project} focusing heavily on clean architecture and maintainable code, actively ensuring massive scalability and top performance.`,
+            `${name} developed ${project} as a complete full-stack solution, seamlessly integrating frontend and backend technologies for perfect functionality.`,
+            `${name} created ${project}, a fully interactive system that drastically improves user engagement through perfectly responsive design and smooth navigation.`,
+            `${name} implemented ${project} to cleverly automate repetitive tasks and massively reduce manual effort, drastically improving efficiency and accuracy.`,
+            `${name} built ${project}, a highly data-driven application that carefully processes and displays information effectively using highly optimized algorithms.`,
+            `${name} designed ${project} to completely enhance the entire user experience by perfectly combining intuitive UI with incredibly robust backend functionality.`,
+            `${name} developed ${project}, an incredibly scalable system perfectly capable of handling multiple users and highly dynamic data remarkably efficiently.`,
+            `${name} engineered ${project} to effectively demonstrate extremely strong logical thinking, actively incorporating highly structured workflows and error handling.`,
+            `${name} created ${project}, a beautifully responsive application perfectly optimized for massive performance across all popular devices and platforms.`,
+            `${name} built ${project} using strictly the best coding practices, actively ensuring complete readability, reusability, and massive maintainability of code.`,
+            `${name} designed ${project} to handle heavy real-time data processing, drastically improving core system responsiveness and overall user interaction.`,
+            `${name} developed ${project}, an incredibly modular application where core components are highly reusable and remarkably easy to actively manage.`,
+            `${name} implemented ${project} to actively showcase the seamless integration of various APIs and external services for massively enhanced functionality.`,
+            `${name} built ${project}, focusing strictly on absolute security and tight data validation to effectively ensure incredibly reliable system performance.`,
+            `${name} engineered ${project} with highly optimized logic to massively reduce core processing time and drastically improve overall operational efficiency.`,
+            `${name} created ${project}, an incredibly versatile application easily adaptable to many completely different use cases and highly specific user requirements.`
+        ];
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        refreshAllCounts();
+
+        document.querySelectorAll("textarea").forEach(txt => {
+            const counterId = txt.id.replace("desc", "count");
+            validateDescription(txt, counterId);
+        });
+
+        if (group === "Other") {
+            const addEduBtn = document.getElementById("addEdu");
+            if (addEduBtn) addEduBtn.style.display = "none";
+            
+        }
+
+      
+
+        if (group === "Finance") {
+            const expSection = document.getElementById("experienceSection");
+            if (expSection) expSection.style.display = "block";
+        }
+
+        if (group === "Design") {
+            const pTitle = document.getElementById("projectTitle");
+            if (pTitle) pTitle.innerText = "Portfolio Projects";
+        }
+
+        const addEduBtn = document.getElementById("addEdu");
+        if (addEduBtn) {
+            addEduBtn.addEventListener("click", function () {
+                if (eduCount >= MAX_EDU) {
+                    alert("Maximum 2 education entries allowed");
+                    return;
+                }
+                eduCount++;
+                updateBadge("eduBadge", eduCount, MAX_EDU);
+                const div = document.createElement("div");
+                div.className = "card eduCard";
+                div.innerHTML = `
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid">
+                        <div class="field"><label>Degree</label><input name="degree" placeholder="e.g. BCA"></div>
+                        <div class="field"><label>College</label><input name="college" placeholder="College name"></div>
+                        <div class="field"><label>University</label><input name="university" placeholder="University name"></div>
+                        <div class="field"><label>CGPA / %</label><input name="cgpa" placeholder="e.g. 8.5"></div>
+                        <div class="field"><label>Start Year</label><input name="start" placeholder="2020"></div>
+                        <div class="field"><label>End Year</label><input name="end" placeholder="2024"></div>
+                    </div>`;
+                document.getElementById("educationContainer").appendChild(div);
+            });
+        }
+
+        const addExpBtn = document.getElementById("addExp");
+        if (addExpBtn) {
+            addExpBtn.addEventListener("click", function () {
+                if (expCount >= MAX_EXP) {
+                    alert("Maximum 2 experience entries allowed");
+                    return;
+                }
+                expCount++;
+                updateBadge("expBadge", expCount, MAX_EXP);
+
+                const ts = Date.now();
+                const textAreaId = `exp_desc_${ts}`;
+                const counterId  = `exp_count_${ts}`;
+
+                const div = document.createElement("div");
+                div.className = "card";
+                div.innerHTML = `
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid" style="margin-bottom:10px">
+                        <div class="field"><label>Role</label><input name="role" class="role-input" placeholder="Role"></div>
+                        <div class="field"><label>Company</label><input name="company" placeholder="Company"></div>
+                    </div>
+                    <div class="field" style="margin-bottom:10px">
+                        <label>Duration</label><input name="duration" placeholder="e.g. Jan 2023 – Jun 2023">
+                    </div>
+                    <div class="field">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <label style="margin-bottom:0;">
+                                Description
+                                <button type="button" class="suggest-btn" onclick="openSuggestions('exp', '${textAreaId}', this)">💡 Suggest</button>
+                                <button type="button" class="bullet-btn" onclick="addBullet('${textAreaId}')">• Add Point</button>
+                            </label>
+                            <span id="${counterId}" style="font-size: 10px; font-weight: bold; color: #7baadb;">0 / 800</span>
+                        </div>
+                        <textarea id="${textAreaId}" name="exp_desc" oninput="validateDescription(this, '${counterId}')" placeholder="120-800 chars..."></textarea>
+                    </div>`;
+                document.getElementById("expContainer").appendChild(div);
+            });
+        }
+
+        const addProjBtn = document.getElementById("addProj");
+        if (addProjBtn) {
+            addProjBtn.addEventListener("click", function () {
+                if (projCount >= MAX_PROJ) {
+                    alert("Maximum 3 projects allowed");
+                    return;
+                }
+                projCount++;
+                updateBadge("projBadge", projCount, MAX_PROJ);
+
+                const ts = Date.now();
+                const textAreaId = `proj_desc_${ts}`;
+                const counterId  = `proj_count_${ts}`;
+
+                const div = document.createElement("div");
+                div.className = "card";
+                div.innerHTML = `
+                    <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+                    <div class="grid" style="margin-bottom:10px">
+                        <div class="field"><label>Title</label><input name="project_title" class="role-input" placeholder="Title"></div>
+                        <div class="field"><label>Tech</label><input name="project_tech" placeholder="React, Python"></div>
+                    </div>
+                    <div class="field">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <label style="margin-bottom:0;">
+                                Description
+                                <button type="button" class="suggest-btn" onclick="openSuggestions('proj', '${textAreaId}', this)">💡 Suggest</button>
+                                <button type="button" class="bullet-btn" onclick="addBullet('${textAreaId}')">• Add Point</button>
+                            </label>
+                            <span id="${counterId}" style="font-size: 10px; font-weight: bold; color: #7baadb;">0 / 180</span>
+                        </div>
+                        <textarea id="${textAreaId}" name="project_desc" oninput="validateDescription(this, '${counterId}')" placeholder="120-180 chars..."></textarea>
+                    </div>`;
+                document.getElementById("projectContainer").appendChild(div);
+            });
+        }
+    });
+</script>
+</body>
+</html>

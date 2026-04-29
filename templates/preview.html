@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Resume Preview</title>
+</head>
+
+<body>
+
+<h1>{{ resume.first_name }} {{ resume.last_name }}</h1>
+
+<p>Email: {{ resume.email }}</p>
+<p>Mobile: {{ resume.mobile }}</p>
+
+<h3>Summary</h3>
+<p>{{ resume.summary }}</p>
+
+<h3>Skills</h3>
+{% if resume.skills %}
+  {% if resume.skills is string %}
+    <p>{{ resume.skills }}</p>
+  {% else %}
+    <p>{{ resume.skills | join(", ") }}</p>
+  {% endif %}
+{% else %}
+  <p>No skills added</p>
+{% endif %}
+
+<h3>Education</h3>
+{% if resume.education %}
+  {% for edu in resume.education %}
+    <p>
+      {{ edu.degree or '' }} - 
+      {{ edu.institute or edu.college or '' }}
+    </p>
+  {% endfor %}
+{% else %}
+  <p>No education data</p>
+{% endif %}
+
+<h3>Projects</h3>
+{% if resume.projects %}
+  {% for p in resume.projects %}
+    <p>
+      {{ p.name or '' }} - 
+      {{ p.description or '' }}
+    </p>
+  {% endfor %}
+{% else %}
+  <p>No projects added</p>
+{% endif %}
+
+</body>
+</html>

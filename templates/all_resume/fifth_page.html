@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Review</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* GLOBAL LIGHT THEME VARIABLES */
+:root {
+    --bg-color: #f4f7f9; /* Matches your soft background */
+    --card-bg: #ffffff;
+    --text-heading: #1e3a8a; /* Deep Navy from your screenshot */
+    --text-main: #334155;
+    --text-muted: #64748b;
+    --accent-blue: #3b82f6;
+    --accent-light: #eff6ff;
+    --border-color: #e2e8f0;
+    --box-bg: #f8fafc;
+    --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    --shadow-hover: 0 20px 25px -5px rgba(59, 130, 246, 0.1), 0 8px 10px -6px rgba(59, 130, 246, 0.05);
+}
+
+body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 60px 20px;
+}
+
+/* HEADER */
+.header-wrapper {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin: 0 0 10px 0;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* PREMIUM LIGHT CARDS */
+.section {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 35px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    
+    /* Staggered Animation Setup */
+    opacity: 0;
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: all 0.4s ease;
+}
+
+.section:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Animation Delays */
+.section:nth-child(2) { animation-delay: 0.1s; }
+.section:nth-child(3) { animation-delay: 0.2s; }
+.section:nth-child(4) { animation-delay: 0.3s; }
+.section:nth-child(5) { animation-delay: 0.4s; }
+.section:nth-child(6) { animation-delay: 0.5s; }
+.section:nth-child(7) { animation-delay: 0.6s; }
+
+.section h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section h3::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: var(--accent-blue);
+    border-radius: 4px;
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: var(--accent-light);
+    color: var(--accent-blue);
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.edit-btn:hover {
+    background: var(--accent-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+/* PERSONAL INFO */
+.info {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.info img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.info img:hover {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.info p {
+    margin: 4px 0;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.info b {
+    color: var(--text-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+/* DATA BOXES */
+.box {
+    background: var(--box-bg);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.box:hover {
+    background: white;
+    border-left: 4px solid var(--accent-blue);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.box b {
+    font-size: 1.1rem;
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+.box small {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent-blue);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* TAGS */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tag:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: var(--accent-light);
+    transform: translateY(-2px);
+}
+
+/* SAVE BUTTON CTA */
+.save-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    animation: slideUpFade 0.6s 0.8s forwards;
+    opacity: 0;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    background: #2563eb; /* Slightly darker on hover */
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* KEYFRAMES */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.step {
+    text-align: center;
+    cursor: pointer;
+}
+
+.step span {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.step.active span {
+    background: #3b82f6;
+    color: white;
+}
+
+.step p {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.line {
+    width: 50px;
+    height: 3px;
+    background: #e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="step-nav">
+<div class="step" onclick="goDashboard()">
+        <span>🏠</span>
+        <p>Dashboard     </p>
+    </div>
+        <div class="line"></div>
+    <div class="step {{ 'active' if current_step == 1 else '' }}" onclick="goStep(1)">
+        <span>1</span><p>Basic</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 2 else '' }}" onclick="goStep(2)">
+        <span>2</span><p>Details</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 3 else '' }}" onclick="goStep(3)">
+        <span>3</span><p>Education</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 4 else '' }}" onclick="goStep(4)">
+        <span>4</span><p>Upload</p>
+    </div>
+
+
+    <!-- Optional: disable click on current step -->
+    
+</div>
+<div class="header-wrapper">
+    <h1>Final Review</h1>
+    <p class="subtitle">Check your details before generating your resume</p>
+</div>
+
+<div class="section">
+    <h3>Personal Information</h3>
+    <a href="{{ url_for('resume.first_page') }}" class="edit-btn">Edit</a>
+
+    <div class="info">
+        <img src="{{ url_for('static', filename='uploads/image/' + resume.profile_pic) }}" alt="Profile Picture">
+        <div>
+            <p><b>{{ resume.name }}</b></p>
+            <p>{{ resume.email }}</p>
+            <p>{{ resume.phone }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <h3>Education</h3>
+    <a href="{{ url_for('resume.third_page') }}" class="edit-btn">Edit</a>
+
+    {% for edu in resume.education %}
+    <div class="box">
+        <b>{{ edu.degree }}</b><br>
+        <span style="color: var(--text-muted); font-size: 0.95rem;">{{ edu.college }}</span><br>
+        <div style="margin-top: 5px; font-size: 0.9rem; color: var(--text-main);">
+            {{ edu.start }} - {{ edu.end }} &nbsp;|&nbsp; <strong>CGPA: {{ edu.cgpa }}</strong>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="section">
+    <h3>Experience</h3>
+    <a href="{{ url_for('resume.third_page') }}" class="edit-btn">Edit</a>
+
+    {% for exp in resume.experience_data %}
+    <div class="box">
+        <b>{{ exp.role }}</b> <span style="color: var(--text-muted);">at {{ exp.company }}</span><br>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">{{ exp.duration }}</div>
+        {{ exp.desc }}
+    </div>
+    {% endfor %}
+</div>
+
+<div class="section">
+    <h3>Key Projects</h3>
+    <a href="{{ url_for('resume.third_page') }}" class="edit-btn">Edit</a>
+
+    {% for proj in resume.projects %}
+    <div class="box">
+        <b>{{ proj.title }}</b><br>
+        <div style="margin: 8px 0; color: var(--text-main);">{{ proj.desc }}</div>
+        <small>Tech: {{ proj.tech }}</small>
+    </div>
+    {% endfor %}
+</div>  
+
+<div class="section">
+    <h3>Skills</h3>
+    <div class="tags">
+   {% for skill in resume.skills.split(',') %}
+    <div class="tag">{{ skill.strip() }}</div>
+{% endfor %}
+</div>
+</div>
+
+<div class="section">
+    <h3>Languages</h3>
+    <div class="tags">
+    {% for l in resume.language_levels %}
+        <div class="tag">{{ l.language }}</div>
+    {% endfor %}
+</div>
+</div>
+
+{% if resume.finance_type or resume.tools or resume.projects %}
+<div class="section">
+    <h3>Professional Details</h3>
+    <a href="{{ url_for('resume.second_page') }}" class="edit-btn">Edit</a>
+
+    {% if resume.finance_type %}
+    <div class="box" style="border: none; background: transparent; padding: 0 0 15px 0;">
+        <b style="display: block; margin-bottom: 12px; font-size: 1rem;">Domain Focus:</b>
+        <div class="tags">
+            {% for f in resume.finance_type.split(',') %}
+            <div class="tag">{{ f.strip() }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resume.tools %}
+    <div class="box" style="border: none; background: transparent; padding: 0;">
+        <b style="display: block; margin-bottom: 12px; font-size: 1rem;">Tools:</b>
+        <div class="tags">
+            {% for t in resume.tools.split(',') %}
+            <div class="tag">{{ t.strip() }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<form method="POST" action="{{ url_for('resume.fifth_page') }}">
+  <input type="hidden" name="next_step" id="nextStep">
+
+    <button class="save-btn">Save & Complete Profile</button>
+</form>
+
+</div>
+<script>
+    function goDashboard() {
+    window.location.href = "/dashbord";
+}
+function goStep(step) {
+
+    const currentPage = window.location.pathname;
+
+    // ❗ If on fifth page → DIRECT REDIRECT (no form submit)
+    if(currentPage.includes("fifth_page")){
+        redirectStep(step);
+        return;
+    }
+
+    // For other pages → auto save
+    let form = document.querySelector("form");
+
+    if(form){
+        document.getElementById("nextStep").value = step;
+        form.submit();
+    } else {
+        redirectStep(step);
+    }
+}
+
+function redirectStep(step){
+    const routes = {
+        1: "/first_page",
+        2: "/second_page",
+        3: "/third_page",
+        4: "/forth_page",
+        5: "/fifth_page"
+    };
+
+    window.location.href = routes[step];
+}
+</script>
+
+</body>
+</html>

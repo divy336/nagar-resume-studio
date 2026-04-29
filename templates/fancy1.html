@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<title>Fancy Resume</title>
+
+<style>
+
+@page{
+    size:A4;
+    margin:0;
+}
+
+/* BASE PAGE */
+
+body{
+    margin:0;
+    padding:0;
+
+    font-family:'Poppins', sans-serif;
+    background:#f3f4f6;
+    display:flex;
+    justify-content:center;
+}
+
+/* RESUME SCALE */
+
+#resume{
+    transform:scale(0.95);
+    transform-origin:top left;
+}
+
+/* RESUME CONTAINER */
+
+.resume{
+    width:210mm;
+    min-height:297mm;   /* A4 height */
+    margin:0 auto;
+
+    background:white;
+    display:grid;
+    grid-template-columns:33% 67%;
+    align-items:stretch;   /* important */
+    box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* LEFT PANEL */
+
+.left{
+    background:linear-gradient(180deg,var(--left1),var(--left2));
+    color:white;
+    padding:30px 25px;
+    min-height:297mm;  /* default height */
+}
+
+.name{
+    font-size:24px;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.major{
+    font-size:14px;
+    color:#cbd5e1;
+    margin-bottom:25px;
+}
+
+.left-title{
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#ffffff;
+    border-left:4px solid #ffffff;
+    padding-left:8px;
+    margin-top:20px;
+    margin-bottom:10px;
+}
+
+.left-text{
+    font-size:13px;
+    line-height:1.6;
+}
+
+.tag{
+    background:white;
+    color:#111;
+    padding:4px 8px;
+    font-size:12px;
+    margin:3px;
+    display:inline-block;
+    border-radius:4px;
+}
+
+/* RIGHT SIDE */
+
+.right{
+    padding:35px;
+    display:flex;
+    flex-direction:column;
+    min-height:297mm; 
+}
+.block:last-child{
+    flex-grow:1;
+}
+.experience-block{
+min-height:270px;
+}
+
+/* Projects section minimum size */
+.project-block{
+min-height:300px;
+}
+p, td{
+    word-break:break-word;
+    overflow-wrap:break-word;
+}
+
+.block-title{
+    font-size:18px;
+    font-weight:600;
+    color:#111827;
+    border-bottom:3px solid var(--main);
+    padding-bottom:5px;
+    margin-bottom:15px;
+}
+
+/* TABLE */
+
+.resume-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+.resume-table th{
+    background:var(--main);
+    color:#111827;
+    padding:8px;
+    text-align:left;
+    font-weight:600;
+}
+
+.resume-table td{
+    padding:8px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* PROFILE IMAGE */
+
+.profile-pic{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    border:4px solid var(--main);
+    object-fit:cover;
+    display:block;
+    margin-bottom:15px;
+}
+
+/* ========================= */
+/* THEME PANEL (RIGHT SIDE) */
+/* ========================= */
+
+.no-print{
+    position:fixed;
+    left:30px;
+    top:60px;
+    width:300px;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.15);
+    cursor:move;
+    animation:dragDemo 2s ease;
+}
+
+
+
+@keyframes dragDemo{
+
+0%{
+transform:translateX(0);
+}
+
+20%{
+transform:translateX(40px);
+}
+
+40%{
+transform:translateX(-30px);
+}
+
+60%{
+transform:translateX(35px);
+}
+
+80%{
+transform:translateX(-20px);
+}
+
+100%{
+transform:translateX(0);
+}
+
+}
+/* COLOR GRID */
+
+.color-grid{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:8px;
+    max-height:260px;
+    overflow-y:auto;
+    padding-right:5px;
+    margin-bottom:20px;
+}
+
+/* COLOR BUTTON */
+
+.color-btn{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    border:none;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.color-btn:hover{
+    transform:scale(1.2);
+    box-shadow:0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* CONTROL BUTTONS */
+
+.no-print button{
+    width:100%;
+    margin-top:10px;
+}
+
+/* ========================= */
+/* MOBILE RESPONSIVE FIX */
+/* ========================= */
+
+@media (max-width:900px){
+
+body{
+    display:block;
+}
+
+/* resume full width */
+
+.resume{
+    width:95%;
+    margin:auto;
+}
+
+/* remove scale */
+
+#resume{
+    transform:none;
+}
+
+/* move panel below resume */
+
+.no-print{
+    position:relative;
+    right:auto;
+    top:auto;
+    width:90%;
+    margin:20px auto;
+}
+
+/* better grid */
+
+.color-grid{
+    grid-template-columns:repeat(10,1fr);
+}
+
+}
+
+/* ========================= */
+/* PRINT / PDF */
+/* ========================= */
+
+@media print{
+
+.no-print{
+    display:none;
+}
+
+body{
+    background:white;
+}
+
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="resume" class="resume">
+
+<!-- LEFT PANEL -->
+
+<div class="left">
+
+{% if resume.photo %}
+<img src="{{ url_for('static', filename='uploads/' ~ resume.photo) }}" class="profile-pic">
+{% endif %}
+
+<h2 class="name">{{ resume.first_name }} {{ resume.last_name }}</h2>
+<div class="major">{{ resume.major }}</div>
+
+
+<!-- CONTACT -->
+
+<div class="left-title">Contact</div>
+<div class="left-text">{{ resume.email }}</div>
+<div class="left-text">{{ resume.mobile }}</div>
+
+{% if resume.github %}
+<div class="left-text">GitHub: {{ resume.github }}</div>
+{% endif %}
+
+{% if resume.linkedin %}
+<div class="left-text">LinkedIn: {{ resume.linkedin }}</div>
+{% endif %}
+
+
+
+<!-- LANGUAGES -->
+
+<div class="left-title">Languages</div>
+
+{% for l in resume.language_levels %}
+<div class="lang-item">
+
+<div class="lang-name">
+{{ l.language }} 
+<span class="lang-level">{{ l.level }}</span>
+</div>
+
+<div class="lang-bar">
+<div class="lang-fill
+{% if l.level == 'Fluent' %}full
+{% elif l.level == 'Professional' %}mid
+{% else %}basic
+{% endif %}
+"></div>
+</div>
+
+</div>
+{% endfor %}
+
+
+
+<!-- MASTER LANGUAGES -->
+ 
+{% if resume.master_languages %}
+<div class="left-title">Programming langauge</div>
+
+{% for lang in resume.languages %}
+<span class="tag">{{ lang }}</span>
+{% endfor %}
+{% endif %}
+{% if resume.master_languages %}
+<div class="left-title">Master Programming langages</div>
+
+{% for lang in resume.master_languages %}
+<span class="tag">{{ lang }}</span>
+{% endfor %}
+{% endif %}
+
+
+
+
+<!-- SKILLS -->
+
+<div class="left-title">Skills</div>
+
+{% for s in resume.skills %}
+<span class="tag">{{ s }}</span>
+{% endfor %}
+
+</div>
+
+
+<!-- RIGHT PANEL -->
+
+<div class="right">
+
+<div class="block">
+<div class="block-title">Career Objective</div>
+<p>{{ resume.summary }}</p>
+</div>
+
+<div class="block experience-block">
+  <div class="block-title">Experience</div>
+
+  <table class="resume-table">
+    <tr>
+      <th>Role</th>
+      <th>Company</th>
+      <th>Duration</th>
+      <th>Description</th>
+    </tr>
+
+    {% for e in resume.experience %}
+    <tr>
+      <td>{{ e.role }}</td>
+      <td>{{ e.company }}</td>
+      <td>{{ e.duration }}</td>
+      <td>{{ e.description }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+
+<div class="block project-block">
+  <div class="block-title">Projects</div>
+
+  <table class="resume-table">
+    <tr>
+      <th>Project</th>
+      <th>Technologies</th>
+      <th>Description</th>
+    </tr>
+
+    {% for p in resume.projects %}
+    <tr>
+      <td>{{ p.name }}</td>
+      <td>{{ p.technologies }}</td>
+      <td>{{ p.description }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="block education-block">
+<div class="block-title">Education</div>
+
+<table class="resume-table">
+<tr>
+<th>Qualification</th>
+<th>Institution</th>
+<th>Duration</th>
+<th>Grade</th>
+</tr>
+
+{% for edu in resume.education %}
+<tr>
+<td>{{ edu.qualification }}</td>
+<td>{{ edu.institution }}</td>
+<td>{{ edu.start }} - {{ edu.end }}</td>
+<td>{{ edu.grade }}%</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- BUTTONS -->
+<div class="no-print">
+<h3>movable ped</h3>
+<h4>Select Color Theme</h4>
+
+<div id="colorGrid" class="color-grid"></div>
+
+<button onclick="downloadPDF()">Download Resume</button>
+<br><br>
+
+<button onclick="location.href='{{ url_for('resume.resume_type') }}'">
+Change Template
+</button>
+
+<br><br>
+
+<button onclick="location.href='{{ url_for('resume.home') }}'">
+Edit Resume
+</button>
+<button onclick="location.href='{{ url_for('resume.dashbord') }}'">
+Dashboard
+</button>
+
+</div>
+
+
+<script>
+
+window.addEventListener("load",function(){
+
+const panel = document.querySelector(".no-print");
+
+setTimeout(()=>{
+panel.style.animation="none";
+},1000);
+
+});
+//animation 
+
+function setColor(main,left1,left2){
+
+document.documentElement.style.setProperty('--main',main);
+document.documentElement.style.setProperty('--left1',left1);
+document.documentElement.style.setProperty('--left2',left2);
+
+}
+
+/* GENERATE 200+ COLORS */
+
+window.addEventListener("DOMContentLoaded", function(){
+
+const grid = document.getElementById("colorGrid");
+
+premiumColors.forEach(color => {
+
+let main = color;
+let dark1 = color;
+let dark2 = color;
+
+const btn = document.createElement("button");
+
+btn.className = "color-btn";
+btn.style.background = color;
+
+/* click event */
+
+btn.onclick = () => setColor(main, dark1, dark2);
+
+grid.appendChild(btn);
+
+});
+
+});
+
+function downloadPDF(){
+
+const element = document.getElementById("resume");
+
+const options = {
+margin:[0,0,0,0],
+filename:"resume.pdf",
+image:{type:"jpeg",quality:1},
+html2canvas:{
+scale:2,
+useCORS:true,
+scrollX:0,
+scrollY:0
+},
+jsPDF:{
+unit:"mm",
+format:"a4",
+orientation:"portrait"
+},
+pagebreak:{mode:['css','legacy']}
+};
+
+html2pdf().set(options).from(element).save();
+
+}
+const panel = document.querySelector(".no-print");
+
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+/* DESKTOP MOUSE */
+
+panel.addEventListener("mousedown", startDrag);
+document.addEventListener("mousemove", drag);
+document.addEventListener("mouseup", stopDrag);
+
+/* MOBILE TOUCH */
+
+panel.addEventListener("touchstart", startDragTouch);
+document.addEventListener("touchmove", dragTouch);
+document.addEventListener("touchend", stopDrag);
+
+/* FUNCTIONS */
+
+function startDrag(e){
+    isDragging = true;
+    offsetX = e.clientX - panel.offsetLeft;
+    offsetY = e.clientY - panel.offsetTop;
+}
+
+function drag(e){
+    if(!isDragging) return;
+
+    panel.style.left = (e.clientX - offsetX) + "px";
+    panel.style.top = (e.clientY - offsetY) + "px";
+}
+
+function startDragTouch(e){
+    isDragging = true;
+    offsetX = e.touches[0].clientX - panel.offsetLeft;
+    offsetY = e.touches[0].clientY - panel.offsetTop;
+}
+
+function dragTouch(e){
+    if(!isDragging) return;
+
+    panel.style.left = (e.touches[0].clientX - offsetX) + "px";
+    panel.style.top = (e.touches[0].clientY - offsetY) + "px";
+}
+
+function stopDrag(){
+    isDragging = false;
+}
+const premiumColors = [
+
+"#000000","#111111","#1f2937","#374151","#4b5563","#6b7280",
+"#0f172a","#1e293b","#334155","#475569",
+
+"#1e3a8a","#1d4ed8","#2563eb","#3b82f6","#60a5fa",
+"#0ea5e9","#0284c7","#0369a1",
+
+"#065f46","#047857","#059669","#10b981","#34d399",
+"#064e3b","#065f46","#047857",
+
+"#14532d","#166534","#15803d","#16a34a","#22c55e","#4ade80",
+
+"#7f1d1d","#991b1b","#b91c1c","#dc2626","#ef4444","#f87171",
+
+"#7c2d12","#9a3412","#c2410c","#ea580c","#f97316",
+
+"#78350f","#92400e","#b45309","#d97706","#f59e0b","#fbbf24",
+
+"#422006","#713f12","#854d0e","#a16207","#ca8a04","#eab308",
+
+"#581c87","#6b21a8","#7e22ce","#9333ea","#a855f7","#c084fc",
+
+"#831843","#9d174d","#be185d","#db2777","#ec4899","#f472b6",
+
+"#0f766e","#0d9488","#14b8a6","#2dd4bf","#5eead4",
+
+"#164e63","#155e75","#0891b2","#06b6d4","#22d3ee",
+
+"#111827","#1f2937","#374151","#4b5563","#6b7280",
+
+"#111827","#030712","#0c0a09","#18181b","#27272a",
+
+"#111827","#1e1b4b","#312e81","#4338ca","#6366f1",
+
+"#18181b","#27272a","#3f3f46","#52525b","#71717a",
+
+"#0a0a0a","#171717","#262626","#404040","#525252",
+
+"#030712","#020617","#0f172a","#020617","#020617",
+
+"#1c1917","#292524","#44403c","#57534e","#78716c",
+
+"#0c0a09","#1c1917","#292524","#44403c","#57534e"
+
+];
+</script>
+
+</body>
+</html>

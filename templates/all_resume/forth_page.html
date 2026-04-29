@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 4 - Profile & Certifications</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #e8f4fd 0%, #faf8f3 50%, #eef3fb 100%); min-height: 100vh; padding: 30px 16px; }
+        .container { max-width: 800px; margin: auto; background: #ffffff; padding: 36px 40px; border-radius: 20px; box-shadow: 0 4px 32px rgba(59, 130, 246, 0.08); }
+        .form-header { text-align: center; margin-bottom: 24px; }
+        .form-header h2 { font-size: 24px; font-weight: 700; color: #1a3a5c; margin-bottom: 6px; }
+        .progress { height: 7px; background: #e2edf8; border-radius: 99px; margin-bottom: 32px; overflow: hidden; }
+        .progress-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #60a5fa, #2563eb); border-radius: 99px; position: relative; animation: shimmer 2.5s infinite; }
+        .section { margin-bottom: 30px; }
+        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1.5px solid #dce9f8; padding-bottom: 10px; }
+        .section-head .accent { width: 4px; height: 20px; background: linear-gradient(180deg, #60a5fa, #2563eb); border-radius: 99px; }
+        .card { background: linear-gradient(135deg, #f5f9ff 0%, #f9fbff 100%); border: 1px solid #d0e4f8; border-radius: 14px; padding: 18px; margin-bottom: 14px; position: relative; }
+        
+        /* Image Upload Styles */
+        .profile-upload { display: flex; align-items: center; gap: 20px; }
+        .img-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #d0e4f8; background: #fff; }
+        .cert-preview { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #d0e4f8; background: #fff; display: none; }
+        .file-input-wrapper { display: flex; flex-direction: column; gap: 8px; }
+        input[type="file"] { font-size: 13px; }
+
+        label { font-size: 11.5px; font-weight: 600; color: #6e90b0; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        input[type="text"] { width: 100%; padding: 10px 13px; border: 1.5px solid #c8ddf5; border-radius: 9px; font-size: 14px; outline: none; }
+        .btn { padding: 9px 16px; border: none; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .btn.add { background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe; margin-top: 6px; }
+        .btn.remove { background: #fff5f5; color: #ef4444; border: 1.5px solid #fecaca; position: absolute; top: 13px; right: 13px; }
+        .btn.submit { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; width: 100%; padding: 14px; font-size: 15px; margin-top: 20px; }
+
+
+        .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.step {
+    text-align: center;
+    cursor: pointer;
+}
+
+.step span {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.step.active span {
+    background: #3b82f6;
+    color: white;
+}
+
+.step p {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.line {
+    width: 50px;
+    height: 3px;
+    background: #e5e7eb;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="form-header">
+        <h2>Step 4: Profile & Certifications</h2>
+        <p>Upload your professional photo and credentials</p>
+    </div>
+<div class="step-nav">
+<div class="step" onclick="goDashboard()">
+        <span>🏠</span>
+        <p>Dashboard     </p>
+    </div>
+        <div class="line"></div>
+    <div class="step {{ 'active' if current_step == 1 else '' }}" onclick="goStep(1)">
+        <span>1</span><p>Basic</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 2 else '' }}" onclick="goStep(2)">
+        <span>2</span><p>Details</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 3 else '' }}" onclick="goStep(3)">
+        <span>3</span><p>Education</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="step {{ 'active' if current_step == 4 else '' }}" onclick="goStep(4)">
+        <span>4</span><p>Upload</p>
+    </div>
+
+
+    <!-- Optional: disable click on current step -->
+        
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="next_step" id="nextStep">
+        <div class="section">
+            <div class="section-head"><div class="accent"></div><h3>Profile Picture</h3></div>
+            <div class="card profile-upload">
+                <input type="hidden" name="existing_profile_pic" value="{{ resume.get('profile_pic', '') }}">
+                
+                <img id="mainProfilePreview" class="img-preview" 
+                     src="{{ url_for('static', filename='uploads/image/' + resume.get('profile_pic')) if resume.get('profile_pic') else 'https://via.placeholder.com/100?text=Photo' }}">
+                
+                <div class="file-input-wrapper">
+                    <label>Upload New Photo (JPG, PNG)</label>
+                    <input type="file" name="profile_pic" accept="image/*" onchange="previewImage(this, 'mainProfilePreview')">
+                    {% if resume.get('profile_pic') %}
+                        <span style="font-size: 11px; color: #22c55e;">Current: {{ resume.get('profile_pic') }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-head"><div class="accent"></div><h3>Certifications</h3></div>
+            
+            <div id="certContainer">
+                {% set cert_data = resume.get('certifications', []) %}
+                {% if not cert_data %}{% set cert_data = [{}] %}{% endif %}
+                
+                {% for cert in cert_data %}
+                {% set idx = loop.index %}
+                <div class="card certCard">
+                    {% if idx > 1 %}<button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>{% endif %}
+                    
+                    <input type="hidden" name="existing_cert_image" value="{{ cert.get('image', '') }}">
+                    
+                    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                        <div style="flex-grow: 1;">
+                            <label>Certificate Image</label>
+                            <input type="file" name="cert_image" accept="image/*" onchange="previewImage(this, 'cert_preview_{{ idx }}')">
+                            {% if cert.get('image') %}
+                                <div style="font-size: 11px; color: #22c55e; margin-top: 4px;">Saved: {{ cert.get('image') }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <img id="cert_preview_{{ idx }}" class="cert-preview" 
+                             src="{{ url_for('static', filename='uploads/image/' + cert.get('image')) if cert.get('image') else '' }}" 
+                             style="display: {{ 'block' if cert.get('image') else 'none' }};">
+                    </div>
+
+                    <div class="field">
+                        <label>Certificate Description / Title</label>
+                        <input type="text" name="cert_desc" placeholder="e.g. AWS Certified Solutions Architect" value="{{ cert.get('desc', '') if cert is mapping else '' }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn add" onclick="addCert()">＋ Add Certification</button>
+        </div>
+
+        <button class="btn submit" type="submit">Finish and Generate Resume →</button>
+    </form>
+</div>
+
+<script>
+    function goDashboard() {
+    window.location.href = "/dashbord";
+}
+function goStep(step) {
+
+    let form = document.querySelector("form");
+
+    if(form){
+        document.getElementById("nextStep").value = step;
+        form.submit(); // 🔥 submit current page form
+    } else {
+        redirectStep(step);
+    }
+}
+
+function redirectStep(step){
+    const routes = {
+        1: "/first_page",
+        2: "/second_page",
+        3: "/third_page",
+        4: "/forth_page",
+        5: "/fifth_page"
+    };
+
+    window.location.href = routes[step];
+}
+    let certCount = document.querySelectorAll(".certCard").length;
+
+    // JavaScript to show image preview before uploading
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Add Dynamic Certification Cards
+    function addCert() {
+        if(certCount >= 5){ alert("Maximum 5 certifications allowed."); return; }
+        certCount++;
+        const ts = Date.now(); // Unique ID for preview mapping
+        
+        const div = document.createElement("div");
+        div.className = "card certCard";
+        div.innerHTML = `
+            <button type="button" class="btn remove" onclick="removeCard(this)">✕ Remove</button>
+            <input type="hidden" name="existing_cert_image" value="">
+            <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                <div style="flex-grow: 1;">
+                    <label>Certificate Image</label>
+                    <input type="file" name="cert_image" accept="image/*" onchange="previewImage(this, 'cert_preview_${ts}')">
+                </div>
+                <img id="cert_preview_${ts}" class="cert-preview" src="">
+            </div>
+            <div class="field">
+                <label>Certificate Description / Title</label>
+                <input type="text" name="cert_desc" placeholder="e.g. Google Data Analytics Certificate">
+            </div>`;
+        document.getElementById("certContainer").appendChild(div);
+    }
+
+    function removeCard(btn) {
+        btn.parentElement.remove();
+        certCount--;
+    }
+</script>
+</body>
+</html>

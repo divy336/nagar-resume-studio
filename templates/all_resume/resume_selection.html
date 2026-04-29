@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Your Template</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* GLOBAL LIGHT THEME VARIABLES */
+:root {
+    --bg-color: #f4f7f9;
+    --card-bg: #ffffff;
+    --text-heading: #1e3a8a; /* Deep Navy */
+    --text-main: #334155;
+    --text-muted: #64748b;
+    
+    /* Professional Theme Colors */
+    --prof-accent: #3b82f6;
+    --prof-light: #eff6ff;
+    
+    /* Fancy Theme Colors */
+    --fancy-accent: #8b5cf6;
+    --fancy-light: #f5f3ff;
+    
+    --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    padding: 40px 20px;
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin: 0 0 10px 0;
+    letter-spacing: -0.03em;
+}
+
+.header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* CARDS WRAPPER */
+.cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 10px;
+}
+
+/* INDIVIDUAL CARD */
+.template-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-main);
+    box-shadow: var(--shadow-soft);
+    border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    animation: slideUpFade 0.6s forwards;
+}
+
+.template-card:nth-child(1) { animation-delay: 0.1s; }
+.template-card:nth-child(2) { animation-delay: 0.2s; }
+
+.template-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* CARD ICONS */
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 25px auto;
+    font-size: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.template-card:hover .icon-wrapper {
+    transform: scale(1.1);
+}
+
+/* PROFESSIONAL CARD SPECIFICS */
+.card-prof:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+.card-prof .icon-wrapper {
+    background: var(--prof-light);
+    color: var(--prof-accent);
+}
+.card-prof h2 {
+    color: var(--prof-accent);
+}
+
+/* FANCY CARD SPECIFICS */
+.card-fancy:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+}
+.card-fancy .icon-wrapper {
+    background: var(--fancy-light);
+    color: var(--fancy-accent);
+}
+.card-fancy h2 {
+    color: var(--fancy-accent);
+}
+
+/* CARD TYPOGRAPHY */
+.template-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+}
+
+.template-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* FAKE BUTTON INSIDE CARD */
+.select-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.card-prof .select-btn {
+    background: var(--prof-light);
+    color: var(--prof-accent);
+}
+
+.card-prof:hover .select-btn {
+    background: var(--prof-accent);
+    color: white;
+}
+
+.card-fancy .select-btn {
+    background: var(--fancy-light);
+    color: var(--fancy-accent);
+}
+
+.card-fancy:hover .select-btn {
+    background: var(--fancy-accent);
+    color: white;
+}
+
+/* ANIMATIONS */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .cards-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Select Your Style</h1>
+        <p>Choose a template layout that fits your career goals.</p>
+    </div>
+
+    <div class="cards-wrapper">
+        
+        <a href="{{ url_for('resume.professional_page') }}" class="template-card card-prof">
+            <div class="icon-wrapper">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h2>Professional</h2>
+            <p>Clean, crisp, and ATS-friendly. Perfect for corporate roles, traditional industries, and senior positions.</p>
+            <div class="select-btn">Select Professional</div>
+        </a>
+
+        
+
+    </div>
+</div>
+
+</body>
+</html>

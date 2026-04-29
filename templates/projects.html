@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume Builder – Page 4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='projects.css') }}">
+<style>
+.error-box {
+    margin: 15px 0;
+    padding: 12px 16px;
+    background: #ffecec;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.internSuggestionBox{
+  display:none;
+  flex-direction:column;
+  gap:8px;
+  margin-top:10px;
+    max-height:150px;   
+  overflow-y:auto;    
+  padding-right:5px;
+    word-wrap:break-word;      
+  white-space:normal; 
+  
+}
+
+.internSuggestionBox p{
+  background:#f3f4f6;
+  padding:8px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.internSuggestionBox p:hover{
+  background:#e5e7eb;
+}
+
+.internSuggestionBox::-webkit-scrollbar{
+  width:6px;
+}
+
+.internSuggestionBox::-webkit-scrollbar-thumb{
+  background:#ccc;
+  border-radius:10px;
+}
+
+.internSuggestionBox::-webkit-scrollbar-thumb:hover{
+  background:#999;
+}
+
+.projectSuggestionBox{
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+
+  max-height:200px;
+  overflow-y:auto;
+  padding:10px;
+
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+
+  scroll-behavior:smooth;
+}
+
+.projectSuggestionBox p{
+  background:#ffffff;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+
+  font-size:15px;
+  line-height:1.6;
+
+  word-wrap:break-word;
+  white-space:normal;
+
+  transition:all 0.2s ease;
+}
+
+.projectSuggestionBox p:hover{
+  background:#e0f2fe;
+  transform:translateX(4px);
+}
+
+.projectSuggestionBox::-webkit-scrollbar{
+  width:6px;
+}
+
+.projectSuggestionBox::-webkit-scrollbar-thumb{
+  background:#bbb;
+  border-radius:10px;
+}
+
+.projectSuggestionBox::-webkit-scrollbar-thumb:hover{
+  background:#888;
+}
+
+.suggest-btn{
+  margin-top:8px;
+  width:fit-content;
+
+  background:linear-gradient(135deg,#6366f1,#3b82f6);
+  color:#fff;
+
+  border:none;
+  padding:10px 14px;
+  border-radius:8px;
+
+  font-size:14px;
+  font-weight:500;
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  transition:all 0.25s ease;
+}
+
+/* hover */
+.suggest-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* click effect */
+.suggest-btn:active{
+  transform:scale(0.96);
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.step-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2563eb;
+    transition: 0.3s;
+}
+
+.step-text {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.step-line {
+    width: 50px;
+    height: 3px;
+    background: #cbd5f5;
+    border-radius: 10px;
+}
+
+/* ACTIVE */
+.step-item.active .step-circle {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.1);
+}
+
+.step-item.active .step-text {
+    color: #2563eb;
+}
+
+/* HOVER */
+.step-item:hover .step-circle {
+    background: #93c5fd;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .stepper {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+  {% set resume = resume if resume is defined else {} %}
+{% if error %}
+<div class="error-box" id="error-Box">
+    {{ error }}
+</div>
+{% endif %}
+<div class="wrapper">
+ 
+
+<!-- STEP NAVIGATION -->
+<div class="stepper">
+
+    <!-- Dashboard -->
+   
+
+
+    <!-- Home -->
+    <button type="button"
+            onclick="goStep(2)"
+            class="step-item {{ 'active' if current_step == 2 else '' }}">
+        <div class="step-circle">1</div>
+        <div class="step-text">Home</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Language -->
+    <button type="button"
+            onclick="goStep(3)"
+            class="step-item {{ 'active' if current_step == 3 else '' }}">
+        <div class="step-circle">2</div>
+        <div class="step-text">Language</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Education -->
+    <button type="button"
+            onclick="goStep(4)"
+            class="step-item {{ 'active' if current_step == 4 else '' }}">
+        <div class="step-circle">3</div>
+        <div class="step-text">Education</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Projects -->
+    <button type="button"
+            onclick="goStep(5)"
+            class="step-item {{ 'active' if current_step == 5 else '' }}">
+        <div class="step-circle">4</div>
+        <div class="step-text">Projects</div>
+    </button>
+
+</div>
+<form method="POST" action="{{url_for("resume.projects")}}">
+  <input type="hidden" name="next_step" id="nextStep">
+  <h1>Projects & Experience</h1>
+
+  <section>
+    <div class="section-header">
+      <h2>Projects <span class="hint">(Add 2–3 projects)</span></h2>
+      <button type="button" onclick="addProject()">+ Add</button>
+    </div>
+    <div id="projects" class="grid"></div>
+  </section>
+
+  <section>
+    <div class="section-header">
+    <h2>Experience / Internship <span class="hint">(Add 1–2 details)</span></h2>
+      <button type="button" onclick="addExperience()">+ Add</button>
+    </div>
+    <div id="experience" class="grid"></div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <h2>Native Languages</h2>
+      <h4> required</h4>
+      <button type="button" onclick="addLanguage()">+ Add</button>
+    </div>
+    <div id="languages" class="grid small"></div>
+  </section>
+   <div class="form-actions">
+    <button type="submit" class="next-btn">
+      Save & Next →
+    </button>
+  </div>
+<input type="hidden" id="existingProjects"
+value='{{ resume.get("projects", []) | tojson }}'>
+
+<input type="hidden" id="existingExperience"
+value='{{ resume.get("experience", []) | tojson }}'>
+
+<input type="hidden" id="existingLanguages"
+value='{{ resume.get("language_levels", []) | tojson }}'>
+</form>
+</div>
+<script>
+
+function goStep(step) {
+    const form = document.querySelector("form");
+
+    if (!form) return;
+
+    // 🔥 RESET first
+    const input = document.getElementById("nextStep");
+    input.value = "";  
+
+    // 🔥 SET correct step
+    input.value = step;
+
+    form.submit();
+}
+
+//error box
+window.addEventListener("load", function(){
+
+  const errorBox = document.getElementById("error-Box");
+
+  if(errorBox){
+    setTimeout(()=>{
+      errorBox.style.opacity = "0";
+      errorBox.style.transition = "0.5s";
+
+      setTimeout(()=>{
+        errorBox.remove();
+      },500);
+
+    },2000); // 2 seconds
+  }
+
+});
+  
+/* REMOVE CARD  */
+function removeCard(btn){
+  const card = btn.parentElement;
+  card.style.opacity="0";
+  card.style.transform="scale(0.9)";
+  setTimeout(()=>card.remove(),200);
+}
+
+/*PROJECTS */
+
+const projectsContainer = document.getElementById("projects");
+const existingProjectsElement = document.getElementById("existingProjects");
+
+const MAX_PROJECTS = 3;
+
+function addProject(data={}){
+
+  if(projectsContainer.children.length >= MAX_PROJECTS){
+      alert("Maximum 3 projects allowed");
+      return;
+  }
+
+  const card = document.createElement("div");
+  card.className="card";
+
+  card.innerHTML=`
+  <button type="button" class="remove" onclick="removeCard(this)">×</button>
+
+  <input name="project_name[]" 
+  placeholder="Project Name"
+  value="${data.name || ""}"
+  required>
+
+<textarea name="project_desc[]" 
+placeholder="Short description"
+minlength="20"
+maxlength="170"
+oninput="countDesc(this)"
+required>${data.description || ""}</textarea>
+
+<p class="char-count">0 / 170</p>
+
+<button type="button" class="suggest-btn" onclick="toggleProjectSuggestions(this)">✨ Suggest</button>
+
+<div class="projectSuggestionBox"></div>
+  <input name="project_tech[]" 
+  placeholder="Technologies Used"
+  value="${data.technologies || ""}">
+  `;
+
+  projectsContainer.appendChild(card);
+}
+function countDesc(textarea){
+
+  const counter = textarea.nextElementSibling;
+
+  const length = textarea.value.length;
+
+  counter.innerText = length + " / 170 characters";
+
+  if(length >= 170){
+      counter.style.color="red";
+  }else{
+      counter.style.color="#666";
+  }
+
+}
+/* load existing projects */
+
+if(existingProjectsElement){
+  const existingProjects = existingProjectsElement.value;
+  if(existingProjects){
+    JSON.parse(existingProjects).forEach(p=>addProject(p));
+  }
+}
+
+
+/* ================= EXPERIENCE ================= */
+
+const expContainer = document.getElementById("experience");
+const existingExpElement = document.getElementById("existingExperience");
+
+const MAX_EXPERIENCE = 2;
+
+function addExperience(data={}){
+
+  if(expContainer.children.length >= MAX_EXPERIENCE){
+      alert("Maximum 2 experience entries allowed");
+      return;
+  }
+
+  const card = document.createElement("div");
+  card.className="card";
+
+  card.innerHTML=`
+  <button type="button" class="remove" onclick="removeCard(this)">×</button>
+
+  <input name="role[]" 
+  placeholder="Role / Position"
+  value="${data.role || ""}"
+  required>
+
+  <input name="company[]" 
+  placeholder="Company / Institute"
+  value="${data.company || ""}">
+
+  <input name="location[]" 
+  placeholder="Location"
+  value="${data.location || ""}">
+
+  <input name="duration[]" 
+  placeholder="Duration"
+  value="${data.duration || ""}">
+
+ <textarea name="work_desc[]" 
+placeholder="Short description"
+minlength="20"
+maxlength="150"
+oninput="countInternship(this)">${data.description || ""}</textarea>
+
+<p class="char-count">0 / 150 characters</p>
+<button type="button" class="suggest-btn" onclick="toggleInternSuggestions(this)">✨ Suggest</button>
+
+<div class="internSuggestionBox"></div>
+
+  `;
+
+  expContainer.appendChild(card);
+}
+
+function countInternship(textarea){
+
+    const counter = textarea.nextElementSibling;
+    const length = textarea.value.length;
+
+    counter.innerText = length + " / 150 characters";
+
+    if(length >= 150){
+        counter.style.color = "red";
+    }else{
+        counter.style.color = "#666";
+    }
+}
+/* load existing experience */
+
+if(existingExpElement){
+  const existingExp = existingExpElement.value;
+  if(existingExp){
+    JSON.parse(existingExp).forEach(e=>addExperience(e));
+  }
+}
+
+
+/* ================= NATIVE LANGUAGES ================= */
+
+const langContainer = document.getElementById("languages");
+const existingLangElement = document.getElementById("existingLanguages");
+
+function addLanguage(data={}){
+
+  const card = document.createElement("div");
+  card.className="card";
+
+  card.innerHTML=`
+  <button type="button" class="remove" onclick="removeCard(this)">×</button>
+
+  <input name="language[]" 
+  placeholder="Language"
+  required
+  value="${data.language || ""}">
+
+  <select name="language_level[]">
+      <option value="">Level</option>
+      ${["Native","Fluent","Professional","Basic"].map(level=>
+        `<option ${data.level===level?"selected":""}>${level}</option>`
+      ).join("")}
+  </select>
+  `;
+
+  langContainer.appendChild(card);
+}
+
+/* load existing languages */
+
+if(existingLangElement){
+  const existingLang = existingLangElement.value;
+  if(existingLang){
+    JSON.parse(existingLang).forEach(l=>addLanguage(l));
+  }
+}
+document.querySelector("form").addEventListener("submit", function(e){
+
+  const projectInputs = document.querySelectorAll("input[name='project_name[]']");
+  let filledProjects = 0;
+
+  projectInputs.forEach(p=>{
+      if(p.value.trim() !== ""){
+          filledProjects++;
+      }
+  });
+
+  if(filledProjects === 1){
+
+      const proceed = confirm(
+        "You added only 1 project.\n\nClick OK to stay and add more projects.\nClick Cancel to continue with only 1 project."
+      );
+
+      if(proceed){
+          e.preventDefault(); // stay on page
+      }
+
+  }
+
+});
+
+
+
+// this is exprience suggation button 
+function toggleInternSuggestions(btn){
+
+  const card = btn.parentElement;
+  const box = card.querySelector(".internSuggestionBox");
+
+  if(box.style.display === "flex"){
+      box.style.display = "none";
+      return;
+  }
+
+  box.style.display = "flex";
+
+  const role = card.querySelector("input[name='role[]']").value || "Intern";
+  const company = card.querySelector("input[name='company[]']").value || "Company";
+
+  const textarea = card.querySelector("textarea[name='work_desc[]']");
+
+  const suggestions = [
+
+`Worked as a ${role} at ${company}, where I contributed to real-world projects and improved my development and teamwork skills.`,
+
+`Completed internship at ${company} as a ${role}, gaining practical knowledge and hands-on experience in software development.`,
+
+`Worked as a ${role} at ${company}, learning industry practices and improving my coding, debugging and problem-solving skills.`,
+
+`During my internship at ${company}, I worked as a ${role} and contributed to development tasks while learning new technologies.`,
+
+`Interned at ${company} as a ${role}, gaining real-world experience and improving my technical and communication skills.`,
+
+`Worked as a ${role} at ${company}, focusing on project development and enhancing my practical and analytical skills.`,
+
+`Completed internship at ${company} as a ${role}, where I improved my coding skills and gained exposure to real-world applications.`,
+
+`Worked at ${company} as a ${role}, contributing to tasks and learning how professional development environments operate.`,
+
+`During my internship as a ${role} at ${company}, I developed strong problem-solving skills and gained practical experience.`,
+
+`Interned at ${company} as a ${role}, where I worked on real projects and improved my understanding of development workflows.`,
+
+`Worked as a ${role} at ${company}, gaining hands-on experience and improving my ability to build and manage applications.`,
+
+`Completed my internship at ${company} as a ${role}, focusing on real-world tasks and improving my technical knowledge.`,
+
+`Worked as a ${role} at ${company}, where I learned modern tools and enhanced my development and teamwork abilities.`,
+
+`Interned as a ${role} at ${company}, contributing to project work and improving my coding and problem-solving skills.`,
+
+`Worked at ${company} as a ${role}, gaining experience in real-world projects and improving my technical expertise.`
+
+  ];
+
+  box.innerHTML = "";
+
+  suggestions.forEach(text=>{
+      const p = document.createElement("p");
+      p.innerText = text;
+
+      p.onclick = ()=>{
+          textarea.value = text;
+          countInternship(textarea);
+          box.style.display = "none";
+      };
+
+      box.appendChild(p);
+  });
+}
+
+// project suggation
+
+function toggleProjectSuggestions(btn){
+
+  const card = btn.parentElement;
+  const box = card.querySelector(".projectSuggestionBox");
+
+  if(box.style.display === "flex"){
+      box.style.display = "none";
+      return;
+  }
+
+  box.style.display = "flex";
+
+  const name = card.querySelector("input[name='project_name[]']").value || "this project";
+  const textarea = card.querySelector("textarea[name='project_desc[]']");
+
+  const suggestions = [
+`Developed ${name}, a feature-rich web application focusing on user experience, responsive design and efficient performance using modern technologies.`,
+
+`Created ${name}, implementing real-world features and improving usability while applying best practices in design, structure and functionality.`,
+
+`Built ${name}, focusing on clean UI, responsive layout and optimized performance to deliver a smooth and efficient user experience.`,
+
+`Worked on ${name}, enhancing core features and improving application performance while ensuring scalability and usability.`,
+
+`Developed ${name}, applying modern development concepts to build a reliable and user-friendly application with structured code.`,
+
+`Designed ${name}, focusing on intuitive interface, responsive design and practical implementation of features for better usability.`,
+
+`Created ${name}, gaining hands-on experience in developing real-world applications and improving coding and debugging skills.`,
+
+`Built ${name}, implementing key functionalities and optimizing performance to create a seamless and responsive application.`,
+
+`Worked on ${name}, improving design, functionality and overall user experience through efficient development practices.`,
+
+`Developed ${name}, focusing on scalability, performance and user interaction while applying modern web development techniques.`,
+
+`Created ${name}, enhancing technical skills by building features and ensuring responsive and user-friendly design.`,
+
+`Built ${name}, improving development skills through real-world implementation of features and application logic.`,
+
+`Worked on ${name}, focusing on clean code, optimized performance and effective feature integration.`,
+
+`Developed ${name}, gaining practical knowledge of application structure, UI design and real-world problem-solving.`,
+
+`Created ${name}, focusing on modern design, efficient functionality and improving overall application performance.`,
+
+`Developed ${name}, a responsive web application with user-friendly interface, focusing on performance, clean design and real-world functionality.`,
+
+`Created ${name} using modern technologies, implementing key features and ensuring smooth performance, responsive design and improved user experience.`,
+
+`Built ${name}, a practical project that demonstrates strong development skills, focusing on functionality, clean UI design and efficient execution.`,
+
+`Designed and developed ${name}, enhancing problem-solving skills and gaining experience in building real-world web applications with modern tools.`,
+
+`Worked on ${name}, implementing features and improving performance while focusing on usability, responsiveness and efficient code structure.`,
+`Developed ${name}, creating a structured and efficient application while improving my understanding of user requirements and system design.`,
+
+`Created ${name}, focusing on delivering a functional solution with clean code, better user interaction and practical implementation of features.`,
+
+`Built ${name}, where I applied development concepts to design a stable and efficient application with improved usability and performance.`,
+
+`Worked on ${name}, developing new features and enhancing system efficiency while improving my technical and analytical skills.`,
+
+`Developed ${name}, focusing on building a reliable application and improving my ability to solve real-world technical challenges.`,
+
+`Created ${name}, implementing structured logic and improving application flow to deliver a smooth and effective user experience.`,
+
+`Built ${name}, enhancing my development skills by working on practical features and improving application stability and usability.`,
+
+`Worked on ${name}, gaining hands-on experience in handling application logic, debugging issues and improving performance.`,
+
+`Developed ${name}, applying best coding practices to create an efficient and maintainable application with improved functionality.`,
+
+`Created ${name}, focusing on improving system design and building a user-friendly application with effective feature implementation.`,
+
+`Built ${name}, where I improved my ability to design application workflows and implement features for better performance and usability.`,
+
+`Worked on ${name}, focusing on improving application structure and enhancing my understanding of real-world development processes.`,
+
+`Developed ${name}, gaining practical experience in designing and implementing features that improve overall system efficiency.`,
+
+`Created ${name}, working on structured development and improving my coding standards while building a functional application.`,
+
+`Built ${name}, focusing on delivering a stable application while improving my technical knowledge and development approach.`
+  ];
+
+  box.innerHTML = "";
+suggestions.sort(() => Math.random() - 0.5);
+  suggestions.forEach(text=>{
+      const p = document.createElement("p");
+      p.innerText = text;
+
+      p.onclick = ()=>{
+          textarea.value = text;
+          countDesc(textarea);
+          box.style.display = "none";
+      };
+
+      box.appendChild(p);
+  });
+}
+</script>

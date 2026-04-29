@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Resume Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+/* ─── Reset & Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+/* ─── Tokens ─── */
+:root {
+  --blue-50:#eef2ff; --blue-100:#e0e7ff; --blue-400:#6b83f5;
+  --blue-500:#4a6cf7; --blue-600:#3a55d4; --blue-700:#2d43b5;
+  --purple-50:#f5f3ff; --purple-400:#9b8ef8;
+  --gray-50:#f8fafc; --gray-100:#f1f5f9; --gray-200:#e2e8f0;
+  --gray-400:#94a3b8; --gray-600:#64748b; --gray-800:#1e293b;
+  --white:#ffffff;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px;
+  --t:0.22s cubic-bezier(0.4,0,0.2,1);
+  --sh-md:0 4px 16px rgba(74,108,247,.08),0 2px 6px rgba(0,0,0,.05);
+  --sh-lg:0 10px 40px rgba(74,108,247,.12),0 4px 12px rgba(0,0,0,.06);
+  --sh-hv:0 16px 48px rgba(74,108,247,.18),0 6px 18px rgba(0,0,0,.08);
+}
+
+body { background:linear-gradient(135deg,#eef2ff 0%,#e8eeff 40%,#f0f4ff 100%); min-height:100vh; color:var(--gray-800); -webkit-font-smoothing:antialiased; }
+
+/* ─── Keyframes ─── */
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── Header ─── */
+.header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(18px) saturate(1.4);
+  padding:14px 32px; display:flex; justify-content:space-between; align-items:center;
+  border-bottom:1px solid rgba(74,108,247,.10);
+  box-shadow:0 1px 0 rgba(74,108,247,.06),0 4px 20px rgba(74,108,247,.06);
+}
+.logo {
+  font-size:20px; font-weight:700; letter-spacing:-0.3px;
+  background:linear-gradient(135deg,var(--blue-500),var(--purple-400));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.logout {
+  color:#e53e5e; text-decoration:none; font-size:13px; font-weight:500;
+  padding:5px 12px; border-radius:var(--r-sm); border:1px solid rgba(229,62,94,.20);
+  transition:background var(--t);
+}
+.logout:hover { background:rgba(229,62,94,.07); }
+.header > div:last-child { font-size:13px; color:var(--gray-600); display:flex; align-items:center; gap:10px; }
+
+/* ─── Main ─── */
+main { max-width:1100px; margin:auto; padding:32px 24px 60px; animation:fadeSlideUp .45s ease both; }
+
+/* ─── Hero ─── */
+.hero {
+  background:linear-gradient(135deg,#fff 60%,var(--blue-50) 100%);
+  padding:36px 40px; border-radius:var(--r-xl);
+  display:flex; justify-content:space-between; align-items:center;
+  box-shadow:var(--sh-lg); margin-bottom:32px;
+  border:1px solid rgba(74,108,247,.10);
+  position:relative; overflow:hidden; animation:fadeSlideUp .5s .05s ease both;
+}
+.hero::before {
+  content:''; position:absolute; top:-60px; right:-60px;
+  width:220px; height:220px; border-radius:50%;
+  background:radial-gradient(circle,rgba(74,108,247,.08) 0%,transparent 70%); pointer-events:none;
+}
+.hero h1 { font-size:26px; font-weight:700; letter-spacing:-0.4px; margin-bottom:6px; }
+.hero p  { font-size:14px; color:var(--gray-600); }
+.hero-cta {
+  padding:13px 26px; background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+  color:#fff; border:none; border-radius:var(--r-md); cursor:pointer;
+  font-size:14px; font-weight:600; letter-spacing:.2px;
+  box-shadow:0 4px 16px rgba(74,108,247,.35); white-space:nowrap;
+  transition:transform var(--t),box-shadow var(--t),background var(--t);
+}
+.hero-cta:hover { transform:translateY(-2px) scale(1.02); box-shadow:0 8px 28px rgba(74,108,247,.45); }
+.hero-cta:active { transform:scale(.98); }
+
+/* ─── Section Head ─── */
+.section-head {
+  display:flex; justify-content:space-between; align-items:center;
+  margin:28px 0 14px; animation:fadeSlideUp .45s .10s ease both;
+}
+.section-head h2 { font-size:16px; font-weight:600; letter-spacing:-0.2px; color:var(--gray-800); }
+.badge {
+  background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+  color:#fff; padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+  box-shadow:0 2px 8px rgba(74,108,247,.25);
+}
+
+/* ─── Type Cards ─── */
+.type-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; animation:fadeSlideUp .45s .13s ease both; }
+.type-link { text-decoration:none; color:inherit; display:block; }
+.type-card {
+  background:var(--white); padding:22px 24px; border-radius:var(--r-lg); cursor:pointer;
+  box-shadow:0 1px 3px rgba(0,0,0,.06); border:2px solid transparent;
+  font-size:15px; font-weight:500; color:var(--gray-600);
+  display:flex; align-items:center; gap:10px;
+  transition:transform var(--t),box-shadow var(--t),border-color var(--t),color var(--t),background var(--t);
+}
+.type-card:hover { transform:translateY(-3px); box-shadow:var(--sh-hv); border-color:rgba(74,108,247,.30); color:var(--gray-800); }
+.type-card.active { border:2px solid var(--blue-500); background:linear-gradient(135deg,var(--blue-50),var(--purple-50)); color:var(--blue-600); box-shadow:var(--sh-md),0 0 0 4px rgba(74,108,247,.07); font-weight:600; }
+
+/* ─── Resumes Box ─── */
+.resumes-box {
+  background:var(--white); border-radius:var(--r-lg);
+  box-shadow:var(--sh-md); border:1px solid rgba(74,108,247,.07);
+  display:flex; flex-direction:column; height:500px; overflow:hidden;
+  animation:fadeSlideUp .45s .16s ease both;
+}
+.resumes-box > div:first-child {
+  display:flex; align-items:center; gap:8px;
+  padding:20px 24px 16px; border-bottom:1px solid var(--gray-200); flex-wrap:wrap;
+}
+.filter-btn {
+  padding:6px 16px; border:1px solid var(--gray-200); background:var(--gray-50);
+  border-radius:20px; font-size:12px; font-weight:500; color:var(--gray-600); cursor:pointer;
+  transition:background var(--t),border-color var(--t),color var(--t),transform var(--t);
+}
+.filter-btn:hover { background:var(--blue-50); border-color:var(--blue-400); color:var(--blue-600); transform:scale(1.04); }
+.filter-btn.on { background:var(--blue-500); border-color:var(--blue-500); color:#fff; }
+
+/* ─── Scroll Area ─── */
+.whatsapp-scroll { flex:1; overflow-y:auto; padding:16px; background:var(--gray-50); scroll-behavior:smooth; }
+.whatsapp-scroll::-webkit-scrollbar { width:6px; }
+.whatsapp-scroll::-webkit-scrollbar-thumb { background:rgba(0,0,0,.10); border-radius:10px; }
+.whatsapp-scroll:hover::-webkit-scrollbar-thumb { background:rgba(0,0,0,.20); }
+
+/* ─── Resume Card ─── */
+.resume-card {
+  background:var(--white); margin-bottom:12px; padding:14px 18px;
+  border-radius:var(--r-md); display:flex; justify-content:space-between; align-items:center;
+  border:1px solid var(--gray-200); cursor:pointer; gap:12px;
+  transition:transform .3s cubic-bezier(.25,.8,.25,1),box-shadow .3s,border-color .3s;
+  animation:fadeInUp .4s ease forwards;
+}
+.resume-card:last-child { margin-bottom:0; }
+.resume-card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,.10); border-color:rgba(74,108,247,.30); }
+.resume-card:active { transform:translateY(-1px); background:var(--gray-50); }
+.resume-card:nth-child(1){animation-delay:.05s} .resume-card:nth-child(2){animation-delay:.10s}
+.resume-card:nth-child(3){animation-delay:.15s} .resume-card:nth-child(4){animation-delay:.20s}
+
+.resume-info { display:flex; align-items:center; gap:12px; }
+.avatar-icon {
+  width:44px; height:44px; flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+  color:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  font-size:20px; transition:transform .3s;
+}
+.resume-card:hover .avatar-icon { transform:scale(1.08); }
+.resume-info b { font-size:14px; font-weight:600; color:var(--gray-800); display:block; margin-bottom:3px; }
+.resume-info .timestamp { font-size:11px; color:var(--gray-400); }
+.resume-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; flex-wrap:wrap; }
+
+/* ─── Buttons ─── */
+.btn-preview {
+  background:linear-gradient(135deg,var(--blue-500),var(--blue-700)); color:#fff; border:none;
+  padding:8px 18px; border-radius:var(--r-sm); font-size:12px; font-weight:600; letter-spacing:.3px;
+  cursor:pointer; text-decoration:none; display:inline-block;
+  box-shadow:0 2px 8px rgba(74,108,247,.30);
+  transition:background var(--t),box-shadow var(--t),transform var(--t);
+}
+.btn-preview:hover { background:linear-gradient(135deg,var(--blue-600),var(--blue-700)); box-shadow:0 4px 14px rgba(74,108,247,.40); transform:translateY(-1px); }
+.btn-preview:active { transform:scale(.97); }
+.btn-preview button { background:transparent!important; border:none!important; color:#fff!important; font:inherit; cursor:pointer; padding:0; }
+.btn-edit {
+  background:var(--gray-100); color:var(--gray-600); border:1px solid var(--gray-200);
+  padding:8px 18px; border-radius:var(--r-sm); font-size:12px; font-weight:600;
+  cursor:pointer; text-decoration:none; display:inline-block;
+  transition:background var(--t),color var(--t),transform var(--t);
+}
+.btn-edit:hover { background:var(--gray-200); color:var(--gray-800); transform:translateY(-1px); }
+
+/* ─── Preview Modal ─── */
+#previewModal {
+  display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
+  background:rgba(15,23,42,.50); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  align-items:center; justify-content:center; animation:fadeIn .25s ease;
+}
+.modal-content {
+  background:rgba(255,255,255,.97); width:90%; max-width:620px; border-radius:var(--r-xl);
+  position:relative; overflow:hidden;
+  box-shadow:0 24px 64px rgba(74,108,247,.18),0 8px 24px rgba(0,0,0,.10);
+  animation:fadeSlideUp .28s cubic-bezier(.175,.885,.32,1.275);
+  border:1px solid rgba(255,255,255,.80);
+}
+.close-btn {
+  position:absolute; top:14px; right:20px; font-size:28px; line-height:1;
+  color:var(--gray-400); cursor:pointer; z-index:10;
+  transition:color var(--t),transform var(--t);
+}
+.close-btn:hover { color:var(--gray-800); transform:scale(1.1); }
+#previewContent { max-height:82vh; overflow-y:auto; padding:30px; }
+#previewContent::-webkit-scrollbar { width:5px; }
+#previewContent::-webkit-scrollbar-thumb { background:rgba(0,0,0,.10); border-radius:8px; }
+
+/* ─── Preview Card Internals ─── */
+.resume-preview-card { font-family:'Poppins',sans-serif; }
+.preview-header-main { display:flex; gap:20px; align-items:center; border-bottom:2px solid var(--blue-400); padding-bottom:20px; margin-bottom:20px; }
+.user-photo-img { width:76px; height:76px; border-radius:50%; object-fit:cover; border:3px solid var(--blue-400); }
+.user-avatar-placeholder { width:76px; height:76px; background:var(--blue-50); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:600; color:var(--blue-600); }
+.user-meta h2 { margin:0; font-size:20px; font-weight:700; color:var(--gray-800); }
+.major-title { color:var(--blue-600); font-weight:600; font-size:13px; margin:4px 0; }
+.user-meta p { margin:4px 0; color:var(--gray-600); font-size:13px; }
+.social-links a { font-size:12px; margin-right:10px; color:var(--blue-500); text-decoration:none; }
+.preview-grid { display:grid; grid-template-columns:1fr 1.5fr; gap:20px; }
+.preview-section { margin-bottom:20px; }
+.preview-section h3 { background:var(--gray-50); padding:5px 10px; border-radius:6px; font-size:13px; font-weight:600; color:var(--gray-800); border-left:4px solid var(--blue-500); margin-bottom:10px; border-radius:0 6px 6px 0; }
+.summary-text { font-size:13px; line-height:1.6; color:var(--gray-600); }
+.skill-chip { display:inline-block; background:var(--blue-50); color:var(--blue-700); padding:4px 11px; border-radius:14px; font-size:11px; font-weight:500; margin:3px; }
+.edu-item,.exp-item,.project-item { margin-bottom:14px; font-size:13px; color:var(--gray-800); }
+.exp-header { display:flex; justify-content:space-between; font-size:12px; font-weight:600; }
+#noDataMsg { text-align:center; color:var(--gray-400); font-size:14px; padding:40px 0; }
+
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  .header{padding:12px 18px;}
+  main{padding:20px 14px 48px;}
+  .hero{flex-direction:column;align-items:flex-start;gap:20px;padding:26px 22px;border-radius:var(--r-lg);}
+  .hero h1{font-size:20px;} .hero-cta{width:100%;text-align:center;}
+  .type-grid{grid-template-columns:1fr;}
+  .resume-card{flex-direction:column;align-items:flex-start;}
+  .resume-actions{width:100%;justify-content:flex-start;}
+  .preview-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .header > div:last-child{font-size:12px;} .logo{font-size:17px;}
+  .resume-actions{flex-direction:column;align-items:stretch;}
+  .btn-preview,.btn-edit{text-align:center;width:100%;}
+}
+
+
+#brandText{
+    position:fixed;
+    bottom:14px;
+    right:18px;
+    margin:0;
+    padding:10px 16px;
+    background:#ffffff;
+    color:#475569;
+    font-size:13px;
+    font-weight:700;
+    border-radius:30px;
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+    border:1px solid #e5e7eb;
+    letter-spacing:.3px;
+    z-index:999;
+}
+#brandText:hover{
+    transform:translateY(-2px);
+    transition:.25s;
+}
+@media(max-width:768px){
+    #brandText{
+        left:10px;
+        right:10px;
+        bottom:10px;
+        text-align:center;
+        font-size:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="header">
+    <div class="logo">Nagar’s Resume Studio</div>
+    <div>
+        Welcome {{ session.username }} |
+        <a href="{{ url_for('auth.logout') }}" class="logout">Logout</a>
+    </div>
+</div>
+ 
+<main>
+ 
+    <!-- HERO -->
+    <div class="hero">
+        <div>
+            <h1>Hello {{ session.username }} 👋</h1>
+            <p>Build a job-winning resume in minutes.</p>
+        </div>
+ 
+        {% if session.get("user_id") %}
+        <a href="{{ url_for('resume.home', type='it', new=1) }}">
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">
+        {% endif %}
+            <button class="hero-cta">+ Create Resume</button>
+        </a>
+    </div>
+ 
+    <!-- TYPE -->
+    <div class="section-head">
+        <h2>Choose Resume Type</h2>
+        <span class="badge">Step 1</span>
+    </div>
+ 
+    <div class="type-grid">
+ 
+        <!-- IT Resume -->
+        {% if session.get("user_id") %}
+            <a href="{{ url_for('resume.home', type='it', new=1) }}" class="type-link">
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="type-link">
+        {% endif %}
+            <div class="type-card">
+                💻 IT Resume
+            </div>
+        </a>
+ 
+        <!-- Other Resume -->
+        {% if session.get("user_id") %}
+        <a href="{{ url_for('resume.first_page', type='other', new=1) }}" class="type-link">
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="type-link">
+        {% endif %}
+            <div class="type-card">
+                📄 Other Resume
+            </div>
+        </a>
+ 
+    </div>
+ 
+    <!-- YOUR RESUMES SECTION -->
+    <div class="section-head">
+        <h2>Your Resumes</h2>
+        <span class="badge">Step 2</span>
+    </div>
+ 
+    <div class="resumes-box">
+ 
+        <div style="margin-bottom:10px;">
+            <button class="filter-btn on" onclick="loadAllResumes(event)">All</button>
+            <button class="filter-btn" onclick="loadITResumes(event)">IT</button>
+            <button class="filter-btn" onclick="loadOtherResumes(event)">Other</button>
+            <p>Total resumes: <span id="resumeCount">{{ resumes|length }}</span></p>
+        </div>
+ 
+        <div id="resumeList" class="whatsapp-scroll">
+            {% if resumes %}
+                {% for r in resumes %}
+                <div class="resume-card" data-type="{{ r.type }}">
+                    <div class="resume-info">
+                        <div class="avatar-icon">📄</div>
+                        <div>
+                            <b>{{ r.name }}</b><br>
+                            <span class="timestamp">{{ r.updated }}</span>
+                        </div>
+                    </div>
+                    <div class="resume-actions">
+                        <button class="btn-preview" onclick="previewResume('{{ r.id }}','{{ r.type }}')">
+                            Preview
+                        </button>
+                        <a class="btn-preview" href="{{ url_for('resume.edit_resume', id=r.id) }}">
+                            <button>Edit</button>
+                        </a>
+                        <button class="btn-preview" onclick="deleteResume('{{ r.id }}', '{{ r.type }}')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p id="noDataMsg">No resumes found</p>
+            {% endif %}
+        </div>
+    </div>
+</main>
+ 
+<!-- PREVIEW MODAL -->
+<div id="previewModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closePreview()">&times;</span>
+        <div id="previewContent"></div>
+    </div>
+</div>
+<p id="brandText">Powered by Nagar’s Resume Studio</p>
+
+
+<script>
+document.getElementById("brandText").style.opacity = "0";
+setTimeout(()=>{
+   document.getElementById("brandText").style.transition="0.6s";
+   document.getElementById("brandText").style.opacity="1";
+},200);
+
+
+
+function loadITResumes(event) {
+    setActive(event);
+ 
+    fetch('/api/get-it-resumes')
+    .then(res => res.json())
+    .then(renderResumes);
+}
+ 
+function loadOtherResumes(event) {
+    setActive(event);
+ 
+    fetch('/api/get-other-resumes')
+    .then(res => res.json())
+    .then(renderResumes);
+}
+ 
+function loadAllResumes(event) {
+    setActive(event);
+ 
+    fetch('/api/get-all-resumes')
+    .then(res => res.json())
+    .then(renderResumes);
+}
+ 
+function renderResumes(data) {
+    let container = document.getElementById("resumeList");
+    let countElement = document.getElementById("resumeCount");
+ 
+    if (data.length === 0) {
+        container.innerHTML = "<p id='noDataMsg'>No Resumes Found</p>";
+        if(countElement) countElement.textContent = "0";
+        return;
+    }
+ 
+    if(countElement) countElement.textContent = data.length;
+ 
+    container.innerHTML = "";
+ 
+    data.forEach(r => {
+        // decide edit link
+        let editLink = r.type === "other"
+            ? `/edit-other/${r.id}`
+            : `/edit/${r.id}`;
+ 
+        let card = document.createElement('div');
+        card.className = 'resume-card';
+        card.setAttribute('data-type', r.type);
+        
+        card.innerHTML = `
+            <div class="resume-info">
+                <div class="avatar-icon">📄</div>
+                <div>
+                    <b>${r.name}</b><br>
+                    <span class="timestamp">${r.updated}</span>
+                </div>
+            </div>
+            <div class="resume-actions">
+                <button class="btn-preview" onclick="previewResume('${r.id}', '${r.type}')">
+                    Preview
+                </button>
+                <a class="btn-preview" href="${editLink}">
+                    <button>Edit</button>
+                </a>
+                <button class="btn-preview" onclick="deleteResume('${r.id}', '${r.type}')">
+                    Delete
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+ 
+function setActive(event) {
+    document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("on"));
+    if(event) event.target.classList.add("on");
+}
+ 
+function deleteResume(id, type) {
+    if(!confirm('Are you sure you want to delete this resume?')) {
+        return;
+    }
+ 
+    fetch(`/api/delete-resume/${type}/${id}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.ok) {
+            alert('Resume deleted successfully!');
+            // Reload the current active filter
+            let activeBtn = document.querySelector('.filter-btn.on');
+            if(activeBtn) {
+                activeBtn.click();
+            } else {
+                loadAllResumes();
+            }
+        } else {
+            alert('Failed to delete resume');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error deleting resume');
+    });
+}
+ 
+function previewResume(id, type) {
+    const modal = document.getElementById("previewModal");
+    const content = document.getElementById("previewContent");
+ 
+    content.innerHTML = "⌛ Loading...";
+    modal.style.display = "flex";
+ 
+    fetch(`/api/preview/${type}/${id}`)
+    .then(res => res.json())
+    .then(data => {
+        if(data.ok){
+            let r = data.resume;
+            
+            // Handle both IT and Other resume types
+            if(type === 'other') {
+                renderOtherPreview(r, content);
+            } else {
+                renderITPreview(r, content);
+            }
+        } else {
+            content.innerHTML = "❌ Resume not found";
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        content.innerHTML = "❌ Error loading preview";
+    });
+}
+ 
+function renderITPreview(r, content) {
+    // 1. Skills & Languages Chip Logic
+    let skillsHtml = (r.skills || []).map(s => `<span class="skill-chip">${s.trim()}</span>`).join('');
+    let langHtml = (r.language_levels || []).map(l => `
+        <div class="lang-item">
+            <b>${l.language}:</b> <span>${l.level}</span>
+        </div>
+    `).join('');
+ 
+    // 2. Education Logic
+    let eduHtml = (r.education || []).map(edu => `
+        <div class="edu-item">
+            <div class="edu-dot"></div>
+            <b>${edu.degree || edu.education || 'Qualification'}</b>
+            <p>${edu.institute || edu.college || 'Institution'}</p>
+        </div>
+    `).join('');
+ 
+    // 3. Projects Logic
+    let projHtml = (r.projects || []).map(p => `
+        <div class="project-item">
+            <h4>🚀 ${p.name}</h4>
+            <p>${p.description}</p>
+            <small><b>Tech:</b> ${p.technologies}</small>
+        </div>
+    `).join('');
+ 
+    // 4. Experience Logic
+    let expHtml = (r.experience || []).map(e => `
+        <div class="exp-item">
+            <div class="exp-header">
+                <b>💼 ${e.role}</b>
+                <span>${e.duration}</span>
+            </div>
+            <p><i>${e.company} | ${e.location}</i></p>
+            <p class="summary-text">${e.description}</p>
+        </div>
+    `).join('');
+ 
+    // 5. Final Assembly
+    let html = `
+        <div class="resume-preview-card">
+            <div class="preview-header-main">
+                <div class="user-photo-container">
+                    ${r.photo ? 
+                        `<img src="/static/uploads/${r.photo}" class="user-photo-img">` : 
+                        `<div class="user-avatar-placeholder">${(r.first_name || 'U')[0]}</div>`}
+                </div>
+                <div class="user-meta">
+                    <h2>${r.first_name || ''} ${r.last_name || ''}</h2>
+                    <p class="major-title">${r.major || ''}</p>
+                    <div class="contact-links">
+                        <span>📧 ${r.email || ''}</span> | <span>📱 ${r.mobile || ''}</span>
+                    </div>
+                    <div class="social-links">
+                        ${r.linkedin ? `<a href="${r.linkedin}" target="_blank">🔗 LinkedIn</a>` : ''}
+                        ${r.github ? `<a href="${r.github}" target="_blank">🐙 GitHub</a>` : ''}
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="preview-grid">
+                <div class="preview-col">
+                    <section>
+                        <h3>📝 Summary</h3>
+                        <p class="summary-text">${r.summary || 'No summary.'}</p>
+                    </section>
+ 
+                    <section>
+                        <h3>🛠️ Technical Skills</h3>
+                        <div class="skills-container">${skillsHtml || 'None'}</div>
+                    </section>
+ 
+                    <section>
+                        <h3>🌐 Languages</h3>
+                        <div class="lang-container">${langHtml || 'None'}</div>
+                    </section>
+                </div>
+ 
+                <div class="preview-col">
+                    <section>
+                        <h3>🎓 Education</h3>
+                        <div class="timeline-list">${eduHtml || 'No data.'}</div>
+                    </section>
+ 
+                    <section>
+                        <h3>💼 Experience</h3>
+                        <div class="experience-list">${expHtml || 'No data.'}</div>
+                    </section>
+ 
+                    <section>
+                        <h3>🚀 Key Projects</h3>
+                        <div class="project-list">${projHtml || 'No data.'}</div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // 🔥 FIX: Use html variable instead of JSON.stringify
+    content.innerHTML = html;
+}
+ 
+function renderOtherPreview(r, content) {
+    let eduHtml = (r.education || []).map(e => `
+        <div class="edu-item">
+            <b>${e.degree || e.education || 'Qualification'}</b>
+            <p>${e.college || e.institute || 'Institution'}</p>
+            <p style="font-size:11px;color:#999;">${e.year || ''}</p>
+        </div>
+    `).join('');
+ 
+    let expHtml = (r.experience || r.experience_data || []).map(e => `
+        <div class="exp-item">
+            <div class="exp-header">
+                <b>💼 ${e.role || e.position || 'Role'}</b>
+                <span>${e.duration || e.year || ''}</span>
+            </div>
+            <p><i>${e.company || ''}</i></p>
+            <p>${e.description || e.desc || ''}</p>
+        </div>
+    `).join('');
+ 
+    let projHtml = (r.projects || []).map(p => `
+        <div class="project-item">
+            <h4>🚀 ${p.name || p.title || 'Project'}</h4>
+            <p>${p.description || p.desc || ''}</p>
+        </div>
+    `).join('');
+ 
+    let skills = r.skills || [];
+    if(typeof skills === "string"){
+        skills = skills.split(",");
+    }
+ 
+    let skillsHtml = skills.map(s =>
+        `<span class="skill-chip">${s.trim()}</span>`
+    ).join('');
+ 
+    let html = `
+        <div class="resume-preview-card">
+ 
+            <div class="preview-header-main">
+ 
+                <div class="user-photo-container">
+                    ${
+                        r.photo
+                        ? `<img src="/static/uploads/${r.photo}" class="user-photo-img">`
+                        : `<div class="user-avatar-placeholder">${(r.first_name || r.name || 'U')[0]}</div>`
+                    }
+                </div>
+ 
+                <div class="user-meta">
+                    <h2>
+                        ${r.first_name || r.name || ''}
+                        ${r.last_name || ''}
+                    </h2>
+ 
+                    <p class="major-title">
+                        ${r.position || r.major || r.career || ''}
+                    </p>
+ 
+                    <div class="contact-links">
+                        <span>📧 ${r.email || ''}</span> |
+                        <span>📱 ${r.mobile || r.phone || ''}</span>
+                    </div>
+                </div>
+ 
+            </div>
+ 
+            <div class="preview-grid">
+ 
+                <div class="preview-col">
+ 
+                    <section>
+                        <h3>📝 Summary</h3>
+                        <p>${r.summary || r.objective || 'No summary available.'}</p>
+                    </section>
+ 
+                    <section>
+                        <h3>🛠️ Skills</h3>
+                        <div class="skills-container">
+                            ${skillsHtml || 'No skills'}
+                        </div>
+                    </section>
+ 
+                </div>
+ 
+                <div class="preview-col">
+ 
+                    <section>
+                        <h3>🎓 Education</h3>
+                        ${eduHtml || 'No education'}
+                    </section>
+ 
+                    <section>
+                        <h3>💼 Experience</h3>
+                        ${expHtml || 'No experience'}
+                    </section>
+ 
+                    <section>
+                        <h3>🚀 Projects</h3>
+                        ${projHtml || 'No projects'}
+                    </section>
+ 
+                </div>
+ 
+            </div>
+ 
+        </div>
+    `;
+ 
+    content.innerHTML = html;
+}
+ 
+// MUST HAVE THIS FUNCTION FOR THE CLOSE BTN TO WORK
+function closePreview() {
+    document.getElementById("previewModal").style.display = "none";
+}
+ 
+// Escape key listener
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        closePreview();
+    }
+});
+ 
+</script>
+ 
+</body>
+</html>

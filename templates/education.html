@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Animated Login</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* PAGE */
+
+body{
+background:#ffffff;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:50px 20px;
+}
+
+/* MAIN CARD */
+
+.container{
+width:100%;
+max-width:750px;
+background:#ffffff;
+padding:45px;
+border-radius:16px;
+border:1px solid #e5e7eb;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+transition:.3s;
+}
+
+.container:hover{
+box-shadow:0 20px 60px rgba(0,0,0,0.12);
+}
+
+/* TITLE */
+
+.container h2{
+text-align:center;
+font-size:28px;
+color:#111827;
+margin-bottom:5px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:35px;
+font-size:14px;
+}
+
+/* SECTION TITLE */
+
+h3{
+margin-top:25px;
+margin-bottom:10px;
+color:#4f46e5;
+font-size:16px;
+font-weight:500;
+border-left:4px solid #4f46e5;
+padding-left:10px;
+}
+
+/* EDUCATION CARD */
+
+.education-card{
+border:1px solid #e5e7eb;
+border-radius:10px;
+padding:18px;
+margin-bottom:15px;
+background:#fafafa;
+display:grid;
+gap:10px;
+}
+
+.education-card input,
+.education-card select{
+padding:10px 12px;
+border:1px solid #d1d5db;
+border-radius:6px;
+font-size:14px;
+outline:none;
+}
+
+.education-card input:focus,
+.education-card select:focus{
+border-color:#4f46e5;
+box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+}
+
+/* ADD EDUCATION BUTTON */
+
+.add-btn{
+background:#eef2ff;
+color:#4f46e5;
+border:1px dashed #c7d2fe;
+padding:10px 14px;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:20px;
+transition:.2s;
+}
+
+.add-btn:hover{
+background:#e0e7ff;
+}
+
+/* LANGUAGE / SKILL INPUT AREA */
+
+.language-box{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.language-box input,
+.language-box select{
+flex:1;
+padding:12px 14px;
+border-radius:8px;
+border:1px solid #d1d5db;
+font-size:14px;
+outline:none;
+}
+
+.language-box input:focus,
+.language-box select:focus{
+border-color:#4f46e5;
+box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+}
+
+/* ADD BUTTON */
+
+.language-box button{
+background:#4f46e5;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+transition:.2s;
+}
+
+.language-box button:hover{
+background:#4338ca;
+}
+
+/* SKILL TAGS */
+
+#skillList,
+#masterList{
+list-style:none;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:20px;
+}
+
+#skillList li,
+#masterList li{
+background:#eef2ff;
+color:#4338ca;
+padding:7px 12px;
+border-radius:20px;
+font-size:13px;
+display:flex;
+align-items:center;
+gap:6px;
+border:1px solid #e0e7ff;
+}
+
+#skillList span,
+#masterList span{
+cursor:pointer;
+color:#ef4444;
+font-weight:600;
+}
+
+/* SUBMIT BUTTON */
+
+button[type="submit"]{
+width:100%;
+padding:14px;
+background:#4f46e5;
+border:none;
+color:white;
+font-size:16px;
+border-radius:10px;
+cursor:pointer;
+transition:.25s;
+margin-top:10px;
+}
+
+button[type="submit"]:hover{
+background:#4338ca;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* TABLET */
+
+@media (max-width:768px){
+
+.container{
+padding:35px;
+}
+
+.container h2{
+font-size:24px;
+}
+
+.education-card{
+padding:15px;
+}
+
+}
+
+/* MOBILE */
+
+@media (max-width:480px){
+
+body{
+padding:30px 15px;
+}
+
+.container{
+padding:25px;
+border-radius:12px;
+}
+
+.container h2{
+font-size:22px;
+}
+
+.subtitle{
+font-size:13px;
+}
+
+.language-box{
+flex-direction:column;
+}
+
+.language-box button{
+width:100%;
+}
+
+}
+
+/* remove btn*/
+.education-card {
+    position: relative;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    background: #1c0b52;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.step-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2563eb;
+    transition: 0.3s;
+}
+
+.step-text {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.step-line {
+    width: 50px;
+    height: 3px;
+    background: #cbd5f5;
+    border-radius: 10px;
+}
+
+/* ACTIVE */
+.step-item.active .step-circle {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.1);
+}
+
+.step-item.active .step-text {
+    color: #2563eb;
+}
+
+/* HOVER */
+.step-item:hover .step-circle {
+    background: #93c5fd;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .stepper {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+    
+
+<!-- STEP NAVIGATION -->
+<div class="stepper">
+
+    <!-- Dashboard -->
+  
+
+    <!-- Home -->
+    <button type="button"
+            onclick="goStep(2)"
+            class="step-item {{ 'active' if current_step == 2 else '' }}">
+        <div class="step-circle">1</div>
+        <div class="step-text">Home</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Language -->
+    <button type="button"
+            onclick="goStep(3)"
+            class="step-item {{ 'active' if current_step == 3 else '' }}">
+        <div class="step-circle">2</div>
+        <div class="step-text">Language</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Education -->
+    <button type="button"
+            onclick="goStep(4)"
+            class="step-item {{ 'active' if current_step == 4 else '' }}">
+        <div class="step-circle">3</div>
+        <div class="step-text">Education</div>
+    </button>
+
+    <div class="step-line"></div>
+
+    <!-- Projects -->
+    <button type="button"
+            onclick="goStep(5)"
+            class="step-item {{ 'active' if current_step == 5 else '' }}">
+        <div class="step-circle">4</div>
+        <div class="step-text">Projects</div>
+    </button>
+
+</div>
+    <h2>Resume Builder</h2>
+    <p class="subtitle">Step 3 of 4 — Education & Skills</p>
+
+    <form method="POST" enctype="multipart/form-data"action="{{url_for('resume.education')}}">
+        <input type="hidden" name="next_step" id="nextStep">
+
+        <h3>Education Qualification</h3>
+
+        <div id="educationWrapper"></div>
+
+        <button type="button" class="add-btn" onclick="addEducation()">+ Add Education</button>
+
+        <input type="hidden" name="education_data" id="educationData">
+
+        <h3>Skills</h3>
+
+        <div class="language-box">
+            <input type="text" id="skillInput" placeholder="Enter skill" >
+            <button type="button" onclick="addSkill()">Add</button>
+        </div>
+
+        <ul id="skillList"></ul>
+        <input type="hidden" name="skills" id="skillsHidden">
+
+        <h3>Master Languages</h3>
+
+        <div class="language-box">
+            <input type="text" id="masterLang" placeholder="Language / Technology"> 
+            <select id="level">
+                <option value="">Level</option>
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+            </select>
+            <button type="button" onclick="addMaster()">Add</button>
+        </div>
+
+        <ul id="masterList"></ul>
+        <input type="hidden" name="master_languages" id="masterHidden">
+
+        <button type="submit">Next → Projects</button>
+    </form>
+<input type="hidden" id="existingEducation"
+       value='{{ resume.education | tojson if resume.education else "" }}'>
+
+<input type="hidden" id="existingSkills"
+       value='{{ resume.skills | tojson if resume.skills else "[]" }}'>
+
+<input type="hidden" id="existingMasters"
+       value='{{ resume.master_languages | tojson if resume.master_languages else "[]" }}'>
+</div>
+
+<script>
+function goStep(step) {
+    const form = document.querySelector("form");
+
+    if (!form) return;
+
+    // 🔥 RESET first
+    const input = document.getElementById("nextStep");
+    input.value = "";  
+
+    // 🔥 SET correct step
+    input.value = step;
+
+    form.submit();
+}
+let educations = [];
+
+const existingEducation = document.getElementById("existingEducation").value;
+if (existingEducation) {
+    educations = JSON.parse(existingEducation);
+    renderEducation();
+}
+
+function addEducation() {
+
+    if (educations.length >= 2) {
+        return;
+    }
+
+    educations.push({
+        qualification: "",
+        institution: "",
+        start: "",
+        end: "",
+        grade: ""
+    });
+
+    renderEducation();
+
+    document.getElementById("addEduBtn").disabled = true;
+}
+function updateEducation(index, field, value) {
+    educations[index][field] = value;
+    document.getElementById("educationData").value = JSON.stringify(educations);
+}
+
+function renderEducation() {
+    const wrapper = document.getElementById("educationWrapper");
+    wrapper.innerHTML = "";
+
+    educations.forEach((edu, i) => {
+        wrapper.innerHTML += `
+        <div class="education-card">
+          <button type="button" class="remove-btn" onclick="removeEducation(${i})">
+                ✕ Remove
+            </button>
+            <select onchange="updateEducation(${i}, 'qualification', this.value)">
+                <option value="">Qualification</option>
+                <option ${edu.qualification === "10th" ? "selected" : ""}>10th</option>
+                <option ${edu.qualification === "12th" ? "selected" : ""}>12th</option>
+                <option ${edu.qualification === "Diploma" ? "selected" : ""}>Diploma</option>
+                <option ${edu.qualification === "Degree" ? "selected" : ""}>Degree</option>
+            </select>
+
+            <input placeholder="School / College Name"
+                   value="${edu.institution || ""}"
+                   oninput="updateEducation(${i}, 'institution', this.value)">
+
+            <input placeholder="Start Year"
+                   value="${edu.start || ""}"
+                   oninput="updateEducation(${i}, 'start', this.value)">
+
+            <input placeholder="End Year"
+                   value="${edu.end || ""}"
+                   oninput="updateEducation(${i}, 'end', this.value)">
+
+            <input placeholder="Percentage / CGPA"
+                   value="${edu.grade || ""}"
+                   oninput="updateEducation(${i}, 'grade', this.value)">
+
+            
+        </div>
+        `;
+    });
+
+    document.getElementById("educationData").value = JSON.stringify(educations);
+}
+
+function removeEducation(index) {
+    educations.splice(index, 1); // remove item
+
+    renderEducation();
+
+    // enable add button again
+    document.getElementById("addEduBtn").disabled = false;
+}
+
+/* ===================== SKILLS ===================== */
+let skills = [];
+
+const existingSkills = document.getElementById("existingSkills").value;
+if (existingSkills) {
+    skills = JSON.parse(existingSkills);
+    renderSkills();
+}
+
+function addSkill() {
+    const input = document.getElementById("skillInput");
+    const value = input.value.trim();
+    if (!value) return;
+
+    skills.push(value);
+    input.value = "";
+    renderSkills();
+}
+
+function removeSkill(index) {
+    skills.splice(index, 1);
+    renderSkills();
+}
+
+function renderSkills() {
+    const list = document.getElementById("skillList");
+    list.innerHTML = "";
+
+    skills.forEach((skill, i) => {
+        list.innerHTML += `
+            <li>${skill}
+                <span onclick="removeSkill(${i})">✖</span>
+            </li>
+        `;
+    });
+
+    document.getElementById("skillsHidden").value = skills.join(",");
+}
+
+/* ===================== MASTER LANGUAGES ===================== */
+let masters = [];
+
+const existingMasters = document.getElementById("existingMasters").value;
+if (existingMasters) {
+    masters = JSON.parse(existingMasters);
+    renderMasters();
+}
+
+function addMaster() {
+    const lang = document.getElementById("masterLang").value.trim();
+    const level = document.getElementById("level").value;
+    if (!lang || !level) return;
+
+    masters.push(`${lang} (${level})`);
+    document.getElementById("masterLang").value = "";
+    document.getElementById("level").value = "";
+    renderMasters();
+}
+
+function removeMaster(index) {
+    masters.splice(index, 1);
+    renderMasters();
+}
+
+function renderMasters() {
+    const list = document.getElementById("masterList");
+    list.innerHTML = "";
+
+    masters.forEach((m, i) => {
+        list.innerHTML += `
+            <li>${m}
+                <span onclick="removeMaster(${i})">✖</span>
+            </li>
+        `;
+    });
+
+    document.getElementById("masterHidden").value = masters.join(",");
+}
+</script>
+</body>
+</html>

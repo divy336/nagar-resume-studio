@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Builder Team | Login</title>
+  <style>
+    :root {
+      --bg-1: #eef4ff;
+      --bg-2: #dfeaff;
+      --card: rgba(255, 255, 255, 0.82);
+      --card-border: rgba(255, 255, 255, 0.7);
+      --text: #12213a;
+      --muted: #6b7a99;
+      --primary: #4f6df5;
+      --primary-dark: #3852d8;
+      --shadow: 0 24px 60px rgba(55, 84, 170, 0.18);
+      --ring: rgba(79, 109, 245, 0.18);
+      --danger-bg: #fff1f2;
+      --danger-text: #e11d48;
+      --danger-border: #fecdd3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.95), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(79,109,245,0.12), transparent 28%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      position: relative;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(20px);
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .page::before {
+      width: 220px;
+      height: 220px;
+      background: rgba(79, 109, 245, 0.16);
+      top: 4%;
+      left: 6%;
+    }
+
+    .page::after {
+      width: 280px;
+      height: 280px;
+      background: rgba(255, 255, 255, 0.5);
+      bottom: 3%;
+      right: 5%;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      align-items: stretch;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-panel,
+    .form-panel {
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .brand-panel {
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 640px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(79, 109, 245, 0.1);
+      color: var(--primary-dark);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 18px;
+    }
+
+    .brand-title {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+      margin-bottom: 18px;
+    }
+
+    .brand-title span {
+      color: var(--primary);
+    }
+
+    .brand-text {
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 1.03rem;
+      line-height: 1.8;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(79, 109, 245, 0.12);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 10px 26px rgba(49, 72, 150, 0.08);
+      min-height: 118px;
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #223055;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .brand-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(18, 33, 58, 0.08);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .brand-footer strong {
+      color: var(--text);
+    }
+
+    .form-panel {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 640px;
+    }
+
+    .form-head {
+      margin-bottom: 24px;
+    }
+
+    .form-head .small {
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+    }
+
+    .form-head h2 {
+      font-size: 2rem;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .form-head p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    .error {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 1px solid var(--danger-border);
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .group {
+      position: relative;
+    }
+
+    .group input {
+      width: 100%;
+      border: 1.6px solid rgba(79, 109, 245, 0.18);
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      padding: 18px 16px 14px;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: 0.25s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 5px var(--ring);
+      background: #fff;
+    }
+
+    .group input::placeholder {
+      color: transparent;
+    }
+
+    .group label {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      color: #7c8aa9;
+      pointer-events: none;
+      background: transparent;
+      transition: 0.2s ease;
+      padding: 0 4px;
+    }
+
+    .group input:focus + label,
+    .group input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 12px;
+      font-size: 0.8rem;
+      color: var(--primary-dark);
+      background: linear-gradient(180deg, rgba(239, 244, 255, 0.95), rgba(255,255,255,0.95));
+      border-radius: 999px;
+    }
+
+    .forgot {
+      text-align: right;
+      margin-top: -6px;
+    }
+
+    .forgot a,
+    .link a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .forgot a:hover,
+    .link a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 16px 30px rgba(79, 109, 245, 0.28);
+      transition: transform 0.15s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+      margin-top: 4px;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 34px rgba(79, 109, 245, 0.32);
+      opacity: 0.98;
+    }
+
+    button:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .login-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(79, 109, 245, 0.07);
+      border: 1px solid rgba(79, 109, 245, 0.11);
+      color: #34415f;
+      font-size: 0.93rem;
+    }
+
+    .login-meta .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(79, 109, 245, 0.12);
+      white-space: nowrap;
+    }
+
+    .login-meta .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 5px rgba(79, 109, 245, 0.12);
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel,
+      .form-panel {
+        min-height: auto;
+      }
+
+      .brand-panel {
+        order: 2;
+      }
+
+      .form-panel {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        gap: 14px;
+      }
+
+      .form-head h2 {
+        font-size: 1.55rem;
+      }
+
+      .form-head p,
+      .brand-text,
+      .link,
+      .forgot a {
+        font-size: 0.92rem;
+      }
+
+      .group input {
+        padding: 16px 14px 12px;
+        font-size: 0.96rem;
+      }
+
+      button {
+        padding: 13px 16px;
+        font-size: 1rem;
+      }
+
+      .badge {
+        font-size: 0.82rem;
+        padding: 8px 12px;
+      }
+
+      .brand-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .feature-card {
+        min-height: auto;
+        padding: 16px;
+      }
+
+      .login-meta .chip {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .login-meta {
+        width: 100%;
+      }
+
+      .group label {
+        font-size: 0.95rem;
+      }
+
+      .group input:focus + label,
+      .group input:not(:placeholder-shown) + label {
+        font-size: 0.76rem;
+      }
+
+      .brand-panel {
+        display: none;
+      }
+
+      .form-panel {
+        order: 1;
+      }
+
+      .page {
+        align-items: flex-start;
+        padding-top: 18px;
+      }
+
+      .form-panel {
+        min-height: auto;
+      }
+
+      .card {
+        width: 100%;
+      }
+
+      .page::before,
+      .page::after {
+        display: none;
+      }
+
+      .page {
+        padding: 14px;
+      }
+
+      .brand-panel,
+      .form-panel {
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-title {
+        max-width: 100%;
+      }
+
+      .login-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <section class="brand-panel">
+        <div>
+          <div class="badge">Resume Builder Team</div>
+          <h1 class="brand-title">Build a <span>professional resume</span> with confidence</h1>
+          <p class="brand-text">
+            A clean and modern login experience designed for your Flask resume builder project.
+            Simple, premium, responsive, and ready for real users.
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>ATS-friendly design</h4>
+              <p>Clear structure, readable layout, and a polished look for job applications.</p>
+            </div>
+            <div class="feature-card">
+              <h4>Fast workflow</h4>
+              <p>Login, create, preview, and manage resumes from one organized dashboard.</p>
+            </div>
+            <div class="feature-card">
+              <h4>Responsive UI</h4>
+              <p>Looks professional on laptop, tablet, and mobile screens.</p>
+            </div>
+            <div class="feature-card">
+              <h4>Secure access</h4>
+              <p>Keep your resumes and account data protected with a smooth sign-in flow.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand-footer">
+          <div><strong>Made by Nagar's</strong></div>
+          <div>Resume Builder Team</div>
+        </div>
+      </section>
+
+      <section class="form-panel">
+        <div class="form-head">
+          <div class="small">Welcome back</div>
+          <h2>Login to your account</h2>
+          <p>Enter your email and password to continue to the resume dashboard.</p>
+        </div>
+
+        <div class="login-meta">
+          <div class="chip"><span class="dot"></span> Professional resume portal</div>
+         
+        </div>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+          <div class="group">
+            <input type="email" name="email" required placeholder="Email" />
+            <label>Email</label>
+          </div>
+
+          <div class="group">
+            <input type="password" name="password" required placeholder="Password" />
+            <label>Password</label>
+          </div>
+
+          <div class="forgot">
+            <a href="{{ url_for('auth.forgot_password') }}">Forgot Password?</a>
+          </div>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <div class="link">
+          New user? <a href="{{ url_for('auth.signup') }}">Create Account</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
