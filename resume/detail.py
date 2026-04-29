@@ -3,26 +3,16 @@ from resume import resume
 import mysql.connector
 import os
 from werkzeug.utils import secure_filename
-#import pdfkit
+import pdfkit
 from flask import Response
 
 import json
 
-# db=mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     password="nagar@73",
-#     database="flask"
-# )
-import os
-
-
-db = mysql.connector.connect(
-    host=os.getenv("MYSQLHOST"),
-    user=os.getenv("MYSQLUSER"),
-    password=os.getenv("MYSQLPASSWORD"),
-    database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+db=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="nagar@73",
+    database="flask"
 )
 cursor = db.cursor(dictionary=True)
 
