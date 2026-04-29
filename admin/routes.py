@@ -12,7 +12,9 @@ db = mysql.connector.connect(
     user=os.getenv("MYSQLUSER"),
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    port=int(os.getenv("MYSQLPORT", 3306)),
+        connection_timeout=30
+
 )
 
 cursor = db.cursor(dictionary=True)
@@ -88,7 +90,7 @@ def admin_signup():
         cursor.execute("SELECT id FROM admin_signup WHERE email=%s", (email,))
         if cursor.fetchone():
             return render_template("admin_signup.html", error="Email already registered")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute(
             "INSERT INTO admin_signup (username, email, password, is_verified) VALUES (%s,%s,%s,0)",
             (username, email, password)
@@ -96,6 +98,7 @@ def admin_signup():
         db.commit()
 
         otp = str(random.randint(100000, 999999))
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute(
             "INSERT INTO admin_otp (email, otp, is_used) VALUES (%s,%s,0)",
             (email, otp)
@@ -120,7 +123,7 @@ def admin_otp():
         otp = request.form.get("otp", "").strip()
         if not otp:
             return render_template("admin_otp.html", error="Please enter OTP")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("""
             SELECT id FROM admin_otp
             WHERE email=%s AND otp=%s AND is_used=0
@@ -131,6 +134,7 @@ def admin_otp():
             return render_template("admin_otp.html", error="Invalid or expired OTP")
 
         cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("UPDATE admin_signup SET is_verified=1 WHERE email=%s", (email,))
         db.commit()
         return redirect(url_for("admin.admin_login"))
@@ -148,7 +152,7 @@ def admin_login():
 
         if not email or not password:
             return render_template("admin_login.html", error="All fields are required")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("""
             SELECT id, username, email
             FROM admin_signup
@@ -186,12 +190,13 @@ def forgot_admin():
         email = request.form.get("email", "").strip()
         if not email:
             return render_template("forgot_admin.html", error="Email required")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("SELECT id FROM admin_signup WHERE email=%s", (email,))
         if not cursor.fetchone():
             return render_template("forgot_admin.html", error="Email not registered")
 
         otp = str(random.randint(100000, 999999))
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("INSERT INTO admin_otp (email, otp, is_used) VALUES (%s,%s,0)", (email, otp))
         db.commit()
         send_otp_email(email, otp, "Password Reset OTP")
@@ -208,7 +213,7 @@ def forgot_admin_otp():
         otp = request.form.get("otp", "").strip()
         if not otp:
             return render_template("forgot_admin_otp.html", error="OTP required")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("""
             SELECT id FROM admin_otp
             WHERE email=%s AND otp=%s AND is_used=0
@@ -217,7 +222,7 @@ def forgot_admin_otp():
         row = cursor.fetchone()
         if not row:
             return render_template("forgot_admin_otp.html", error="Invalid OTP")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
         db.commit()
         return redirect(url_for("admin.admin_login"))
@@ -235,6 +240,7 @@ def delete_admin(admin_id):
 
     try:
         # Get admin details
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("SELECT id, username, email FROM admin_signup WHERE id=%s", (admin_id,))
         row = cursor.fetchone()
 
@@ -259,7 +265,7 @@ def delete_admin(admin_id):
                 "message": "You cannot delete your own account"
             }), 400
 
-     
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("DELETE FROM admin_signup WHERE id=%s", (admin_id,))
         cursor.execute("DELETE FROM admin_otp WHERE email=%s", (deleted_email,))
         db.commit()
@@ -278,7 +284,7 @@ def delete_admin(admin_id):
 def admin_dashboard():
     if "admin_id" not in session:
         return redirect(url_for("admin.admin_login"))
-
+    db.ping(reconnect=True, attempts=3, delay=2)
     cursor.execute("SELECT user_id, resume_data FROM user_resume")
     resume_rows = cursor.fetchall()
 

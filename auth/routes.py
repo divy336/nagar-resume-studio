@@ -11,7 +11,9 @@ db = mysql.connector.connect(
     user=os.getenv("MYSQLUSER"),
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    port=int(os.getenv("MYSQLPORT", 3306)),
+        connection_timeout=30
+
 )
 
 cursor = db.cursor(dictionary=True)
@@ -153,7 +155,7 @@ def forgot_password():
 
     if request.method == "POST":
         email = request.form.get("email")
-
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("SELECT id FROM register WHERE email=%s", (email,))
         if not cursor.fetchone():
             return render_template("forgot_password.html", error="Email not found")

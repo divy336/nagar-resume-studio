@@ -15,7 +15,9 @@ db = mysql.connector.connect(
     user=os.getenv("MYSQLUSER"),
     password=os.getenv("MYSQLPASSWORD"),
     database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    port=int(os.getenv("MYSQLPORT", 3306)),
+        connection_timeout=30
+
 )
 
 cur = db.cursor(dictionary=True)
@@ -457,7 +459,7 @@ def fifth_page():
         # UPDATE IF resume_id EXISTS
         # ==================================
         if "resume_id" in session:
-
+            db.ping(reconnect=True, attempts=3, delay=2)
             cursor.execute("""
                 UPDATE other_resume
                 SET resume_data=%s
@@ -475,7 +477,7 @@ def fifth_page():
         # INSERT FIRST TIME
         # ==================================
         else:
-
+            db.ping(reconnect=True, attempts=3, delay=2)
             cursor.execute("""
                 INSERT INTO other_resume (user_id, resume_data, created_at)
                 VALUES (%s, %s, NOW())
@@ -491,6 +493,7 @@ def fifth_page():
         # ==================================
         # HISTORY TABLE
         # ==================================
+        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("""
             INSERT INTO all_resume
             (user_id, resume_data, resume_type, original_id, action_type)
@@ -648,7 +651,7 @@ def edit_other_resume(id):
 @resume.route("/api/get-other-resumes")
 def get_other_resumes():
     user_id = session.get("user_id")
-
+    db.ping(reconnect=True, attempts=3, delay=2)
     cur.execute("""
         SELECT id, resume_data, created_at 
         FROM other_resume 
@@ -673,7 +676,7 @@ def get_other_resumes():
 def get_it_resumes():
     user_id = session.get("user_id")
    
-
+    db.ping(reconnect=True, attempts=3, delay=2)
     cur.execute("""
         SELECT id, resume_data, created_at 
         FROM user_resume 
@@ -734,6 +737,7 @@ def preview(rtype, id):
     
 
     if rtype == "it":
+        db.ping(reconnect=True, attempts=3, delay=2)
         cur.execute("""
             SELECT resume_data
             FROM user_resume
@@ -741,6 +745,7 @@ def preview(rtype, id):
         """, (id, session["user_id"]))
 
     else:
+        db.ping(reconnect=True, attempts=3, delay=2)
         cur.execute("""
             SELECT resume_data
             FROM other_resume
@@ -773,11 +778,13 @@ def delete_resume(rtype, id):
  
     try:
         if rtype == "it":
+            db.ping(reconnect=True, attempts=3, delay=2)
             cur.execute("""
                 DELETE FROM user_resume 
                 WHERE id=%s AND user_id=%s
             """, (id, session["user_id"]))
         else:
+            db.ping(reconnect=True, attempts=3, delay=2)
             cur.execute("""
                 DELETE FROM other_resume 
                 WHERE id=%s AND user_id=%s
