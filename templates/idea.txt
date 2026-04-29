@@ -108,573 +108,405 @@ def third_page():
         resume_data["hobbies"] = request.form.get("hobbies")
 
         # 🔥 SAVE ALL
-        resume_data["education"] = education_list
-        resume_data["experience"] = experience_list
-        resume_data["projects"] = project_list
 
-        session["resume"] = resume_data
-        session.modified = True
-        print( session["resume"])  # Debugging line
-        return redirect(url_for("resume.forth_page"))  # next page
 
-    return render_template("all_resume/third_page.html", resume=session.get("resume", {}))@resume.route("/third_page", methods=["GET", "POST"])
-def third_page():
 
-    if "user_id" not in session:
-        return redirect(url_for("auth.login"))
 
-    if "resume" not in session:
-        return redirect(url_for("resume.first_page"))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        from flask import session, url_for, render_template, request, redirect, jsonify
+from admin import admin
+import mysql.connector
+import smtplib
+from email.message import EmailMessage
+import random
+import json
+import os
+
+def get_db():
+    db = mysql.connector.connect(
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT", 3306)),
+        connection_timeout=30,
+        autocommit=True
+    )
+    cursor = db.cursor(dictionary=True)
+    return db, cursor
+
+SUPER_ADMIN_EMAIL = "nagardivya73@gmail.com"
+SENDER_EMAIL      = "nagardivya73@gmail.com"
+SENDER_PASSWORD   = "gjgebkodbezyzoxr"
+
+
+# ══════════════════════════════════════
+#  EMAIL HELPERS
+# ══════════════════════════════════════
+def send_otp_email(to_email, otp, subject="OTP Verification"):
+    """Send OTP to a given email address."""
+    msg = EmailMessage()
+    msg["Subject"] = f"🔐 {subject}"
+    msg["From"]    = f"Resume Builder <{SENDER_EMAIL}>"
+    msg["To"]      = to_email
+    msg.set_content(f"Your OTP is: {otp}")
+    msg.add_alternative(f"""
+    <html><body style="font-family:Poppins,sans-serif;background:#f0f4fc;padding:30px;">
+    <div style="max-width:480px;margin:auto;background:#fff;border-radius:16px;padding:32px;
+                box-shadow:0 4px 24px rgba(37,99,235,.12);">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="width:52px;height:52px;background:#eff6ff;border-radius:14px;
+                    display:inline-flex;align-items:center;justify-content:center;font-size:24px;">🔐</div>
+      </div>
+      <h2 style="color:#1e293b;text-align:center;font-size:20px;margin-bottom:6px;">{subject}</h2>
+      <p style="color:#64748b;text-align:center;font-size:13px;">Resume Builder Admin Panel</p>
+      <div style="text-align:center;margin:28px 0;">
+        <span style="font-size:34px;font-weight:700;letter-spacing:10px;
+                     background:#eff6ff;padding:14px 28px;border-radius:12px;
+                     color:#2563eb;display:inline-block;">{otp}</span>
+      </div>
+      <p style="color:#94a3b8;font-size:12px;text-align:center;">
+        This OTP is valid for one-time use only. Do not share it with anyone.
+      </p>
+    </div>
+    </body></html>
+    """, subtype="html")
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        server.send_message(msg)
+
+
+
+
+def log_login(username, email, ip, status):
+    try:
+        
+        db, cursor = get_db()
+        cursor.execute(
+            "INSERT INTO admin_login (username, email) VALUES (%s, %s)",
+            (f"{status}:{username}", email)
+        )
+        db.commit()
+    except Exception as e:
+        print(f"[Login Log Error] {e}")
+        
+        
+@admin.route("/admin_signup", methods=["GET", "POST"])
+def admin_signup():
     if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        email    = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+        confirm  = request.form.get("confirm", "")
 
-        resume_data = session.get("resume", {})
+        if not all([username, email, password, confirm]):
+            return render_template("admin_signup.html", error="All fields are required")
+        if password != confirm:
+            return render_template("admin_signup.html", error="Passwords do not match")
 
-        # 🔥 EDUCATION (LIST)
-        degrees = request.form.getlist("degree[]")
-        colleges = request.form.getlist("college[]")
-        boards = request.form.getlist("board[]")
-        cgpas = request.form.getlist("cgpa[]")
-        starts = request.form.getlist("edu_start[]")
-        ends = request.form.getlist("edu_end[]")
+        db, cursor = get_db()
+        if cursor.fetchone():
+            return render_template("admin_signup.html", error="Email already registered")
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute(
+            "INSERT INTO admin_signup (username, email, password, is_verified) VALUES (%s,%s,%s,0)",
+            (username, email, password)
+        )
+        db.commit()
 
-        education_list = []
+        otp = str(random.randint(100000, 999999))
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute(
+            "INSERT INTO admin_otp (email, otp, is_used) VALUES (%s,%s,0)",
+            (email, otp)
+        )
+        db.commit()
+        send_otp_email(
+    SUPER_ADMIN_EMAIL,
+    otp,
+    f"New Admin Signup Approval for {email}"
+)
+        session["otp_email"] = email
+        return redirect(url_for("admin.admin_otp"))
 
-        for i in range(len(degrees)):
-            education_list.append({
-                "degree": degrees[i],
-                "college": colleges[i],
-                "board": boards[i],
-                "cgpa": cgpas[i],
-                "start": starts[i],
-                "end": ends[i]
-            })
-
-        # 🔥 EXPERIENCE (LIST)
-        roles = request.form.getlist("exp_role[]")
-        companies = request.form.getlist("exp_company[]")
-        durations = request.form.getlist("exp_duration[]")
-        descs = request.form.getlist("exp_desc[]")
-
-        experience_list = []
-
-        for i in range(len(roles)):
-            experience_list.append({
-                "role": roles[i],
-                "company": companies[i],
-                "duration": durations[i],
-"description": clean_text(descs[i])
-})
-
-        # 🔥 PROJECTS (LIST)
-        titles = request.form.getlist("proj_title[]")
-        techs = request.form.getlist("proj_tech[]")
-        pdescs = request.form.getlist("proj_desc[]")
-
-        project_list = []
-
-        for i in range(len(titles)):
-            project_list.append({
-                "title": titles[i],
-                "tech": techs[i],
-                "description": clean_text(descs[i])
-            })
-
-        # 🔥 EXTRA
-        resume_data["languages"] = request.form.get("languages")
-        resume_data["hobbies"] = request.form.get("hobbies")
-
-        # 🔥 SAVE ALL
-        resume_data["education"] = education_list
-        resume_data["experience"] = experience_list
-        resume_data["projects"] = project_list
-
-        session["resume"] = resume_data
-        session.modified = True
-        print( session["resume"])  # Debugging line
-        return redirect(url_for("resume.forth_page"))  # next page
-
-    return render_template("all_resume/third_page.html", resume=session.get("resume", {}))
+    return render_template("admin_signup.html")
 
 
 
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Step 3 - Academic & Professional</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@admin.route("/admin_otp", methods=["GET", "POST"])
+def admin_otp():
+    email = session.get("otp_email")
+    if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
+        otp = request.form.get("otp", "").strip()
+        if not otp:
+            return render_template("admin_otp.html", error="Please enter OTP")
+        db, cursor = get_db()
+        cursor.execute("""
+            SELECT id FROM admin_otp
+            WHERE email=%s AND otp=%s AND is_used=0
+            ORDER BY id DESC LIMIT 1
+        """, (email, otp))
+        row = cursor.fetchone()
+        if not row:
+            return render_template("admin_otp.html", error="Invalid or expired OTP")
+
+        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
+        cursor.execute("UPDATE admin_signup SET is_verified=1 WHERE email=%s", (email,))
+        db.commit()
+        return redirect(url_for("admin.admin_login"))
+
+    return render_template("admin_otp.html")
+
+
+
+@admin.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        db, cursor = get_db()
         
-        body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; padding: 20px; }
-        
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        
-        h2 { color: #1e3a8a; margin: 0 0 20px 0; font-size: 1.5rem; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
-        .entry-card { 
-            background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; 
-            margin-bottom: 15px; position: relative; animation: fadeIn 0.3s ease;
-        }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.85rem; color: #4b5563; }
-        
-        input, textarea, select {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; box-sizing: border-box; font-size: 1rem;
-        }
-        
-        .add-btn {
-            background: #eff6ff; color: #2563eb; border: 1px dashed #2563eb; padding: 10px 20px;
-            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s;
-        }
-        .add-btn:hover { background: #2563eb; color: white; }
-
-        .remove-btn {
-            position: absolute; top: 10px; right: 10px; background: #fee2e2; color: #ef4444;
-            border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;
-        }
-
-        .save-btn {
-            width: 100%; background: #2563eb; color: white; padding: 18px; border: none;
-            border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.2);
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <form method="POST">
-        
-        <div class="card">
-            <div class="section-header">
-                <h2>Education (Required)</h2>
-                <button type="button" class="add-btn" onclick="addEducation()">+ Add More</button>
-                <p id="eduMsg"></p>
-
-            </div>
-            <div id="educationContainer">
-                <div class="entry-card">
-                    <div class="grid">
-                        <div class="form-group"><label>Degree (BCA, 12th)</label><input name="degree[]" required placeholder="e.g. BCA" value="{{ resume.get('degree', '') }}"></div>
-                        <div class="form-group"><label>Institute Name</label><input name="college[]" required placeholder="College/School Name" value="{{ resume.get('college', '') }}"></div>
-                        <div class="form-group"><label>Board/University</label><input name="board[]" required placeholder="e.g. Gujarat University" value="{{ resume.get('board', '') }}"></div>
-                        <div class="form-group"><label>CGPA / %</label><input name="cgpa[]" required placeholder="e.g. 8.5 or 85%" value="{{ resume.get('cgpa', '') }}"></div>
-                        <div class="form-group"><label>Start Year</label><input type="number" name="edu_start[]" placeholder="2021" value="{{ resume.get('edu_start', '') }}"></div>
-                        <div class="form-group"><label>End Year (or Pursuing)</label><input name="edu_end[]" placeholder="2024" value="{{ resume.get('edu_end', '') }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="section-header">
-                <h2>Experience / Internships</h2>
-                <button type="button" class="add-btn" onclick="addExperience()">+ Add More</button>
-                <p id="expMsg"></p>
-
-            </div>
-            <div id="experienceContainer">
-                <div class="entry-card">
-                    <div class="grid">
-                        <div class="form-group"><label>Role</label><input name="exp_role[]" placeholder="Intern, Trainee" value="{{ resume.get('exp_role', '') }}"></div>
-                        <div class="form-group"><label>Company</label><input name="exp_company[]" placeholder="Company Name" value="{{ resume.get('exp_company', '') }}"></div>
-                    </div>
-                    <div class="form-group"><label>Duration</label><input name="exp_duration[]" placeholder="Jan 2024 - Mar 2024" value="{{ resume.get('exp_duration', '') }}"></div>
-                    <div class="form-group"><label>Description</label><textarea name="exp_desc[]" rows="2" placeholder="What did you do there?">{{ resume.get('exp_desc', '') }}</textarea></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="section-header">
-                <h2>Projects (At least one)</h2>
-                <button type="button" class="add-btn" onclick="addProject()">+ Add More</button>
-                <p id="projMsg"></p>
-            </div>
-            <div id="projectContainer">
-                <div class="entry-card">
-                    <div class="form-group"><label>Project Title</label><input name="proj_title[]" required placeholder="Resume Builder" value="{{ resume.get('proj_title', '') }}"></div>
-                    <div class="form-group"><label>Technologies (Comma separated)</label><input name="proj_tech[]" required placeholder="Python, Flask, JS" value="{{ resume.get('proj_tech', '') }}"></div>
-                    <div class="form-group"><label>Project Description</label><textarea name="proj_desc[]" required rows="3" placeholder="Key features and your role...">{{ resume.get('proj_desc', '') }}</textarea></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Extra Details</h2>
-            <div class="form-group">
-                <label>Languages Known</label>
-                <input name="languages" placeholder="English, Hindi, Gujarati" value="{{ resume.get('languages', '') }}">
-            </div>
-            <div class="form-group">
-                <label>Hobbies / Interests</label>
-                <input name="hobbies" placeholder="Coding, Cricket, Traveling" value="{{ resume.get('hobbies', '') }}">
-            </div>
-        </div>
-
-        <button type="submit" class="save-btn">Save and Generate Preview →</button>
-    </form>
-</div>
-
-<script>
- // counters (1 default entry already exists)
-let eduCount = 1;
-let expCount = 1;
-let projCount = 1;
-
-// max limits
-const MAX_EDU = 2;
-const MAX_EXP = 2;
-const MAX_PROJ = 3;
-
-
-// 🔥 REMOVE BUTTON
-function createRemoveBtn(el, type) {
-    const btn = document.createElement('button');
-    btn.className = 'remove-btn';
-    btn.innerText = 'Remove';
-
-    btn.onclick = () => {
-        el.remove();
-
-        if (type === "edu") eduCount--;
-        if (type === "exp") expCount--;
-        if (type === "proj") projCount--;
-
-        updateButtons();
-    };
-
-    el.appendChild(btn);
-}
-
-
-// 🔥 UPDATE BUTTON + MESSAGE
-function updateButtons() {
-
-    const eduBtn = document.querySelector('[onclick="addEducation()"]');
-    const expBtn = document.querySelector('[onclick="addExperience()"]');
-    const projBtn = document.querySelector('[onclick="addProject()"]');
-
-    const eduMsg = document.getElementById("eduMsg");
-    const expMsg = document.getElementById("expMsg");
-    const projMsg = document.getElementById("projMsg");
-
-    // EDUCATION
-    if (eduCount >= MAX_EDU) {
-        eduBtn.disabled = true;
-        if (eduMsg) eduMsg.innerText = "Max 2 education allowed";
-    } else {
-        eduBtn.disabled = false;
-        if (eduMsg) eduMsg.innerText = "";
-    }
-
-    // EXPERIENCE
-    if (expCount >= MAX_EXP) {
-        expBtn.disabled = true;
-        if (expMsg) expMsg.innerText = "Max 2 internships allowed";
-    } else {
-        expBtn.disabled = false;
-        if (expMsg) expMsg.innerText = "";
-    }
-
-    // PROJECT
-    if (projCount >= MAX_PROJ) {
-        projBtn.disabled = true;
-        if (projMsg) projMsg.innerText = "Max 3 projects allowed";
-    } else {
-        projBtn.disabled = false;
-        if (projMsg) projMsg.innerText = "";
-    }
-}
-
-
-// 🔥 EDUCATION
-function addEducation() {
-    if (eduCount >= MAX_EDU) return;
-
-    eduCount++;
-
-    const container = document.getElementById('educationContainer');
-    const div = document.createElement('div');
-    div.className = 'entry-card';
-
-    div.innerHTML = `
-        <div class="grid">
-            <div class="form-group"><input name="degree[]" placeholder="Degree" value="{{ resume.get('degree', '') }}"></div>
-            <div class="form-group"><input name="college[]" placeholder="Institute" value="{{ resume.get('college', '') }}"></div>
-            <div class="form-group"><input name="board[]" placeholder="Board" value="{{ resume.get('board', '') }}"></div>
-            <div class="form-group"><input name="cgpa[]" placeholder="CGPA" value="{{ resume.get('cgpa', '') }}"></div>
-            <div class="form-group"><input name="edu_start[]" placeholder="Start Year" value="{{ resume.get('edu_start', '') }}"></div>
-            <div class="form-group"><input name="edu_end[]" placeholder="End Year" value="{{ resume.get('edu_end', '') }}">
-        </div>`;
-
-    createRemoveBtn(div, "edu");
-    container.appendChild(div);
-
-    updateButtons();
-}
-
-
-// 🔥 EXPERIENCE
-function addExperience() {
-    if (expCount >= MAX_EXP) return;
-
-    expCount++;
-
-    const container = document.getElementById('experienceContainer');
-    const div = document.createElement('div');
-    div.className = 'entry-card';
-
-    div.innerHTML = `
-        <div class="grid">
-            <div class="form-group"><input name="exp_role[]" placeholder="Role" value="{{ resume.get('exp_role', '') }}"></div>
-            <div class="form-group"><input name="exp_company[]" placeholder="Company" value="{{ resume.get('exp_company', '') }}"></div>
-        </div>
-        <div class="form-group"><input name="exp_duration[]" placeholder="Duration" value="{{ resume.get('exp_duration', '') }}"></div>
-        <div class="form-group"><textarea name="exp_desc[]" placeholder="Description">{{ resume.get('exp_desc', '') }}</textarea></div>`;
-    createRemoveBtn(div, "exp");
-    container.appendChild(div);
-
-    updateButtons();
-}
-
-
-// 🔥 PROJECT
-function addProject() {
-    if (projCount >= MAX_PROJ) return;
-
-    projCount++;
-
-    const container = document.getElementById('projectContainer');
-    const div = document.createElement('div');
-    div.className = 'entry-card';
-
-    div.innerHTML = `
-        <div class="form-group"><input name="proj_title[]" placeholder="Project Title" value="{{ resume.get('proj_title', '') }}"></div>
-        <div class="form-group"><input name="proj_tech[]" placeholder="Technologies"></div>
-        <div class="form-group"><textarea name="proj_desc[]" placeholder="Description"></textarea></div>`;
-
-    createRemoveBtn(div, "proj");
-    container.appendChild(div);
-
-    updateButtons();
-}
-
-
-// 🔥 INITIAL CALL
-updateButtons();
-</script>
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  function getProjTemplates(project) {
-    const name = userName;
-    const field = group;
-
-    if (field === "Finance") {
-       return [
-`${name} developed ${project} to automate financial tracking, utilizing Excel and data tools to improve accuracy in budget forecasting.`,
-
-`${name} created ${project}, a dynamic reporting system that streamlines audit preparation and provides clear insights into fiscal health.`,
-
-`${name} engineered ${project} to analyze stock market trends, incorporating statistical models to minimize risk and maximize returns.`,
-
-`${name} built ${project}, a financial dashboard that visualizes income, expenses, and cash flow, enabling better strategic decision-making.`,
-
-`${name} designed ${project} to manage personal and business budgets efficiently, reducing overspending through real-time tracking.`,
-
-`${name} implemented ${project} to perform ratio analysis and evaluate company performance using key financial metrics.`,
-
-`${name} developed ${project}, an automated tax calculation system that ensures compliance and reduces manual errors.`,
-
-`${name} created ${project} to forecast future revenue using historical financial data and predictive analytics.`,
-
-`${name} built ${project}, a portfolio management tool that tracks investments and suggests optimized asset allocation strategies.`,
-
-`${name} designed ${project} to detect anomalies in financial transactions, helping identify potential fraud risks.`,
-
-`${name} engineered ${project} for loan eligibility analysis by evaluating credit scores, income patterns, and risk factors.`,
-
-`${name} developed ${project}, a real-time expense monitoring system that categorizes spending and improves financial discipline.`,
-
-`${name} built ${project} to automate invoice generation and payment tracking, improving financial workflow efficiency.`,
-
-`${name} created ${project}, a financial planning tool that helps users set goals, track savings, and manage investments.`,
-
-`${name} implemented ${project} to analyze business profitability by calculating margins, costs, and revenue trends.`,
-
-`${name} designed ${project} to simulate investment scenarios and predict returns under different market conditions.`,
-
-`${name} developed ${project}, a budgeting application that integrates multiple accounts for unified financial management.`,
-
-`${name} built ${project} to generate financial statements such as balance sheets and income statements automatically.`,
-
-`${name} created ${project}, a risk assessment tool that evaluates financial exposure and suggests mitigation strategies.`,
-
-`${name} engineered ${project} to optimize expense allocation using data-driven insights and cost analysis techniques.`
-];
-    }
-
-    if (field === "Design") {
-      return [
-`${name} designed ${project} focusing on seamless UI/UX, combining modern aesthetics and intuitive navigation to enhance user interaction.`,
-
-`${name} built ${project} as a comprehensive branding identity, focusing on color theory and typography to deliver a professional visual experience.`,
-
-`${name} created ${project}, a responsive web layout that prioritizes mobile-first design and accessibility for a diverse range of users.`,
-
-`${name} developed ${project} with a user-centered design approach, ensuring intuitive workflows and enhanced usability across all devices.`,
-
-`${name} crafted ${project}, a visually engaging interface that balances creativity and functionality to improve overall user satisfaction.`,
-
-`${name} designed ${project} using modern design principles such as minimalism and consistency to create a clean and impactful user experience.`,
-
-`${name} built ${project}, an interactive prototype that demonstrates smooth transitions, animations, and engaging micro-interactions.`,
-
-`${name} created ${project} focusing on accessibility standards, ensuring inclusive design for users with diverse needs.`,
-
-`${name} developed ${project}, a high-fidelity UI prototype showcasing detailed layouts, color palettes, and typography systems.`,
-
-`${name} designed ${project} to enhance brand storytelling through visually compelling graphics and cohesive design elements.`,
-
-`${name} built ${project}, a modern dashboard interface that visualizes data effectively using charts, layouts, and color hierarchy.`,
-
-`${name} created ${project}, a design system that standardizes components, styles, and interactions for consistent user experience.`,
-
-`${name} engineered ${project} with a focus on responsive design, ensuring optimal performance across mobile, tablet, and desktop screens.`,
-
-`${name} designed ${project} to improve user engagement by incorporating interactive elements and intuitive visual feedback.`,
-
-`${name} developed ${project}, a creative portfolio showcasing innovative layouts and unique visual concepts.`,
-
-`${name} built ${project} with emphasis on usability testing and iterative improvements to refine the overall user experience.`,
-
-`${name} created ${project}, a modern landing page optimized for conversions using strategic layout and visual hierarchy.`,
-
-`${name} designed ${project} to deliver a smooth and engaging digital experience through thoughtful animations and transitions.`,
-
-`${name} developed ${project}, a visually appealing interface that integrates branding elements for a strong identity.`,
-
-`${name} built ${project} focusing on clean layouts, whitespace utilization, and readability to enhance user interaction.`
-];
-    }
-
-    if (field === "Business") {
-      return [
-`${name} developed ${project} as a strategic business model, focusing on market penetration and efficient resource allocation for growth.`,
-
-`${name} managed ${project} to optimize sales workflows, implementing CRM logic and data tracking to increase lead conversion rates.`,
-
-`${name} created ${project} to improve team collaboration, featuring an organized system for project tracking and strategic goal setting.`,
-
-`${name} built ${project}, a customer relationship management system designed to enhance client engagement and retention strategies.`,
-
-`${name} designed ${project} to analyze market trends and consumer behavior, enabling data-driven business decisions.`,
-
-`${name} developed ${project}, a business analytics dashboard that tracks KPIs and improves performance monitoring.`,
-
-`${name} created ${project} to streamline supply chain operations, reducing costs and improving delivery efficiency.`,
-
-`${name} managed ${project}, implementing effective marketing strategies to increase brand visibility and customer acquisition.`,
-
-`${name} built ${project}, a sales tracking system that monitors revenue, targets, and performance metrics in real-time.`,
-
-`${name} designed ${project} to improve operational efficiency by automating routine business processes and workflows.`,
-
-`${name} developed ${project}, a startup business plan focusing on scalability, profitability, and competitive positioning.`,
-
-`${name} created ${project} to enhance digital marketing campaigns using analytics and targeted customer segmentation.`,
-
-`${name} built ${project}, a project management tool that improves task allocation, deadlines, and team productivity.`,
-
-`${name} implemented ${project} to optimize pricing strategies based on market demand and competitor analysis.`,
-
-`${name} designed ${project} to improve customer experience by integrating feedback systems and service enhancements.`,
-
-`${name} developed ${project}, a business forecasting tool that predicts sales trends and supports strategic planning.`,
-
-`${name} created ${project} to manage inventory efficiently, reducing waste and improving stock control.`,
-
-`${name} built ${project}, a lead generation system that captures and nurtures potential clients through automated workflows.`,
-
-`${name} engineered ${project} to evaluate business risks and develop mitigation strategies for sustainable growth.`,
-
-`${name} designed ${project} focusing on improving profitability through cost analysis and revenue optimization techniques.`
-];
-    }
-
-    // Default Project Suggestions
-   return [
-`${name} developed ${project} using modern technologies, focusing on functionality, user experience, and performance to solve problems.`,
-
-`${name} created ${project} demonstrating strong problem-solving skills, efficient design, and practical implementation of core concepts.`,
-
-`${name} engineered ${project} to highlight key technical skills, featuring a user-friendly interface and optimized logic to handle data.`,
-
-`${name} built ${project}, a practical application designed to solve real-world problems through efficient coding and structured logic.`,
-
-`${name} designed ${project} focusing on clean architecture and maintainable code, ensuring scalability and performance.`,
-
-`${name} developed ${project} as a full-stack solution, integrating frontend and backend technologies for seamless functionality.`,
-
-`${name} created ${project}, an interactive system that improves user engagement through responsive design and smooth navigation.`,
-
-`${name} implemented ${project} to automate tasks and reduce manual effort, improving efficiency and accuracy.`,
-
-`${name} built ${project}, a data-driven application that processes and displays information effectively using optimized algorithms.`,
-
-`${name} designed ${project} to enhance user experience by combining intuitive UI with robust backend functionality.`,
-
-`${name} developed ${project}, a scalable system capable of handling multiple users and dynamic data efficiently.`,
-
-`${name} engineered ${project} to demonstrate strong logical thinking, incorporating structured workflows and error handling.`,
-
-`${name} created ${project}, a responsive application optimized for performance across devices and platforms.`,
-
-`${name} built ${project} using best coding practices, ensuring readability, reusability, and maintainability of code.`,
-
-`${name} designed ${project} to handle real-time data processing, improving system responsiveness and user interaction.`,
-
-`${name} developed ${project}, a modular application where components are reusable and easy to manage.`,
-
-`${name} implemented ${project} to showcase integration of APIs and external services for enhanced functionality.`,
-
-`${name} built ${project}, focusing on security and data validation to ensure reliable system performance.`,
-
-`${name} engineered ${project} with optimized logic to reduce processing time and improve overall efficiency.`,
-
-`${name} created ${project}, a versatile application adaptable to different use cases and user requirements.`
-];
-  }
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+        ip = request.remote_addr or "Unknown"
+
+        if not email or not password:
+            return render_template("admin_login.html", error="All fields are required")
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("""
+            SELECT id, username, email
+            FROM admin_signup
+            WHERE email=%s AND password=%s AND is_verified=1
+        """, (email, password))
+
+        row = cursor.fetchone()
+
+        if not row:
+            log_login("UNKNOWN", email, ip, "FAILED")
+            return render_template(
+                "admin_login.html",
+                error="Invalid credentials or account not verified"
+            )
+
+        admin_id = row["id"]
+        admin_name = row["username"]
+        admin_mail = row["email"]
+
+        session["admin_id"] = admin_id
+        session["admin_name"] = admin_name
+        session["admin_email"] = admin_mail
+
+        log_login(admin_name, admin_mail, ip, "SUCCESS")
+
+        return redirect(url_for("admin.admin_dashboard"))
+
+    return render_template("admin_login.html")
+
+
+
+@admin.route("/forgot_admin", methods=["GET", "POST"])
+def forgot_admin():
+    if request.method == "POST":
+        db, cursor = get_db()
+        email = request.form.get("email", "").strip()
+        if not email:
+            return render_template("forgot_admin.html", error="Email required")
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("SELECT id FROM admin_signup WHERE email=%s", (email,))
+        if not cursor.fetchone():
+            return render_template("forgot_admin.html", error="Email not registered")
+
+        otp = str(random.randint(100000, 999999))
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("INSERT INTO admin_otp (email, otp, is_used) VALUES (%s,%s,0)", (email, otp))
+        db.commit()
+        send_otp_email(email, otp, "Password Reset OTP")
+        session["reset_email"] = email
+        return redirect(url_for("admin.forgot_admin_otp"))
+
+    return render_template("forgot_admin.html")
+
+
+@admin.route("/forgot_admin_otp", methods=["GET", "POST"])
+def forgot_admin_otp():
+    email = session.get("reset_email")
+    if request.method == "POST":
+        db, cursor = get_db()
+        otp = request.form.get("otp", "").strip()
+        if not otp:
+            return render_template("forgot_admin_otp.html", error="OTP required")
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("""
+            SELECT id FROM admin_otp
+            WHERE email=%s AND otp=%s AND is_used=0
+            ORDER BY id DESC LIMIT 1
+        """, (email, otp))
+        row = cursor.fetchone()
+        if not row:
+            return render_template("forgot_admin_otp.html", error="Invalid OTP")
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
+        db.commit()
+        return redirect(url_for("admin.admin_login"))
+
+    return render_template("forgot_admin_otp.html")
+
+
+
+
+
+@admin.route("/delete_admin/<int:admin_id>", methods=["POST"])
+def delete_admin(admin_id):
+    if "admin_id" not in session:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    try:
+        db, cursor = get_db()
+        # Get admin details
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("SELECT id, username, email FROM admin_signup WHERE id=%s", (admin_id,))
+        row = cursor.fetchone()
+
+        if not row:
+            return jsonify({"success": False, "message": "Admin not found"}), 404
+
+        deleted_id    = row["id"]
+        deleted_name  = row["username"]
+        deleted_email = row["email"]
+
+        # ❌ BLOCK: Super Admin cannot be deleted
+        if deleted_email == SUPER_ADMIN_EMAIL:
+            return jsonify({
+                "success": False,
+                "message": "Super Admin cannot be deleted"
+            }), 403
+
+        # ❌ BLOCK: Self delete
+        if deleted_id == session["admin_id"]:
+            return jsonify({
+                "success": False,
+                "message": "You cannot delete your own account"
+            }), 400
+
+        db.ping(reconnect=True, attempts=3, delay=2)
+        cursor.execute("DELETE FROM admin_signup WHERE id=%s", (admin_id,))
+        cursor.execute("DELETE FROM admin_otp WHERE email=%s", (deleted_email,))
+        db.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Admin '{deleted_name}' deleted successfully"
+        })
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@admin.route("/admin_dashboard")
+def admin_dashboard():
+    if "admin_id" not in session:
+        return redirect(url_for("admin.admin_login"))
+    db, cursor = get_db()
+    db.ping(reconnect=True, attempts=3, delay=2)
+    cursor.execute("SELECT user_id, resume_data FROM user_resume")
+    resume_rows = cursor.fetchall()
+
+    users = []
+    resumes = []
+
+    for row in resume_rows:
+        user_id = row["user_id"]
+
+        try:
+            r = json.loads(row["resume_data"]) if isinstance(row["resume_data"], str) else row["resume_data"]
+        except:
+            continue
+
+        name = ((r.get("first_name","") + " " + r.get("last_name","")).strip()) or "No Name"
+
+        users.append({
+            "user_id": user_id,
+            "name": name,
+            "email": r.get("email","Not Provided"),
+            "mobile": r.get("mobile","Not Provided"),
+            "major": r.get("major","Not Provided"),
+            "status": 1
+        })
+
+        resumes.append({
+            "user_id": user_id,
+            "name": name,
+            "email": r.get("email","Not Provided"),
+            "skills": ", ".join(r.get("skills", [])),
+            "experience": len(r.get("experience", [])),
+            "projects": len(r.get("projects", [])),
+            "raw": r
+        })
+
+    # admins
+    cursor.execute("SELECT id, username, email, is_verified, created_at FROM admin_signup")
+    admin_rows = cursor.fetchall()
+
+    admins = []
+    for row in admin_rows:
+        admins.append({
+            "id": row["id"],
+            "username": row["username"],
+            "email": row["email"],
+            "is_verified": bool(row["is_verified"]),
+            "created_at": str(row["created_at"]),
+            "is_self": row["id"] == session["admin_id"]
+        })
+
+    # login activity
+    cursor.execute("SELECT id, username, email, created_at FROM admin_login ORDER BY created_at DESC LIMIT 50")
+    login_rows = cursor.fetchall()
+
+    login_activity = []
+    for row in login_rows:
+        login_activity.append({
+            "id": row["id"],
+            "username": row["username"],
+            "email": row["email"],
+            "login_time": str(row["created_at"])
+        })
+
+    cursor.execute("""
+        SELECT COUNT(DISTINCT email) AS total
+        FROM admin_login
+        WHERE username LIKE 'SUCCESS:%'
+    """)
+    result = cursor.fetchone()
+    successful_logins = result["total"]
+
+    return render_template(
+        "admin/dashbord_admin.html",
+        users=users,
+        resumes=resumes,
+        admins=admins,
+        login_activity=login_activity,
+        total_users=len(users),
+        total_resumes=len(resumes),
+        verified_admins=sum(1 for a in admins if a["is_verified"]),
+        successful_logins=successful_logins,
+        admin_name=session.get("admin_name", "Admin"),
+        admin_email=session.get("admin_email", ""),
+        current_admin_id=session.get("admin_id"),
+    )
+@admin.route("/admin_logout")
+def admin_logout():
+    session.clear()
+    return redirect(url_for("admin.admin_login"))

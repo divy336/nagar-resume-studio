@@ -7,19 +7,18 @@ import random
 import json
 import os
 
-db = mysql.connector.connect(
-    host=os.getenv("MYSQLHOST"),
-    user=os.getenv("MYSQLUSER"),
-    password=os.getenv("MYSQLPASSWORD"),
-    database=os.getenv("MYSQLDATABASE"),
-    port=int(os.getenv("MYSQLPORT", 3306)),
+def get_db():
+    db = mysql.connector.connect(
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT", 3306)),
         connection_timeout=30,
         autocommit=True
-
-)
-
-cursor = db.cursor(dictionary=True)
-
+    )
+    cursor = db.cursor(dictionary=True)
+    return db, cursor
 
 SUPER_ADMIN_EMAIL = "nagardivya73@gmail.com"
 SENDER_EMAIL      = "nagardivya73@gmail.com"
@@ -66,6 +65,8 @@ def send_otp_email(to_email, otp, subject="OTP Verification"):
 
 def log_login(username, email, ip, status):
     try:
+        
+        db, cursor = get_db()
         cursor.execute(
             "INSERT INTO admin_login (username, email) VALUES (%s, %s)",
             (f"{status}:{username}", email)
@@ -88,7 +89,7 @@ def admin_signup():
         if password != confirm:
             return render_template("admin_signup.html", error="Passwords do not match")
 
-        cursor.execute("SELECT id FROM admin_signup WHERE email=%s", (email,))
+        db, cursor = get_db()
         if cursor.fetchone():
             return render_template("admin_signup.html", error="Email already registered")
         db.ping(reconnect=True, attempts=3, delay=2)
@@ -121,10 +122,11 @@ def admin_signup():
 def admin_otp():
     email = session.get("otp_email")
     if request.method == "POST":
+        db.ping(reconnect=True, attempts=3, delay=2)
         otp = request.form.get("otp", "").strip()
         if not otp:
             return render_template("admin_otp.html", error="Please enter OTP")
-        db.ping(reconnect=True, attempts=3, delay=2)
+        db, cursor = get_db()
         cursor.execute("""
             SELECT id FROM admin_otp
             WHERE email=%s AND otp=%s AND is_used=0
@@ -135,7 +137,6 @@ def admin_otp():
             return render_template("admin_otp.html", error="Invalid or expired OTP")
 
         cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
-        db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("UPDATE admin_signup SET is_verified=1 WHERE email=%s", (email,))
         db.commit()
         return redirect(url_for("admin.admin_login"))
@@ -147,6 +148,8 @@ def admin_otp():
 @admin.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
+        db, cursor = get_db()
+        
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "")
         ip = request.remote_addr or "Unknown"
@@ -188,6 +191,7 @@ def admin_login():
 @admin.route("/forgot_admin", methods=["GET", "POST"])
 def forgot_admin():
     if request.method == "POST":
+        db, cursor = get_db()
         email = request.form.get("email", "").strip()
         if not email:
             return render_template("forgot_admin.html", error="Email required")
@@ -211,6 +215,7 @@ def forgot_admin():
 def forgot_admin_otp():
     email = session.get("reset_email")
     if request.method == "POST":
+        db, cursor = get_db()
         otp = request.form.get("otp", "").strip()
         if not otp:
             return render_template("forgot_admin_otp.html", error="OTP required")
@@ -240,6 +245,7 @@ def delete_admin(admin_id):
         return jsonify({"success": False, "message": "Unauthorized"}), 401
 
     try:
+        db, cursor = get_db()
         # Get admin details
         db.ping(reconnect=True, attempts=3, delay=2)
         cursor.execute("SELECT id, username, email FROM admin_signup WHERE id=%s", (admin_id,))
@@ -285,6 +291,7 @@ def delete_admin(admin_id):
 def admin_dashboard():
     if "admin_id" not in session:
         return redirect(url_for("admin.admin_login"))
+    db, cursor = get_db()
     db.ping(reconnect=True, attempts=3, delay=2)
     cursor.execute("SELECT user_id, resume_data FROM user_resume")
     resume_rows = cursor.fetchall()
