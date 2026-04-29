@@ -482,9 +482,9 @@ def admin_dashboard():
     try:
         db.ping(reconnect=True, attempts=3, delay=2)
 
-        # ===============================
-        # USER RESUMES
-        # ===============================
+        # =====================================
+        # IT RESUMES
+        # =====================================
         cursor.execute("SELECT user_id, resume_data FROM user_resume")
         resume_rows = cursor.fetchall()
 
@@ -526,12 +526,42 @@ def admin_dashboard():
                 "raw": r
             })
 
-        # ===============================
+        # =====================================
+        # OTHER RESUMES
+        # =====================================
+        cursor.execute("SELECT user_id, resume_data FROM other_resume")
+        other_rows = cursor.fetchall()
+
+        other_resumes = []
+
+        for row in other_rows:
+
+            try:
+                r = json.loads(row["resume_data"]) if isinstance(
+                    row["resume_data"], str
+                ) else row["resume_data"]
+
+            except:
+                continue
+
+            other_resumes.append({
+                "user_id": row["user_id"],
+                "name": r.get("name", "No Name"),
+                "email": r.get("email", "Not Provided"),
+                "career": r.get("career", ""),
+                "skills": ", ".join(r.get("skills", [])),
+                "experience": len(r.get("experience", [])),
+                "projects": len(r.get("projects", [])),
+                "raw": r
+            })
+
+        # =====================================
         # ADMINS
-        # ===============================
+        # =====================================
         cursor.execute("""
             SELECT id, username, email, is_verified, created_at
             FROM admin_signup
+            ORDER BY id DESC
         """)
 
         admin_rows = cursor.fetchall()
@@ -548,9 +578,9 @@ def admin_dashboard():
                 "is_self": row["id"] == session["admin_id"]
             })
 
-        # ===============================
+        # =====================================
         # LOGIN ACTIVITY
-        # ===============================
+        # =====================================
         cursor.execute("""
             SELECT id, username, email, created_at
             FROM admin_login
@@ -570,9 +600,9 @@ def admin_dashboard():
                 "login_time": str(row["created_at"])
             })
 
-        # ===============================
-        # SUCCESSFUL LOGINS
-        # ===============================
+        # =====================================
+        # SUCCESS LOGIN COUNT
+        # =====================================
         cursor.execute("""
             SELECT COUNT(DISTINCT email) AS total
             FROM admin_login
@@ -580,20 +610,32 @@ def admin_dashboard():
         """)
 
         result = cursor.fetchone()
-        successful_logins = result["total"]
+        successful_logins = result["total"] if result else 0
 
+        # =====================================
+        # RENDER PAGE
+        # =====================================
         return render_template(
             "admin/dashbord_admin.html",
+
             users=users,
             resumes=resumes,
+
+            other_resumes=other_resumes,
+
             admins=admins,
             login_activity=login_activity,
+
             total_users=len(users),
             total_resumes=len(resumes),
+            total_other_resumes=len(other_resumes),
+
             verified_admins=sum(
                 1 for a in admins if a["is_verified"]
             ),
+
             successful_logins=successful_logins,
+
             admin_name=session.get("admin_name", "Admin"),
             admin_email=session.get("admin_email", ""),
             current_admin_id=session.get("admin_id")
@@ -605,7 +647,6 @@ def admin_dashboard():
     finally:
         cursor.close()
         db.close()
-
 
 @admin.route("/admin_logout")
 def admin_logout():
