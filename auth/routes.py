@@ -211,14 +211,12 @@ def login():
         )
 
         user = cursor.fetchone()
-        print(user)
 
         if user is None:
             return render_template("login.html", error="Invalid email or password")
 
-      
-        session["user_id"] = user[0]
-        session["username"] = user[1]
+        session["user_id"] = user["id"]
+        session["username"] = user["username"]
 
         return redirect(url_for("resume.dashbord"))
 

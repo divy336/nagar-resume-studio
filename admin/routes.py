@@ -142,42 +142,41 @@ def admin_otp():
 @admin.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        email    = request.form.get("email", "").strip()
+        email = request.form.get("email", "").strip()
         password = request.form.get("password", "")
-        ip       = request.remote_addr or "Unknown"
+        ip = request.remote_addr or "Unknown"
 
         if not email or not password:
             return render_template("admin_login.html", error="All fields are required")
 
         cursor.execute("""
-            SELECT id, username, email FROM admin_signup
+            SELECT id, username, email
+            FROM admin_signup
             WHERE email=%s AND password=%s AND is_verified=1
         """, (email, password))
+
         row = cursor.fetchone()
 
         if not row:
-            
             log_login("UNKNOWN", email, ip, "FAILED")
-            return render_template("admin_login.html", error="Invalid credentials or account not verified")
+            return render_template(
+                "admin_login.html",
+                error="Invalid credentials or account not verified"
+            )
 
-        admin_id   = row[0]
-        admin_name = row[1]
-        admin_mail = row[2]
+        admin_id = row["id"]
+        admin_name = row["username"]
+        admin_mail = row["email"]
 
-    
-        session["admin_id"]   = admin_id
+        session["admin_id"] = admin_id
         session["admin_name"] = admin_name
-        session["admin_email"]= admin_mail
-
+        session["admin_email"] = admin_mail
 
         log_login(admin_name, admin_mail, ip, "SUCCESS")
-
-
 
         return redirect(url_for("admin.admin_dashboard"))
 
     return render_template("admin_login.html")
-
 
 
 
