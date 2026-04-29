@@ -8,14 +8,16 @@ from flask import Response
 
 import json
 
-db=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="nagar@73",
-    database="flask"
-)
-cursor = db.cursor(dictionary=True)
 
+db = mysql.connector.connect(
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
+)
+
+cursor = db.cursor(dictionary=True)
 
 UPLOAD_FOLDER = "static/uploads"
 UPLOAD_EDU_DATA="static/edu"

@@ -5,15 +5,17 @@ import smtplib
 from email.message import EmailMessage
 import random
 import json
+import os
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="nagar@73",
-    database="flask",
-    port=3306
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
 )
-cursor = db.cursor()
+
+cursor = db.cursor(dictionary=True)
 
 
 SUPER_ADMIN_EMAIL = "nagardivya73@gmail.com"

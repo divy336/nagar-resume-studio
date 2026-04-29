@@ -10,13 +10,15 @@ import json
 
 
 resume_type = "other"
-conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="nagar@73",                
-        database="flask"
-    )   
-cur = conn.cursor(dictionary=True)
+db = mysql.connector.connect(
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
+)
+
+cur = db.cursor(dictionary=True)
 
 @resume.route("/first_page", methods=["GET", "POST"])
 def first_page():
@@ -782,7 +784,7 @@ def delete_resume(rtype, id):
             """, (id, session["user_id"]))
         
        
-            conn.commit() 
+            db.commit() 
         
         return jsonify({"ok": True, "message": "Resume deleted successfully"})
     

@@ -5,15 +5,17 @@ import smtplib
 from email.message import EmailMessage
 from auth import auth
 from resume import detail
+import os
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="nagar@73",
-    database="flask",
-    port=3306
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
 )
-cursor = db.cursor()
+
+cursor = db.cursor(dictionary=True)
         #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
 
     
