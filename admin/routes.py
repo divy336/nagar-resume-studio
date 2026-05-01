@@ -543,7 +543,8 @@ def admin_dashboard():
                 "email": r.get("email", "Not Provided"),
                 "mobile": r.get("mobile", "Not Provided"),
                 "major": r.get("major", "Not Provided"),
-                "status": 1
+                "status": 1,
+                "raw": r
             })
 
             resumes.append({
