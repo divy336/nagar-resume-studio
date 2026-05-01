@@ -20,7 +20,7 @@ try:
         password=os.getenv("MYSQLPASSWORD"),
         database=os.getenv("MYSQLDATABASE"),
         port=int(os.getenv("MYSQLPORT", 3306)),
-        autocommit=True
+    
     )
     print("✅ Admin database pool created")
 except Exception as e:
@@ -36,7 +36,7 @@ def get_db():
             password=os.getenv("MYSQLPASSWORD"),
             database=os.getenv("MYSQLDATABASE"),
             port=int(os.getenv("MYSQLPORT", 3306)),
-            autocommit=True
+            autocommit=False  # Change to False for better control
         )
     else:
         db = db_pool.get_connection()
@@ -130,8 +130,12 @@ def send_otp_email(to_email, otp, subject="OTP Verification"):
 
 def log_login(username, email, ip, status):
     """Helper function to log admin login attempts"""
+    db = None
+    cursor = None
     try:
         db, cursor = get_db()
+        db.ping(reconnect=True, attempts=3, delay=2)
+        
         cursor.execute(
             """
             INSERT INTO admin_login (username, email, ip_address, status)
@@ -139,11 +143,18 @@ def log_login(username, email, ip, status):
             """,
             (username, email, ip, status)
         )
-        cursor.close()
-        db.close()
+        db.commit()
+        
     except Exception as e:
         print(f"❌ Login logging error: {e}")
-
+        if db:
+            db.rollback()
+            
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
 
 # ══════════════════════════════════════
 #  ADMIN SIGNUP
@@ -188,7 +199,7 @@ def admin_signup():
                 """,
                 (email, otp)
             )
-
+            db.commit() 
             send_otp_email(
                 SUPER_ADMIN_EMAIL,
                 otp,
@@ -242,7 +253,7 @@ def admin_otp():
 
             cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
             cursor.execute("UPDATE admin_signup SET is_verified=1 WHERE email=%s", (email,))
-
+            db.commit()
             return redirect(url_for("admin.admin_login"))
 
         except Exception as e:
@@ -273,6 +284,9 @@ def admin_login():
         db, cursor = get_db()
 
         try:
+            # Add reconnection logic
+            db.ping(reconnect=True, attempts=3, delay=2)
+            
             cursor.execute(
                 """
                 SELECT id, username, email
@@ -285,28 +299,56 @@ def admin_login():
             row = cursor.fetchone()
 
             if not row:
-                log_login("UNKNOWN", email, ip, "FAILED")
+                # Log failed attempt BEFORE returning
+                try:
+                    cursor.execute(
+                        """
+                        INSERT INTO admin_login (username, email, ip_address, status)
+                        VALUES (%s, %s, %s, %s)
+                        """,
+                        ("UNKNOWN", email, ip, "FAILED")
+                    )
+                    db.commit()
+                except Exception as log_error:
+                    print(f"❌ Failed login logging error: {log_error}")
+                
                 return render_template(
                     "admin_login.html",
                     error="Invalid credentials or account not verified"
                 )
+            
+            # Clear session before setting new values
             session.clear()
             session.permanent = True
             session["admin_id"] = row["id"]
             session["admin_name"] = row["username"]
             session["admin_email"] = row["email"]
 
-            log_login(row["username"], row["email"], ip, "SUCCESS")
+            # Log successful login
+            cursor.execute(
+                """
+                INSERT INTO admin_login (username, email, ip_address, status)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (row["username"], row["email"], ip, "SUCCESS")
+            )
+            db.commit()
 
             return redirect(url_for("admin.admin_dashboard"))
 
         except Exception as e:
             print(f"❌ Admin login error: {e}")
-            return render_template("admin_login.html", error="Login failed")
+            import traceback
+            traceback.print_exc()
+            
+            return render_template("admin_login.html", error="Login failed. Please try again.")
 
         finally:
-            cursor.close()
-            db.close()
+            # ALWAYS close connections
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()
 
     return render_template("admin_login.html")
 
@@ -433,12 +475,8 @@ def forgot_admin_otp():
     return render_template("forgot_admin_otp.html")
 
 
-# ==========================================
-# RESET PASSWORD
-# ==========================================
 @admin.route("/reset_password", methods=["GET", "POST"])
 def reset_password():
-
     email = session.get("reset_email")
     otp_verified = session.get("otp_verified")
 
@@ -447,14 +485,8 @@ def reset_password():
         return redirect(url_for("admin.forgot_admin"))
 
     if request.method == "POST":
-
-        new_password = request.form.get(
-            "new_password", ""
-        ).strip()
-
-        confirm_password = request.form.get(
-            "confirm_password", ""
-        ).strip()
+        new_password = request.form.get("new_password", "").strip()
+        confirm_password = request.form.get("confirm_password", "").strip()
 
         # Validation
         if not new_password or not confirm_password:
@@ -478,16 +510,46 @@ def reset_password():
         db, cursor = get_db()
 
         try:
-            db.ping(reconnect=True, attempts=3, delay=2)
+            # First verify the email exists
+            cursor.execute(
+                "SELECT id, email FROM admin_signup WHERE email=%s",
+                (email,)
+            )
+            
+            user = cursor.fetchone()
+            
+            if not user:
+                return render_template(
+                    "reset_password.html",
+                    error="User not found"
+                )
 
             # Update password
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE admin_signup
                 SET password=%s
                 WHERE email=%s
-            """, (new_password, email))
+                """,
+                (new_password, email)
+            )
 
-            db.commit()
+            # Verify the update worked
+            affected_rows = cursor.rowcount
+            
+            if affected_rows == 0:
+                print(f"❌ Password update failed - no rows affected for {email}")
+                return render_template(
+                    "reset_password.html",
+                    error="Password update failed"
+                )
+
+            # Since autocommit=True, no need for db.commit()
+            # But we'll add it for safety
+            if hasattr(db, 'commit'):
+                db.commit()
+
+            print(f"✅ Password updated successfully for {email}")
 
             # Clear reset session only
             session.pop("reset_email", None)
@@ -500,18 +562,23 @@ def reset_password():
             )
 
         except Exception as e:
-            db.rollback()
+            print(f"❌ Reset Password Error: {e}")
+            import traceback
+            traceback.print_exc()
 
-            print("Reset Password Error:", e)
+            if hasattr(db, 'rollback'):
+                db.rollback()
 
             return render_template(
                 "reset_password.html",
-                error="Password reset failed"
+                error="Password reset failed. Please try again."
             )
 
         finally:
-            cursor.close()
-            db.close()
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()
 
     return render_template("reset_password.html")
 # ══════════════════════════════════════
@@ -544,7 +611,7 @@ def delete_admin(admin_id):
 
         cursor.execute("DELETE FROM admin_signup WHERE id=%s", (admin_id,))
         cursor.execute("DELETE FROM admin_otp WHERE email=%s", (row["email"],))
-
+        db.commit() 
         return jsonify({
             "success": True,
             "message": f"Admin '{row['username']}' deleted successfully"
