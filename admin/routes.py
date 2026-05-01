@@ -629,37 +629,30 @@ def admin_dashboard():
         # RENDER PAGE
         # =====================================
         return render_template(
-            "admin/dashbord_admin.html",
-
-            users=users,
-            resumes=resumes,
-
-            other_resumes=other_resumes,
-
-            admins=admins,
-            login_activity=login_activity,
-
-            total_users=len(users),
-            total_resumes=len(resumes),
-            total_other_resumes=len(other_resumes),
-
-            verified_admins=sum(
-                1 for a in admins if a["is_verified"]
-            ),
-
-            successful_logins=successful_logins,
-
-            admin_name=session.get("admin_name", "Admin"),
-            admin_email=session.get("admin_email", ""),
-            current_admin_id=session.get("admin_id")
-        )
-
+   "admin/dashbord_admin.html",
+   users=users or [],
+   resumes=resumes or [],
+   other_resumes=other_resumes or [],
+   admins=admins or [],
+   login_activity=login_activity or [],
+   total_users=len(users),
+   total_resumes=len(resumes),
+   total_other_resumes=len(other_resumes),
+   successful_logins=successful_logins,
+   admin_name=session.get("admin_name","Admin"),
+   admin_email=session.get("admin_email",""),
+   current_admin_id=session.get("admin_id")
+)
     except Exception as e:
-        return str(e)
+        print("ADMIN DASHBOARD ERROR:", e)
+    return render_template(
+        "admin/error.html",
+        error=str(e)
+    )
 
-    finally:
-        cursor.close()
-        db.close()
+    
+
+
 
 @admin.route("/admin_logout")
 def admin_logout():
