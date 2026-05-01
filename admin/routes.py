@@ -655,6 +655,8 @@ def admin_dashboard():
             total_users=len(users),
             total_resumes=len(resumes),
             total_other_resumes=len(other_resumes),
+                verified_admins=sum(1 for a in admins if a["is_verified"]),
+
             successful_logins=successful_logins,
             admin_name=session.get("admin_name", "Admin"),
             admin_email=session.get("admin_email", ""),
