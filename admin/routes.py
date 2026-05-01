@@ -138,10 +138,10 @@ def log_login(username, email, ip, status):
         
         cursor.execute(
             """
-            INSERT INTO admin_login (username, email, ip_address, status)
+            INSERT INTO admin_login (username, email, status)
             VALUES (%s, %s, %s, %s)
             """,
-            (username, email, ip, status)
+            (username, email,status)
         )
         db.commit()
         
@@ -303,10 +303,10 @@ def admin_login():
                 try:
                     cursor.execute(
                         """
-                        INSERT INTO admin_login (username, email, ip_address, status)
-                        VALUES (%s, %s, %s, %s)
+                        INSERT INTO admin_login (username, email, status)
+                        VALUES (%s, %s, %s)
                         """,
-                        ("UNKNOWN", email, ip, "FAILED")
+                        ("UNKNOWN", email, "FAILED")
                     )
                     db.commit()
                 except Exception as log_error:
@@ -327,10 +327,10 @@ def admin_login():
             # Log successful login
             cursor.execute(
                 """
-                INSERT INTO admin_login (username, email, ip_address, status)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO admin_login (username, email, status)
+                VALUES (%s, %s, %s)
                 """,
-                (row["username"], row["email"], ip, "SUCCESS")
+                (row["username"], row["email"], "SUCCESS")
             )
             db.commit()
 
