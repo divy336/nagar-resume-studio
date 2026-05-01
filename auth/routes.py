@@ -275,12 +275,7 @@ def send_email_async(to_email, otp, purpose="verification"):
 
 
 def send_email(to_email, otp, purpose="verification"):
-    """Wrapper to send email in background thread"""
-    thread = Thread(target=send_email_async, args=(to_email, otp, purpose))
-    thread.daemon = True
-    thread.start()
-    print(f"🚀 Email queued for {to_email}")
-
+    send_email_async(to_email, otp, purpose)
 
 # ---------------- SIGNUP ----------------
 @auth.route("/signup", methods=["GET", "POST"])
