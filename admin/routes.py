@@ -1,3 +1,5 @@
+import email
+
 from flask import session, url_for, render_template, request, redirect, jsonify
 from admin import admin
 import mysql.connector
@@ -288,7 +290,8 @@ def admin_login():
                     "admin_login.html",
                     error="Invalid credentials or account not verified"
                 )
-
+            session.clear()
+            session.permanent = True
             session["admin_id"] = row["id"]
             session["admin_name"] = row["username"]
             session["admin_email"] = row["email"]
@@ -355,33 +358,52 @@ def forgot_admin():
     return render_template("forgot_admin.html")
 
 
+# ==========================================
+# FORGOT ADMIN OTP
+# ==========================================
 @admin.route("/forgot_admin_otp", methods=["GET", "POST"])
 def forgot_admin_otp():
+
     email = session.get("reset_email")
 
+    # If email missing, go back
     if not email:
         return redirect(url_for("admin.forgot_admin"))
 
     if request.method == "POST":
+
         otp = request.form.get("otp", "").strip()
 
         if not otp:
-            return render_template("forgot_admin_otp.html", error="OTP required")
+            return render_template(
+                "forgot_admin_otp.html",
+                error="OTP required"
+            )
 
         db, cursor = get_db()
 
         try:
+            db.ping(reconnect=True, attempts=3, delay=2)
+
             cursor.execute("""
-                SELECT id FROM admin_otp
-                WHERE email=%s AND otp=%s AND is_used=0
-                ORDER BY id DESC LIMIT 1
+                SELECT id
+                FROM admin_otp
+                WHERE email=%s
+                AND otp=%s
+                AND is_used=0
+                ORDER BY id DESC
+                LIMIT 1
             """, (email, otp))
 
             row = cursor.fetchone()
 
             if not row:
-                return render_template("forgot_admin_otp.html", error="Invalid OTP")
+                return render_template(
+                    "forgot_admin_otp.html",
+                    error="Invalid OTP"
+                )
 
+            # Mark OTP used
             cursor.execute(
                 "UPDATE admin_otp SET is_used=1 WHERE id=%s",
                 (row["id"],)
@@ -389,82 +411,109 @@ def forgot_admin_otp():
 
             db.commit()
 
+            # Save session
+            session.permanent = True
+            session["reset_email"] = email
             session["otp_verified"] = True
 
             return redirect(url_for("admin.reset_password"))
+
+        except Exception as e:
+            print("Forgot OTP Error:", e)
+
+            return render_template(
+                "forgot_admin_otp.html",
+                error="OTP verification failed"
+            )
 
         finally:
             cursor.close()
             db.close()
 
     return render_template("forgot_admin_otp.html")
- 
+
+
+# ==========================================
+# RESET PASSWORD
+# ==========================================
 @admin.route("/reset_password", methods=["GET", "POST"])
 def reset_password():
+
     email = session.get("reset_email")
-    otp_verified = session.get("otp_verified", False)
- 
-    # Check if user has verified OTP
-    if not email or not otp_verified:
+    otp_verified = session.get("otp_verified")
+
+    # Security check
+    if email is None or otp_verified is not True:
         return redirect(url_for("admin.forgot_admin"))
- 
+
     if request.method == "POST":
-        new_password = request.form.get("new_password", "").strip()
-        confirm_password = request.form.get("confirm_password", "").strip()
- 
+
+        new_password = request.form.get(
+            "new_password", ""
+        ).strip()
+
+        confirm_password = request.form.get(
+            "confirm_password", ""
+        ).strip()
+
         # Validation
         if not new_password or not confirm_password:
             return render_template(
                 "reset_password.html",
                 error="All fields are required"
             )
- 
+
         if len(new_password) < 6:
             return render_template(
                 "reset_password.html",
                 error="Password must be at least 6 characters"
             )
- 
+
         if new_password != confirm_password:
             return render_template(
                 "reset_password.html",
                 error="Passwords do not match"
             )
- 
+
         db, cursor = get_db()
- 
+
         try:
+            db.ping(reconnect=True, attempts=3, delay=2)
+
             # Update password
-            cursor.execute(
-                "UPDATE admin_signup SET password=%s WHERE email=%s",
-                (new_password, email)
-            )
+            cursor.execute("""
+                UPDATE admin_signup
+                SET password=%s
+                WHERE email=%s
+            """, (new_password, email))
+
             db.commit()
 
- 
-            # Clear session
+            # Clear reset session only
             session.pop("reset_email", None)
             session.pop("otp_verified", None)
- 
+
             return render_template(
                 "reset_password.html",
-                success="Password reset successful! You can now login.",
+                success="Password reset successful! Redirecting to login...",
                 redirect_login=True
             )
- 
+
         except Exception as e:
-            print(f"❌ Reset password error: {e}")
+            db.rollback()
+
+            print("Reset Password Error:", e)
+
             return render_template(
                 "reset_password.html",
-                error="Password reset failed. Please try again."
+                error="Password reset failed"
             )
- 
+
         finally:
             cursor.close()
             db.close()
- 
+
     return render_template("reset_password.html")
- 
 # ══════════════════════════════════════
 #  DELETE ADMIN
 # ══════════════════════════════════════
