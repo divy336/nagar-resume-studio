@@ -591,7 +591,8 @@ def admin_dashboard():
                 "email": r.get("email") or "Not Provided",
                 "mobile": r.get("mobile") or "Not Provided",
                 "major": r.get("major") or "Not Provided",
-                "status": 1
+                "status": 1,
+                "raw": r
             })
 
             resumes.append({
@@ -600,7 +601,8 @@ def admin_dashboard():
                 "email": r.get("email") or "Not Provided",
                 "skills": ", ".join(r.get("skills", [])) if r.get("skills") else "",
                 "experience": len(r.get("experience", [])) if r.get("experience") else 0,
-                "projects": len(r.get("projects", [])) if r.get("projects") else 0
+                "projects": len(r.get("projects", [])) if r.get("projects") else 0,
+                "raw": r
             })
 
         # ===== OTHER RESUMES =====
@@ -622,7 +624,8 @@ def admin_dashboard():
                 "career": r.get("career") or "",
                 "skills": ", ".join(r.get("skills", [])) if r.get("skills") else "",
                 "experience": len(r.get("experience", [])) if r.get("experience") else 0,
-                "projects": len(r.get("projects", [])) if r.get("projects") else 0
+                "projects": len(r.get("projects", [])) if r.get("projects") else 0,
+                "raw": r
             })
 
         # ===== ADMINS =====
