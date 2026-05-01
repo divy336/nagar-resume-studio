@@ -217,61 +217,117 @@ def get_otp_email_template(otp, purpose="verification"):
 
 # ---------------- ASYNC EMAIL SENDING ----------------
 
-def send_email_async(to_email, otp, purpose="verification"):
-    """Send email in background thread to avoid timeout"""
-    sender_email = os.getenv("SENDER_EMAIL")
-    sender_password = os.getenv("SENDER_APP_PASSWORD")
-    
-    if not sender_email or not sender_password:
-        print("❌ ERROR: Email credentials not configured in environment variables")
-        print("Please set SENDER_EMAIL and SENDER_APP_PASSWORD in Render")
-        return
-    
-    # Create message
-    msg = MIMEMultipart('alternative')
-    msg["Subject"] = f"Resume Studio - {'Account Verification' if purpose == 'verification' else 'Password Reset'} OTP"
-    msg["From"] = f"Resume Studio <{sender_email}>"
-    msg["To"] = to_email
-    
-    # Plain text version (fallback)
-    text_content = f"""
-    Resume Studio - {'Account Verification' if purpose == 'verification' else 'Password Reset'}
-    
-    Your OTP is: {otp}
-    
-    This code is valid for 10 minutes.
-    
-    If you didn't request this, please ignore this email.
-    
-    © 2026 Resume Studio
+import requests
+
+# ==========================================
+# OTP EMAIL TEMPLATE
+# ==========================================
+def get_otp_email_template(otp, purpose="verification"):
+
+    if purpose == "verification":
+        title = "Verify Your Account"
+        msg = "Use this OTP to verify your account."
+    else:
+        title = "Reset Password"
+        msg = "Use this OTP to reset your password."
+
+    return f"""
+    <html>
+    <body style="font-family:Arial;background:#f4f4f4;padding:30px;">
+        <div style="
+            max-width:600px;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:12px;
+        ">
+
+            <h1 style="color:#4f46e5;">Resume Studio</h1>
+
+            <h2>{title}</h2>
+
+            <p>{msg}</p>
+
+            <div style="
+                background:#4f46e5;
+                color:white;
+                font-size:34px;
+                font-weight:bold;
+                text-align:center;
+                padding:20px;
+                border-radius:10px;
+                letter-spacing:8px;
+                margin:25px 0;
+            ">
+                {otp}
+            </div>
+
+            <p>This OTP is valid for 10 minutes.</p>
+
+            <p style="color:#777;font-size:13px;">
+                If you did not request this, ignore this email.
+            </p>
+
+            <hr>
+
+            <p style="font-size:12px;color:#999;">
+                © 2026 Resume Studio
+            </p>
+
+        </div>
+    </body>
+    </html>
     """
-    
-    # HTML version
+
+
+# ==========================================
+# SEND EMAIL (BREVO)
+# ==========================================
+def send_email_async(to_email, otp, purpose="verification"):
+
+    api_key = os.getenv("BREVO_API_KEY")
+
+    if not api_key:
+        print("BREVO_API_KEY missing")
+        return
+
+    subject = "Resume Studio OTP"
+
     html_content = get_otp_email_template(otp, purpose)
-    
-    # Attach both versions
-    part1 = MIMEText(text_content, 'plain')
-    part2 = MIMEText(html_content, 'html')
-    msg.attach(part1)
-    msg.attach(part2)
-    
+
+    payload = {
+        "sender": {
+            "name": "Resume Studio",
+            "email": "nagardivya73@gmail.com"
+        },
+        "to": [
+            {
+                "email": to_email
+            }
+        ],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
+
     try:
-        
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as server:
-            server.ehlo()
-            server.starttls()
-            server.ehlo()
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            json=payload,
+            headers=headers,
+            timeout=20
+        )
 
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-
-        print(f"✅ Email sent successfully to {to_email}")
-
-    except smtplib.SMTPAuthenticationError:
-        print("❌ Gmail login failed. Check App Password.")
+        print("Email Status:", response.status_code)
+        print(response.text)
 
     except Exception as e:
-        print(f"❌ Email send failed: {e}")
+        print("Email Error:", e)
 
 
 def send_email(to_email, otp, purpose="verification"):
