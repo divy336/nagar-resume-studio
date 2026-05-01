@@ -348,6 +348,7 @@ tbody tr:hover td{background:#f8faff}
       </div>
 
       <!-- Recent Login Activity -->
+       <!-- Recent Login Activity -->
       <div class="panel">
         <div class="panel-hd">
           <h3><i class="fas fa-shield-alt"></i> Recent Login Activity</h3>
@@ -363,10 +364,10 @@ tbody tr:hover td{background:#f8faff}
                 <td>{{ log.email }}</td>
                 <td style="font-size:11px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
                 <td>
-                  {% if log.status == 'SUCCESS' %}
-                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
-                  {% else %}
+                  {% if log.username == 'FAILED' %}
                   <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
+                  {% else %}
+                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
                   {% endif %}
                 </td>
               </tr>
@@ -583,9 +584,9 @@ tbody tr:hover td{background:#f8faff}
     <!-- ════════ END OTHER RESUMES ════════ -->
 
     <!-- ════════ LOGIN INFO ════════ -->
-    <div id="sec-logininfo" class="section">
+     <div id="sec-logininfo" class="section">
       <div class="sec-hd"><h2>Login Activity</h2><p>All admin login attempts — success &amp; failed</p></div>
-
+ 
       <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:11px;
                   padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
         <i class="fas fa-envelope" style="color:#16a34a;font-size:16px"></i>
@@ -594,7 +595,7 @@ tbody tr:hover td{background:#f8faff}
           every time an admin logs in successfully.
         </span>
       </div>
-
+ 
       <div class="panel">
         <div class="fbar">
           <div class="fi"><i class="fas fa-search"></i>
@@ -612,10 +613,10 @@ tbody tr:hover td{background:#f8faff}
                 <td>{{ log.email }}</td>
                 <td style="font-size:11.5px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
                 <td>
-                  {% if log.status == 'SUCCESS' %}
-                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
-                  {% else %}
+                  {% if log.username == 'FAILED' %}
                   <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
+                  {% else %}
+                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
                   {% endif %}
                 </td>
               </tr>
@@ -631,7 +632,6 @@ tbody tr:hover td{background:#f8faff}
         </div>
       </div>
     </div>
-
     <!-- ════════ SUB-ADMINS ════════ -->
     <div id="sec-admins" class="section">
       <div class="sec-hd"><h2>Sub-Admin Management</h2><p>Manage all admin accounts — {{ admins|length }} total</p></div>
