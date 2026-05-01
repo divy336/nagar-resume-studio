@@ -256,15 +256,20 @@ def send_email_async(to_email, otp, purpose="verification"):
     msg.attach(part2)
     
     try:
-        print(f"📧 Attempting to send email to {to_email}...")
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
+        
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+
             server.login(sender_email, sender_password)
             server.send_message(msg)
+
         print(f"✅ Email sent successfully to {to_email}")
+
     except smtplib.SMTPAuthenticationError:
-        print(f"❌ Email authentication failed. Check SENDER_EMAIL and SENDER_APP_PASSWORD")
-    except smtplib.SMTPException as e:
-        print(f"❌ SMTP error: {e}")
+        print("❌ Gmail login failed. Check App Password.")
+
     except Exception as e:
         print(f"❌ Email send failed: {e}")
 
