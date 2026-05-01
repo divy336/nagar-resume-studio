@@ -439,6 +439,8 @@ def reset_password():
                 "UPDATE admin_signup SET password=%s WHERE email=%s",
                 (new_password, email)
             )
+            db.commit()
+
  
             # Clear session
             session.pop("reset_email", None)
