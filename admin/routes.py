@@ -3,11 +3,10 @@
 from flask import session, url_for, render_template, request, redirect, jsonify
 from admin import admin
 import mysql.connector
-import smtplib
-from email.message import EmailMessage
 import random
 import json
 import os
+import requests
 
 def get_db():
     db = mysql.connector.connect(
@@ -30,53 +29,67 @@ SENDER_PASSWORD   = "gjgebkodbezyzoxr"
 # ══════════════════════════════════════
 #  EMAIL HELPERS
 # ══════════════════════════════════════
+
+import requests
+
+def get_email_template(otp, title="OTP Verification"):
+    return f"""
+    <html>
+    <body style="font-family:Arial;background:#f4f4f4;padding:30px;">
+      <div style="max-width:500px;margin:auto;background:#fff;padding:30px;border-radius:12px;">
+        <h2 style="text-align:center;color:#4f46e5;">Resume Builder Admin</h2>
+        <h3 style="text-align:center;">{title}</h3>
+        <div style="
+            font-size:34px;
+            font-weight:bold;
+            text-align:center;
+            background:#4f46e5;
+            color:white;
+            padding:15px;
+            border-radius:10px;
+            letter-spacing:8px;
+            margin:25px 0;
+        ">
+            {otp}
+        </div>
+        <p style="text-align:center;">OTP valid for one time use.</p>
+      </div>
+    </body>
+    </html>
+    """
+
 def send_otp_email(to_email, otp, subject="OTP Verification"):
-    """Send OTP to a given email address."""
-    msg = EmailMessage()
-    msg["Subject"] = f"🔐 {subject}"
-    msg["From"]    = f"Resume Builder <{SENDER_EMAIL}>"
-    msg["To"]      = to_email
-    msg.set_content(f"Your OTP is: {otp}")
-    msg.add_alternative(f"""
-    <html><body style="font-family:Poppins,sans-serif;background:#f0f4fc;padding:30px;">
-    <div style="max-width:480px;margin:auto;background:#fff;border-radius:16px;padding:32px;
-                box-shadow:0 4px 24px rgba(37,99,235,.12);">
-      <div style="text-align:center;margin-bottom:20px;">
-        <div style="width:52px;height:52px;background:#eff6ff;border-radius:14px;
-                    display:inline-flex;align-items:center;justify-content:center;font-size:24px;">🔐</div>
-      </div>
-      <h2 style="color:#1e293b;text-align:center;font-size:20px;margin-bottom:6px;">{subject}</h2>
-      <p style="color:#64748b;text-align:center;font-size:13px;">Resume Builder Admin Panel</p>
-      <div style="text-align:center;margin:28px 0;">
-        <span style="font-size:34px;font-weight:700;letter-spacing:10px;
-                     background:#eff6ff;padding:14px 28px;border-radius:12px;
-                     color:#2563eb;display:inline-block;">{otp}</span>
-      </div>
-      <p style="color:#94a3b8;font-size:12px;text-align:center;">
-        This OTP is valid for one-time use only. Do not share it with anyone.
-      </p>
-    </div>
-    </body></html>
-    """, subtype="html")
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.send_message(msg)
+    api_key = os.getenv("BREVO_API_KEY")
 
+    payload = {
+        "sender": {
+            "name": "Resume Builder",
+            "email": "nagardivya73@gmail.com"
+        },
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": get_email_template(otp, subject)
+    }
 
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
 
-
-def log_login(username, email, ip, status):
     try:
-        
-        db, cursor = get_db()
-        cursor.execute(
-            "INSERT INTO admin_login (username, email) VALUES (%s, %s)",
-            (f"{status}:{username}", email)
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            json=payload,
+            headers=headers,
+            timeout=20
         )
-        db.commit()
+
+        print("Email Status:", response.status_code)
+        print("Response:", response.text)
+
     except Exception as e:
-        print(f"[Login Log Error] {e}")
-        
+        print("Email Error:", e)        
         
 @admin.route("/admin_signup", methods=["GET", "POST"])
 def admin_signup():
