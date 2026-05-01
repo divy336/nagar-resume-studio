@@ -248,29 +248,18 @@ def admin_otp():
 
 
 # ══════════════════════════════════════
-#  ADMIN LOGIN
+#  ADMIN LOGIN (STATUS REMOVED)
 # ══════════════════════════════════════
 
 @admin.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
-    
-    # DEBUG: Log every request
-    print(f"=" * 50)
-    print(f"ADMIN LOGIN REQUEST - Method: {request.method}")
-    print(f"URL: {request.url}")
-    print(f"Form Data: {request.form}")
-    print(f"=" * 50)
 
     if request.method == "POST":
 
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "").strip()
 
-        print(f"📧 LOGIN EMAIL: {email}")
-        print(f"🔑 LOGIN PASSWORD: {'*' * len(password) if password else 'EMPTY'}")
-
         if not email or not password:
-            print("❌ Missing email or password")
             return render_template(
                 "admin_login.html",
                 error="All fields are required"
@@ -282,95 +271,72 @@ def admin_login():
             db.ping(reconnect=True, attempts=3, delay=2)
 
             cursor.execute("""
-                SELECT id, username, email, password
+                SELECT id, username, email
                 FROM admin_signup
                 WHERE LOWER(email)=%s
+                AND password=%s
                 AND is_verified=1
                 LIMIT 1
-            """, (email,))
+            """, (email, password))
 
             row = cursor.fetchone()
 
-            print(f"🔍 DATABASE QUERY RESULT: {row}")
-
             if row is None:
-                print(f"❌ No user found with email: {email}")
-                
-                cursor.execute("""
-                    INSERT INTO admin_login
-                    (username, email, status)
-                    VALUES (%s,%s,%s)
-                """, ("UNKNOWN", email, "FAILED"))
-
-                db.commit()
-
-                return render_template(
-                    "admin_login.html",
-                    error="Invalid email or password"
-                )
-
-            # Check password match
-            if row["password"] != password:
-                print(f"❌ Password mismatch for user: {email}")
-                
-                cursor.execute("""
-                    INSERT INTO admin_login
-                    (username, email, status)
-                    VALUES (%s,%s,%s)
-                """, (row["username"], email, "FAILED"))
-
-                db.commit()
+                # Log failed login attempt (without status column)
+                try:
+                    cursor.execute("""
+                        INSERT INTO admin_login
+                        (username, email)
+                        VALUES (%s, %s)
+                    """, ("FAILED", email))
+                    db.commit()
+                except:
+                    pass  # Don't fail login if logging fails
 
                 return render_template(
                     "admin_login.html",
                     error="Invalid email or password"
                 )
 
-            # SUCCESS!
-            print(f"✅ Login successful for: {email}")
-            
+            # Clear any existing session
             session.clear()
             session.permanent = True
 
+            # Set session variables
             session["admin_id"] = row["id"]
             session["admin_name"] = row["username"]
             session["admin_email"] = row["email"]
 
-            print(f"✅ Session created: {session}")
+            # Log successful login (without status column)
+            try:
+                cursor.execute("""
+                    INSERT INTO admin_login
+                    (username, email)
+                    VALUES (%s, %s)
+                """, (row["username"], row["email"]))
+                db.commit()
+            except Exception as log_error:
+                print(f"⚠️ Could not log login: {log_error}")
+                # Don't fail the login if logging fails
 
-            cursor.execute("""
-                INSERT INTO admin_login
-                (username, email, status)
-                VALUES (%s,%s,%s)
-            """, (
-                row["username"],
-                row["email"],
-                "SUCCESS"
-            ))
-
-            db.commit()
-
-            print(f"✅ Redirecting to dashboard...")
             return redirect(url_for("admin.admin_dashboard"))
 
         except Exception as e:
             db.rollback()
-            print(f"❌ ADMIN LOGIN ERROR: {e}")
-            import traceback
-            traceback.print_exc()
+            print(f"❌ Admin login error: {e}")
 
             return render_template(
                 "admin_login.html",
-                error="Login failed. Please try again."
+                error="Login failed"
             )
 
         finally:
             cursor.close()
             db.close()
 
-    # GET request - just show the form
-    print("📄 Rendering login form (GET request)")
     return render_template("admin_login.html")
+
+
 # ══════════════════════════════════════
 #  FORGOT PASSWORD
 # ══════════════════════════════════════
@@ -433,7 +399,7 @@ def forgot_admin_otp():
         if not otp:
             return render_template("forgot_admin_otp.html", error="OTP required")
 
-        db, cursor = get_db()   
+        db, cursor = get_db()
 
         try:
             cursor.execute(
@@ -702,12 +668,12 @@ def admin_dashboard():
                 "login_time": str(row["created_at"]) if row.get("created_at") else ""
             })
 
-        # ===== SUCCESS LOGIN COUNT =====
+        # ===== SUCCESS LOGIN COUNT (updated without status column) =====
         cursor.execute(
             """
             SELECT COUNT(DISTINCT email) AS total
             FROM admin_login
-            WHERE status = 'SUCCESS'
+            WHERE username != 'FAILED'
             """
         )
 
