@@ -219,8 +219,8 @@ def get_otp_email_template(otp, purpose="verification"):
 
 def send_email_async(to_email, otp, purpose="verification"):
     """Send email in background thread to avoid timeout"""
-    sender_email = os.getenv("nagardivya73@gmail.com")
-    sender_password = os.getenv("ahxd cufn tmwc yfxu")
+    sender_email = os.getenv("SENDER_EMAIL")
+    sender_password = os.getenv("SENDER_APP_PASSWORD")
     
     if not sender_email or not sender_password:
         print("❌ ERROR: Email credentials not configured in environment variables")
