@@ -387,7 +387,7 @@ def forgot_admin_otp():
 
             cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
 
-            return redirect(url_for("admin.admin_login"))
+            return redirect(url_for("admin.reset_password"))
 
         except Exception as e:
             print(f"❌ Reset OTP error: {e}")
