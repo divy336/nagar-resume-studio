@@ -253,13 +253,24 @@ def admin_otp():
 
 @admin.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
+    
+    # DEBUG: Log every request
+    print(f"=" * 50)
+    print(f"ADMIN LOGIN REQUEST - Method: {request.method}")
+    print(f"URL: {request.url}")
+    print(f"Form Data: {request.form}")
+    print(f"=" * 50)
 
     if request.method == "POST":
 
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "").strip()
 
+        print(f"📧 LOGIN EMAIL: {email}")
+        print(f"🔑 LOGIN PASSWORD: {'*' * len(password) if password else 'EMPTY'}")
+
         if not email or not password:
+            print("❌ Missing email or password")
             return render_template(
                 "admin_login.html",
                 error="All fields are required"
@@ -270,24 +281,21 @@ def admin_login():
         try:
             db.ping(reconnect=True, attempts=3, delay=2)
 
-            print("LOGIN EMAIL:", email)
-            print("LOGIN PASSWORD:", password)
-
             cursor.execute("""
-                SELECT id, username, email
+                SELECT id, username, email, password
                 FROM admin_signup
                 WHERE LOWER(email)=%s
-                AND password=%s
                 AND is_verified=1
                 LIMIT 1
-            """, (email, password))
+            """, (email,))
 
             row = cursor.fetchone()
 
-            print("LOGIN ROW:", row)
+            print(f"🔍 DATABASE QUERY RESULT: {row}")
 
             if row is None:
-
+                print(f"❌ No user found with email: {email}")
+                
                 cursor.execute("""
                     INSERT INTO admin_login
                     (username, email, status)
@@ -301,12 +309,34 @@ def admin_login():
                     error="Invalid email or password"
                 )
 
+            # Check password match
+            if row["password"] != password:
+                print(f"❌ Password mismatch for user: {email}")
+                
+                cursor.execute("""
+                    INSERT INTO admin_login
+                    (username, email, status)
+                    VALUES (%s,%s,%s)
+                """, (row["username"], email, "FAILED"))
+
+                db.commit()
+
+                return render_template(
+                    "admin_login.html",
+                    error="Invalid email or password"
+                )
+
+            # SUCCESS!
+            print(f"✅ Login successful for: {email}")
+            
             session.clear()
             session.permanent = True
 
             session["admin_id"] = row["id"]
             session["admin_name"] = row["username"]
             session["admin_email"] = row["email"]
+
+            print(f"✅ Session created: {session}")
 
             cursor.execute("""
                 INSERT INTO admin_login
@@ -320,24 +350,27 @@ def admin_login():
 
             db.commit()
 
+            print(f"✅ Redirecting to dashboard...")
             return redirect(url_for("admin.admin_dashboard"))
 
         except Exception as e:
             db.rollback()
-            print("ADMIN LOGIN ERROR:", e)
+            print(f"❌ ADMIN LOGIN ERROR: {e}")
+            import traceback
+            traceback.print_exc()
 
             return render_template(
                 "admin_login.html",
-                error="Login failed"
+                error="Login failed. Please try again."
             )
 
         finally:
             cursor.close()
             db.close()
 
+    # GET request - just show the form
+    print("📄 Rendering login form (GET request)")
     return render_template("admin_login.html")
-
-
 # ══════════════════════════════════════
 #  FORGOT PASSWORD
 # ══════════════════════════════════════
@@ -400,7 +433,7 @@ def forgot_admin_otp():
         if not otp:
             return render_template("forgot_admin_otp.html", error="OTP required")
 
-        db, cursor = get_db()
+        db, cursor = get_db()   
 
         try:
             cursor.execute(
