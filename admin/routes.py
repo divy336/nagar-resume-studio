@@ -371,34 +371,33 @@ def forgot_admin_otp():
         db, cursor = get_db()
 
         try:
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT id FROM admin_otp
                 WHERE email=%s AND otp=%s AND is_used=0
                 ORDER BY id DESC LIMIT 1
-                """,
-                (email, otp)
-            )
+            """, (email, otp))
 
             row = cursor.fetchone()
 
             if not row:
                 return render_template("forgot_admin_otp.html", error="Invalid OTP")
 
-            cursor.execute("UPDATE admin_otp SET is_used=1 WHERE id=%s", (row["id"],))
+            cursor.execute(
+                "UPDATE admin_otp SET is_used=1 WHERE id=%s",
+                (row["id"],)
+            )
+
+            db.commit()
+
+            session["otp_verified"] = True
 
             return redirect(url_for("admin.reset_password"))
-
-        except Exception as e:
-            print(f"❌ Reset OTP error: {e}")
-            return render_template("forgot_admin_otp.html", error="Verification failed")
 
         finally:
             cursor.close()
             db.close()
 
     return render_template("forgot_admin_otp.html")
-
  
 @admin.route("/reset_password", methods=["GET", "POST"])
 def reset_password():
