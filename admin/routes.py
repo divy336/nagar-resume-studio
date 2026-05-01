@@ -253,78 +253,87 @@ def admin_otp():
 
 @admin.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
+
     if request.method == "POST":
+
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "").strip()
 
-        if not all([email, password]):
-            return render_template("admin_login.html", error="All fields are required")
+        if not email or not password:
+            return render_template(
+                "admin_login.html",
+                error="All fields are required"
+            )
 
         db, cursor = get_db()
 
         try:
-            cursor.execute(
-                """
+            db.ping(reconnect=True, attempts=3, delay=2)
+
+            print("LOGIN EMAIL:", email)
+            print("LOGIN PASSWORD:", password)
+
+            cursor.execute("""
                 SELECT id, username, email
                 FROM admin_signup
-                WHERE email=%s AND password=%s AND is_verified=1
-                """,
-                (email, password)
-            )
+                WHERE LOWER(email)=%s
+                AND password=%s
+                AND is_verified=1
+                LIMIT 1
+            """, (email, password))
 
             row = cursor.fetchone()
 
-            if not row:
-                # Log failed attempt
-                try:
-                    cursor.execute(
-                        """
-                        INSERT INTO admin_login (username, email, status)
-                        VALUES (%s, %s, %s)
-                        """,
-                        ("UNKNOWN", email, "FAILED")
-                    )
-                    db.commit()
-                except Exception as log_error:
-                    print(f"❌ Failed login logging error: {log_error}")
-                
+            print("LOGIN ROW:", row)
+
+            if row is None:
+
+                cursor.execute("""
+                    INSERT INTO admin_login
+                    (username, email, status)
+                    VALUES (%s,%s,%s)
+                """, ("UNKNOWN", email, "FAILED"))
+
+                db.commit()
+
                 return render_template(
                     "admin_login.html",
-                    error="Invalid credentials or account not verified"
+                    error="Invalid email or password"
                 )
-            
-            # Clear and set session
+
             session.clear()
             session.permanent = True
+
             session["admin_id"] = row["id"]
             session["admin_name"] = row["username"]
             session["admin_email"] = row["email"]
 
-            # Log successful login
-            cursor.execute(
-                """
-                INSERT INTO admin_login (username, email, status)
-                VALUES (%s, %s, %s)
-                """,
-                (row["username"], row["email"], "SUCCESS")
-            )
+            cursor.execute("""
+                INSERT INTO admin_login
+                (username, email, status)
+                VALUES (%s,%s,%s)
+            """, (
+                row["username"],
+                row["email"],
+                "SUCCESS"
+            ))
+
             db.commit()
 
             return redirect(url_for("admin.admin_dashboard"))
 
         except Exception as e:
             db.rollback()
-            print(f"❌ Admin login error: {e}")
-            import traceback
-            traceback.print_exc()
-            
-            return render_template("admin_login.html", error="Login failed. Please try again.")
+            print("ADMIN LOGIN ERROR:", e)
+
+            return render_template(
+                "admin_login.html",
+                error="Login failed"
+            )
 
         finally:
-            if cursor:
-                cursor.close()
-            if db:
-                db.close()
+            cursor.close()
+            db.close()
 
     return render_template("admin_login.html")
 
