@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -11,82 +10,76 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Poppins',sans-serif;background:#f0f4fc;color:#1e293b;font-size:14px}
 .wrapper{display:flex;min-height:100vh}
-
 /* ─── SIDEBAR ─── */
 .sidebar{
-  width:245px;min-height:100vh;
-  background:linear-gradient(175deg,#1e3a8a 0%,#1d4ed8 55%,#2563eb 100%);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;bottom:0;
-  box-shadow:3px 0 20px rgba(30,64,175,.25);z-index:100;
+width:245px;min-height:100vh;
+background:linear-gradient(175deg,#1e3a8a 0%,#1d4ed8 55%,#2563eb 100%);
+display:flex;flex-direction:column;
+position:fixed;top:0;left:0;bottom:0;
+box-shadow:3px 0 20px rgba(30,64,175,.25);z-index:100;
 }
 .sb-brand{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
 .sb-logo{width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.18);
-  display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:10px}
+display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:10px}
 .sb-brand h2{font-size:14px;font-weight:700;color:#fff}
 .sb-brand p{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:.3px}
 .sb-sec{padding:14px 18px 4px;font-size:9px;font-weight:600;letter-spacing:1.8px;
-  text-transform:uppercase;color:rgba(255,255,255,.38)}
+text-transform:uppercase;color:rgba(255,255,255,.38)}
 .nav-link{display:flex;align-items:center;gap:11px;padding:10px 16px;margin:2px 10px;
-  border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:500;
-  color:rgba(255,255,255,.7);transition:all .2s;user-select:none;text-decoration:none}
+border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:500;
+color:rgba(255,255,255,.7);transition:all .2s;user-select:none;text-decoration:none}
 .nav-link i{width:16px;text-align:center;font-size:13px}
 .nav-link:hover{background:rgba(255,255,255,.13);color:#fff}
 .nav-link.active{background:rgba(255,255,255,.22);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.15)}
 .nav-link .nb{margin-left:auto;background:rgba(255,255,255,.2);color:#fff;
-  font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px}
+font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px}
 .nav-link .nb.red{background:rgba(239,68,68,.5)}
-
 .sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);
-  display:flex;align-items:center;gap:10px}
+display:flex;align-items:center;gap:10px}
 .sb-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.22);
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:#fff;flex-shrink:0;font-weight:700}
+display:flex;align-items:center;justify-content:center;
+font-size:13px;color:#fff;flex-shrink:0;font-weight:700}
 .sb-info .sb-name{font-size:12px;font-weight:600;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
 .sb-info .sb-role{font-size:9.5px;color:rgba(255,255,255,.5)}
 .sb-out{margin-left:auto;background:rgba(255,255,255,.15);border:none;color:#fff;
-  width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;font-size:13px;text-decoration:none;flex-shrink:0}
+width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+cursor:pointer;transition:background .2s;font-size:13px;text-decoration:none;flex-shrink:0}
 .sb-out:hover{background:rgba(239,68,68,.55)}
-
 /* ─── MAIN ─── */
 .main{margin-left:245px;flex:1;display:flex;flex-direction:column;min-height:100vh}
-
 /* ─── TOPBAR ─── */
 .topbar{height:60px;background:#fff;border-bottom:1px solid #e2e8f0;
-  display:flex;align-items:center;padding:0 26px;gap:14px;
-  position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(30,64,175,.06)}
+display:flex;align-items:center;padding:0 26px;gap:14px;
+position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(30,64,175,.06)}
 .tb-title{font-size:15px;font-weight:700;color:#1e293b;flex:1}
 .tb-title span{color:#2563eb}
 .sbox{display:flex;align-items:center;gap:7px;background:#f1f5f9;
-  border:1.5px solid #e2e8f0;border-radius:9px;padding:7px 12px;width:195px}
+border:1.5px solid #e2e8f0;border-radius:9px;padding:7px 12px;width:195px}
 .sbox i{color:#94a3b8;font-size:12px}
 .sbox input{background:none;border:none;outline:none;font-family:'Poppins',sans-serif;
-  font-size:12px;color:#1e293b;width:100%}
+font-size:12px;color:#1e293b;width:100%}
 .sbox input::placeholder{color:#94a3b8}
 .tb-date{font-size:11px;color:#64748b;background:#f8faff;border:1px solid #e2e8f0;
-  border-radius:8px;padding:6px 12px;white-space:nowrap}
-
+border-radius:8px;padding:6px 12px;white-space:nowrap}
 /* ─── CONTENT ─── */
 .content {
-  padding:24px 26px;
-  flex:1;
-  overflow-y: auto;
-  max-height: calc(90vh - 60px);
+padding:24px 26px;
+flex:1;
+overflow-y: auto;
+max-height: calc(100vh - 60px);
 }
-.section{display:none}
-.section.active{display:block;animation:fadeUp .28s ease}
+.section{display:none !important}
+.section.active{display:block !important;animation:fadeUp .28s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .sec-hd{margin-bottom:20px}
 .sec-hd h2{font-size:18px;font-weight:700;color:#1e293b}
 .sec-hd p{font-size:11.5px;color:#64748b;margin-top:3px}
-
 /* ─── STAT CARDS ─── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
 .stat-card{background:#fff;border-radius:13px;padding:20px 16px;
-  box-shadow:0 2px 10px rgba(30,64,175,.06);border:1px solid #e8eef8;
-  display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s}
+box-shadow:0 2px 10px rgba(30,64,175,.06);border:1px solid #e8eef8;
+display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s}
 .stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(30,64,175,.12)}
 .si{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .si.blue{background:#eff6ff;color:#2563eb}
@@ -96,38 +89,35 @@ html,body{height:100%;font-family:'Poppins',sans-serif;background:#f0f4fc;color:
 .si.red{background:#fef2f2;color:#dc2626}
 .sv{font-size:24px;font-weight:700;color:#1e293b;line-height:1}
 .sl{font-size:11px;color:#64748b;margin-top:4px}
-
 /* ─── PANEL ─── */
 .panel{background:#fff;border-radius:13px;box-shadow:0 2px 10px rgba(30,64,175,.06);
-  border:1px solid #e8eef8;overflow:hidden;margin-bottom:18px}
+border:1px solid #e8eef8;overflow:hidden;margin-bottom:18px}
 .panel-hd{display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;border-bottom:1px solid #f1f5fd}
+padding:14px 20px;border-bottom:1px solid #f1f5fd}
 .panel-hd h3{font-size:13px;font-weight:600;color:#1e293b;display:flex;align-items:center;gap:7px}
 .panel-hd h3 i{color:#2563eb;font-size:13px}
 .ph-tag{font-size:11px;color:#64748b;background:#f1f5f9;padding:3px 10px;border-radius:20px}
-
 /* ─── TABLE ─── */
 .tw {
-  overflow-x: auto;
-  overflow-y: auto;
-  max-height: 250px;
+overflow-x: auto;
+overflow-y: auto;
+max-height: 250px;
 }
 table{width:100%;border-collapse:collapse}
 thead tr{background:#f8faff;border-bottom:1.5px solid #e8eef8}
 th{padding:10px 15px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.7px;
-  text-transform:uppercase;color:#64748b;white-space:nowrap}
+text-transform:uppercase;color:#64748b;white-space:nowrap}
 td{padding:12px 15px;font-size:12.5px;color:#334155;border-bottom:1px solid #f1f5fd;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:#f8faff}
 .u-cell{display:flex;align-items:center;gap:9px}
 .u-av{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;
-  justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
 .u-name{font-weight:600;font-size:12.5px;color:#1e293b}
 .u-sub{font-size:10.5px;color:#94a3b8;margin-top:1px}
-
 /* ─── BADGES ─── */
 .bp{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
-  border-radius:20px;font-size:10.5px;font-weight:500}
+border-radius:20px;font-size:10.5px;font-weight:500}
 .bp i{font-size:7px}
 .bp-green{background:#f0fdf4;color:#16a34a}
 .bp-red{background:#fef2f2;color:#dc2626}
@@ -135,40 +125,37 @@ tbody tr:hover td{background:#f8faff}
 .bp-orange{background:#fff7ed;color:#ea580c}
 .bp-violet{background:#faf5ff;color:#7c3aed}
 .bp-gray{background:#f1f5f9;color:#64748b}
-
 /* ─── BUTTONS ─── */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:7px;
-  font-size:11px;font-family:'Poppins',sans-serif;font-weight:500;border:none;
-  cursor:pointer;transition:all .2s;white-space:nowrap}
+font-size:11px;font-family:'Poppins',sans-serif;font-weight:500;border:none;
+cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-blue{background:#eff6ff;color:#2563eb;border:1.5px solid #bfdbfe}
-.btn-blue:hover{background:#dbeafe}
+.btn-blue
 .btn-green{background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0}
-.btn-green:hover{background:#dcfce7}
+.btn-green
 .btn-red{background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca}
-.btn-red:hover{background:#fee2e2}
+.btn-red
 .btn-gray{background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0}
-.btn-gray:hover{background:#e2e8f0}
-
+.btn-gray
 /* ─── FILTER BAR ─── */
 .fbar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid #f1f5fd;flex-wrap:wrap}
 .fi{display:flex;align-items:center;gap:7px;background:#f8faff;border:1.5px solid #e2e8f0;
-  border-radius:8px;padding:6px 12px;flex:1;min-width:160px}
+border-radius:8px;padding:6px 12px;flex:1;min-width:160px}
 .fi i{color:#94a3b8;font-size:12px}
 .fi input{background:none;border:none;outline:none;font-family:'Poppins',sans-serif;font-size:12px;color:#1e293b;width:100%}
 .fi input::placeholder{color:#94a3b8}
-
 /* ─── RESUME CARDS ─── */
 .r-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;padding:18px 20px}
 .r-card{background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;
-  transition:all .2s;position:relative;overflow:hidden}
+transition:all .2s;position:relative;overflow:hidden}
 .r-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,#2563eb,#7c3aed)}
+background:linear-gradient(90deg,#2563eb,#7c3aed)}
 .r-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(30,64,175,.12);border-color:#93c5fd}
 .rc-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .rc-av{width:38px;height:38px;border-radius:10px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+background:linear-gradient(135deg,#2563eb,#7c3aed);
+display:flex;align-items:center;justify-content:center;
+font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
 .rc-name{font-size:13px;font-weight:600;color:#1e293b}
 .rc-mail{font-size:10px;color:#64748b;margin-top:2px}
 .rc-row{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px;font-size:12px;color:#475569}
@@ -178,62 +165,56 @@ tbody tr:hover td{background:#f8faff}
 .chip.more{background:#f1f5f9;color:#64748b}
 .rc-actions{display:flex;gap:7px;margin-top:12px}
 .rc-actions .btn{flex:1;justify-content:center}
-
-/* ─── OTHER RESUME CARD accent (violet top bar) ─── */  /* ← NEW */
+/* ─── OTHER RESUME CARD accent (violet top bar) ─── */
 .r-card.other-card::before{
-  background:linear-gradient(90deg,#7c3aed,#db2777)
+background:linear-gradient(90deg,#7c3aed,#db2777)
 }
-
 /* ─── EMPTY STATE ─── */
 .empty{text-align:center;padding:42px 20px}
 .empty i{font-size:36px;color:#cbd5e1;margin-bottom:10px}
 .empty p{font-size:12.5px;color:#94a3b8}
-
 /* ─── ADMIN TABLE SPECIAL ─── */
 .self-row td{background:#fffbeb}
 .self-badge{font-size:9.5px;background:#fef3c7;color:#92400e;
-  padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:600}
-
+padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:600}
 /* ─── ALERT TOAST ─── */
 .toast{
-  position:fixed;top:20px;right:20px;z-index:9999;
-  background:#1e293b;color:#fff;padding:13px 18px;border-radius:11px;
-  font-size:12.5px;font-weight:500;
-  box-shadow:0 8px 24px rgba(0,0,0,.2);
-  display:flex;align-items:center;gap:10px;
-  transform:translateX(120%);transition:transform .35s cubic-bezier(.4,0,.2,1);
-  max-width:320px;
+position:fixed;top:20px;right:20px;z-index:9999;
+background:#1e293b;color:#fff;padding:13px 18px;border-radius:11px;
+font-size:12.5px;font-weight:500;
+box-shadow:0 8px 24px rgba(0,0,0,.2);
+display:flex;align-items:center;gap:10px;
+transform:translateX(120%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+max-width:320px;
 }
 .toast.show{transform:translateX(0)}
 .toast.success{border-left:4px solid #16a34a}
 .toast.error{border-left:4px solid #dc2626}
 .toast.info{border-left:4px solid #2563eb}
 .toast i{font-size:16px}
-
 /* ─── CONFIRM DIALOG ─── */
 .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);
-  z-index:998;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+z-index:998;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
 .confirm-overlay.open{display:flex}
 .confirm-box{background:#fff;border-radius:16px;padding:28px;max-width:400px;width:90%;
-  box-shadow:0 20px 55px rgba(30,64,175,.2);animation:mUp .22s ease}
+box-shadow:0 20px 55px rgba(30,64,175,.2);animation:mUp .22s ease}
 .confirm-box h3{font-size:16px;font-weight:700;color:#1e293b;margin-bottom:8px}
 .confirm-box p{font-size:13px;color:#64748b;line-height:1.6;margin-bottom:20px}
 .confirm-actions{display:flex;gap:10px;justify-content:flex-end}
-
 /* ─── MODAL ─── */
 .m-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);
-  z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
 .m-overlay.open{display:flex}
 .modal{background:#fff;border-radius:16px;width:92%;max-width:540px;max-height:88vh;
-  overflow-y:auto;padding:26px;box-shadow:0 20px 55px rgba(30,64,175,.2);animation:mUp .24s ease}
+overflow-y:auto;padding:26px;box-shadow:0 20px 55px rgba(30,64,175,.2);animation:mUp .24s ease}
 @keyframes mUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
 .m-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .m-hd h3{font-size:15px;font-weight:700;color:#1e293b}
 .m-close{background:#f1f5f9;border:none;border-radius:7px;width:30px;height:30px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:13px;color:#64748b;transition:background .2s}
-.m-close:hover{background:#fee2e2;color:#dc2626}
+display:flex;align-items:center;justify-content:center;font-size:13px;color:#64748b;transition:background .2s}
+.m-close
 .m-sec{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;
-  margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid #f1f5fd}
+margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid #f1f5fd}
 .m-row{display:flex;gap:8px;margin-bottom:7px;font-size:12.5px}
 .m-row i{color:#2563eb;width:15px;margin-top:1px;flex-shrink:0}
 .m-row strong{color:#475569;min-width:82px;flex-shrink:0;font-weight:500}
@@ -241,125 +222,65 @@ tbody tr:hover td{background:#f8faff}
 .m-card{background:#f8faff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 13px;margin-bottom:6px}
 .m-card strong{font-size:12.5px;color:#1e293b;display:block}
 .m-card p{font-size:11px;color:#64748b;margin-top:3px;line-height:1.5}
-
-
-
-
-::-webkit-scrollbar{
-width:5px;
-height:5px;
-}
-
-::-webkit-scrollbar-track{
-background:#f0f4fc;
-}
-
-::-webkit-scrollbar-thumb{
-background:#cbd5e1;
-border-radius:4px;
-}
-
-/* menu button */
-.menu-btn{
-display:none;
-border:none;
-background:#2563eb;
-color:#fff;
-padding:8px 12px;
-border-radius:8px;
-font-size:20px;
-cursor:pointer;
-}
-
-/* responsive */
+.m-card ul{margin:5px 0;padding-left:20px}
+.m-card li{margin:3px 0}
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#f0f4fc}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+/* ─── MENU BUTTON ─── */
+.menu-btn{display:none;border:none;background:#2563eb;color:#fff;
+padding:8px 12px;border-radius:8px;font-size:20px;cursor:pointer}
+/* ─── RESPONSIVE ─── */
 @media(max-width:1100px){
-.stats-row{
-grid-template-columns:repeat(2,1fr);
+.stats-row{grid-template-columns:repeat(2,1fr)}
 }
-}
-
 @media(max-width:720px){
-
-.menu-btn{
-display:block;
-}
-
-.sidebar{
-position:fixed;
-top:0;
-left:0;
-width:245px;
-height:100vh;
-z-index:9999;
-transform:translateX(-100%);
-transition:0.35s ease;
-}
-
-.sidebar.show{
-transform:translateX(0);
-}
-
-.main{
-margin-left:0;
-width:100%;
-}
-
-.stats-row{
-grid-template-columns:1fr;
-}
-
-.content{
-padding:14px;
-}
-
-.sbox,
-.tb-date{
-display:none;
-}
-
+.menu-btn{display:block}
+.sidebar{position:fixed;top:0;left:0;width:245px;height:100vh;z-index:9999;
+transform:translateX(-100%);transition:0.35s ease}
+.sidebar.show{transform:translateX(0)}
+.main{margin-left:0;width:100%}
+.stats-row{grid-template-columns:1fr}
+.content{padding:14px}
+.sbox,.tb-date{display:none}
 }
 </style>
 </head>
 <body>
 <div class="wrapper">
-
 <!-- ══════════════════ SIDEBAR ══════════════════ -->
 <aside class="sidebar">
   <div class="sb-brand">
     <div class="sb-logo"><i class="fas fa-file-alt"></i></div>
-    <h2>Resume Builder</h2>
+    <h2>Resume Studio</h2>
     <p>Admin Control Panel</p>
   </div>
-
   <div class="sb-sec">Main</div>
-  <div class="nav-link active" onclick="show('dashboard',this)">
+  <div class="nav-link active" onclick="switchSection('dashboard',this)">
     <i class="fas fa-chart-pie"></i> Dashboard
   </div>
-  <div class="nav-link" onclick="show('users',this)">
+  <div class="nav-link" onclick="switchSection('users',this)">
     <i class="fas fa-users"></i> Users
     <span class="nb">{{ total_users }}</span>
   </div>
-  <div class="nav-link" onclick="show('resumes',this)">
+  <div class="nav-link" onclick="switchSection('resumes',this)">
     <i class="fas fa-file-user"></i> IT Resumes
     <span class="nb">{{ total_resumes }}</span>
   </div>
-
-  <!-- ★ NEW sidebar button ★ -->
-  <div class="nav-link" onclick="show('other_resumes',this)">
+  <div class="nav-link" onclick="switchSection('other_resumes',this)">
     <i class="fas fa-file-alt"></i> Other Resumes
     <span class="nb">{{ total_other_resumes }}</span>
   </div>
-
   <div class="sb-sec">Security</div>
-  <div class="nav-link" onclick="show('logininfo',this)">
+  <div class="nav-link" onclick="switchSection('logininfo',this)">
     <i class="fas fa-shield-alt"></i> Login Info
     <span class="nb">{{ login_activity|length }}</span>
   </div>
-  <div class="nav-link" onclick="show('admins',this)">
+  <div class="nav-link" onclick="switchSection('admins',this)">
     <i class="fas fa-user-shield"></i> Sub-Admins
     <span class="nb">{{ admins|length }}</span>
   </div>
-
   <div class="sb-foot">
     <div class="sb-av">{{ admin_name[0]|upper if admin_name else 'A' }}</div>
     <div class="sb-info">
@@ -371,415 +292,371 @@ display:none;
     </a>
   </div>
 </aside>
-
 <!-- ══════════════════ MAIN ══════════════════ -->
-
-  <div class="main">
+<div class="main">
   <div class="topbar">
-
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-    <div class="tb-title">
-      Nagar's <span>Panel</span>
-    </div>
-
+    <div class="tb-title">Resume <span>Studio</span> Admin</div>
     <div class="sbox">
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search…" oninput="globalSearch(this.value)">
     </div>
-
     <div class="tb-date" id="tb-date"></div>
-
+  </div>
+  <div class="content">
+<!-- ════════ DASHBOARD ════════ -->
+<div id="sec-dashboard" class="section active">
+  <div class="sec-hd">
+    <h2>Dashboard Overview</h2>
+    <p>Welcome back, <strong>{{ admin_name }}</strong>. Here's your platform summary.</p>
   </div>
 
-  <div class="content">
-
-    <!-- ════════ DASHBOARD ════════ -->
-    <div id="sec-dashboard" class="section active">
-      <div class="sec-hd">
-        <h2>Dashboard Overview</h2>
-        <p>Welcome back, <strong>{{ admin_name }}</strong>. Here's your platform summary.</p>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="si blue"><i class="fas fa-users"></i></div>
-          <div><div class="sv">{{ successful_logins }}</div><div class="sl">Total Users</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="si green"><i class="fas fa-file-alt"></i></div>
-          <div><div class="sv">{{ total_resumes }}</div><div class="sl">IT Resumes</div></div>
-        </div>
-        <!-- ★ NEW stat card ★ -->
-        <div class="stat-card">
-          <div class="si violet"><i class="fas fa-file-alt"></i></div>
-          <div><div class="sv">{{ total_other_resumes }}</div><div class="sl">Other Resumes</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="si orange"><i class="fas fa-user-shield"></i></div>
-          <div><div class="sv">{{ verified_admins }}</div><div class="sl">Verified Admins</div></div>
-        </div>
-      </div>
-
-      <!-- Recent Login Activity -->
-       <!-- Recent Login Activity -->
-      <div class="panel">
-        <div class="panel-hd">
-          <h3><i class="fas fa-shield-alt"></i> Recent Login Activity</h3>
-          <span class="ph-tag">{{ login_activity|length }} records</span>
-        </div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Username</th><th>Email</th><th>Time</th><th>Status</th></tr></thead>
-            <tbody>
-              {% for log in login_activity[:6] %}
-              <tr>
-                <td><strong>{{ log.username }}</strong></td>
-                <td>{{ log.email }}</td>
-                <td style="font-size:11px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
-                <td>
-                  {% if log.username == 'FAILED' %}
-                  <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
-                  {% else %}
-                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% else %}
-              <tr><td colspan="4"><div class="empty"><i class="fas fa-history"></i><p>No login records yet</p></div></td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Recent Users -->
-      <div class="panel">
-        <div class="panel-hd">
-          <h3><i class="fas fa-users"></i> Recent Users</h3>
-          <span class="ph-tag">{{ total_users }} total</span>
-        </div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Name</th><th>Email</th><th>Major</th><th>Status</th></tr></thead>
-            <tbody>
-              {% for u in users[:5] %}
-              <tr>
-                <td>
-                  <div class="u-cell">
-                    <div class="u-av" style="background:#eff6ff;color:#2563eb">{{ u.name[0]|upper if u.name else '?' }}</div>
-                    <div class="u-name">{{ u.name }}</div>
-                  </div>
-                </td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.major }}</td>
-                <td><span class="bp bp-green"><i class="fas fa-circle"></i> Active</span></td>
-              </tr>
-              {% else %}
-              <tr><td colspan="4"><div class="empty"><i class="fas fa-users"></i><p>No users yet</p></div></td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="si blue"><i class="fas fa-users"></i></div>
+      <div><div class="sv">{{ total_users }}</div><div class="sl">Total Users</div></div>
     </div>
-
-    <!-- ════════ USERS ════════ -->
-    <div id="sec-users" class="section">
-      <div class="sec-hd"><h2>User Management</h2><p>{{ total_users }} users in the system</p></div>
-      <div class="panel">
-        <div class="fbar">
-          <div class="fi"><i class="fas fa-search"></i>
-            <input type="text" placeholder="Search by name or email…" oninput="filterRows('u-tbody',this.value)">
-          </div>
-          <button class="btn btn-green" onclick="dlJSON(ALL_USERS,'all_users')">
-            <i class="fas fa-download"></i> Export All JSON
-          </button>
-        </div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Major</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="u-tbody">
-              {% for u in users %}
-              <tr data-q="{{ (u.name+' '+u.email)|lower }}">
-                <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
-                <td>
-                  <div class="u-cell">
-                    <div class="u-av" style="background:{{ loop.cycle('#eff6ff','#f0fdf4','#fff7ed','#faf5ff') }};color:{{ loop.cycle('#2563eb','#16a34a','#ea580c','#7c3aed') }}">
-                      {{ u.name[0]|upper if u.name else '?' }}
-                    </div>
-                    <div><div class="u-name">{{ u.name }}</div><div class="u-sub">ID: {{ u.user_id }}</div></div>
-                  </div>
-                </td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.mobile }}</td>
-                <td>{{ u.major }}</td>
-                <td><span class="bp bp-green"><i class="fas fa-circle"></i> Verified</span></td>
-                <td>
-                  <button class="btn btn-blue" onclick='dlJSON({{ u.raw|tojson }},"{{ u.name }}_user")'>
-                    <i class="fas fa-download"></i> JSON
-                  </button>
-                </td>
-              </tr>
-              {% else %}
-              <tr><td colspan="7"><div class="empty"><i class="fas fa-users-slash"></i><p>No users found in the database</p></div></td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="stat-card">
+      <div class="si green"><i class="fas fa-file-alt"></i></div>
+      <div><div class="sv">{{ total_resumes }}</div><div class="sl">IT Resumes</div></div>
     </div>
+    <div class="stat-card">
+      <div class="si violet"><i class="fas fa-file-alt"></i></div>
+      <div><div class="sv">{{ total_other_resumes }}</div><div class="sl">Other Resumes</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="si orange"><i class="fas fa-user-shield"></i></div>
+      <div><div class="sv">{{ verified_admins }}</div><div class="sl">Verified Admins</div></div>
+    </div>
+  </div>
 
-    <!-- ════════ IT RESUMES ════════ -->
-    <div id="sec-resumes" class="section">
-      <div class="sec-hd"><h2>IT Resume Management</h2><p>{{ total_resumes }} resumes generated</p></div>
-      <div class="panel" style="margin-bottom:16px">
-        <div class="fbar" style="border:none;padding:12px 20px">
-          <div class="fi"><i class="fas fa-search"></i>
-            <input type="text" placeholder="Search by name…" oninput="filterCards(this.value)">
-          </div>
-        </div>
-      </div>
-      {% if resumes %}
-      <div class="r-grid" id="r-grid">
-        {% for r in resumes %}
-        <div class="r-card" data-n="{{ r.name|lower }}">
-          <div class="rc-head">
-            <div class="rc-av">{{ r.name[0]|upper if r.name else '?' }}</div>
-            <div><div class="rc-name">{{ r.name }}</div><div class="rc-mail">{{ r.email }}</div></div>
-          </div>
-          <div class="rc-row">
-            <i class="fas fa-tools"></i>
-            <div>
-              <div style="font-size:9.5px;color:#94a3b8;margin-bottom:3px">SKILLS</div>
-              <div class="chips">
-                {% set sl = r.skills.split(',') %}
-                {% for s in sl[:4] %}<span class="chip">{{ s.strip() }}</span>{% endfor %}
-                {% if sl|length > 4 %}<span class="chip more">+{{ sl|length-4 }}</span>{% endif %}
-                {% if r.skills == 'No skills listed' %}<span style="font-size:11px;color:#94a3b8">None listed</span>{% endif %}
+  <!-- Recent Login Activity -->
+  <div class="panel">
+    <div class="panel-hd">
+      <h3><i class="fas fa-shield-alt"></i> Recent Login Activity</h3>
+      <span class="ph-tag">{{ login_activity|length }} records</span>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Time</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for log in login_activity[:6] %}
+          <tr>
+            <td><strong>{{ log.username }}</strong></td>
+            <td>{{ log.email }}</td>
+            <td style="font-size:11px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
+            <td>
+              {% if log.username == 'FAILED' %}
+              <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
+              {% else %}
+              <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4"><div class="empty"><i class="fas fa-history"></i><p>No login records yet</p></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Users -->
+  <div class="panel">
+    <div class="panel-hd">
+      <h3><i class="fas fa-users"></i> Recent Users</h3>
+      <span class="ph-tag">{{ total_users }} total</span>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Major</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for u in users[:5] %}
+          <tr>
+            <td>
+              <div class="u-cell">
+                <div class="u-av" style="background:#eff6ff;color:#2563eb">{{ u.name[0]|upper if u.name else '?' }}</div>
+                <div class="u-name">{{ u.name }}</div>
               </div>
-            </div>
-          </div>
-          <div class="rc-row">
-            <i class="fas fa-briefcase"></i>
-            {% if r.experience > 0 %}
-            <span class="bp bp-blue"><i class="fas fa-circle"></i> {{ r.experience }} Experience</span>
-            {% else %}<span class="bp bp-orange"><i class="fas fa-circle"></i> Fresher</span>{% endif %}
-          </div>
-          <div class="rc-row"><i class="fas fa-code"></i><span>{{ r.projects }} Project(s)</span></div>
-          {% if r.github %}<div class="rc-row"><i class="fab fa-github"></i><span style="font-size:11px;word-break:break-all">{{ r.github }}</span></div>{% endif %}
-          <div class="rc-actions">
-            <button class="btn btn-blue" onclick='openModal({{ r.raw|tojson }})'><i class="fas fa-eye"></i> View</button>
-            <button class="btn btn-green" onclick='dlJSON({{ r.raw|tojson }},"{{ r.name }}_resume")'><i class="fas fa-download"></i> JSON</button>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% else %}
-      <div class="panel"><div class="empty"><i class="fas fa-folder-open"></i><p>No resumes available</p></div></div>
-      {% endif %}
+            </td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.major }}</td>
+            <td><span class="bp bp-green"><i class="fas fa-circle"></i> Active</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4"><div class="empty"><i class="fas fa-users"></i><p>No users yet</p></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
 
-    <!-- ════════ OTHER RESUMES ════════ -->  <!-- ★ NEW SECTION ★ -->
-    <div id="sec-other_resumes" class="section">
-      <div class="sec-hd">
-        <h2>Other Resume Management</h2>
-        <p>{{ total_other_resumes }} other resumes generated</p>
+<!-- ════════ USERS ════════ -->
+<div id="sec-users" class="section">
+  <div class="sec-hd"><h2>User Management</h2><p>{{ total_users }} users in the system</p></div>
+  <div class="panel">
+    <div class="fbar">
+      <div class="fi"><i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by name or email…" oninput="filterRows('u-tbody',this.value)">
       </div>
-      <div class="panel" style="margin-bottom:16px">
-        <div class="fbar" style="border:none;padding:12px 20px">
-          <div class="fi"><i class="fas fa-search"></i>
-            <input type="text" placeholder="Search by name, email or career…" oninput="filterOtherCards(this.value)">
-          </div>
-        </div>
-      </div>
-      {% if other_resumes %}
-      <div class="r-grid" id="other-r-grid">
-        {% for r in other_resumes %}
-        <div class="r-card other-card" data-n="{{ (r.name+' '+r.email+' '+r.career)|lower }}">
-          <div class="rc-head">
-            <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">
-              {{ r.name[0]|upper if r.name else '?' }}
-            </div>
-            <div>
-              <div class="rc-name">{{ r.name }}</div>
-              <div class="rc-mail">{{ r.email }}</div>
-            </div>
-          </div>
-
-          {% if r.career %}
-          <div class="rc-row">
-            <i class="fas fa-briefcase"></i>
-            <span class="bp bp-violet"><i class="fas fa-circle"></i> {{ r.career }}</span>
-          </div>
-          {% endif %}
-
-          <div class="rc-row">
-            <i class="fas fa-tools"></i>
-            <div>
-              <div style="font-size:9.5px;color:#94a3b8;margin-bottom:3px">SKILLS</div>
-              <div class="chips">
-                {% set sl = r.skills.split(',') %}
-                {% for s in sl[:4] %}<span class="chip">{{ s.strip() }}</span>{% endfor %}
-                {% if sl|length > 4 %}<span class="chip more">+{{ sl|length-4 }}</span>{% endif %}
-                {% if r.skills == 'No skills listed' %}<span style="font-size:11px;color:#94a3b8">None listed</span>{% endif %}
-              </div>
-            </div>
-          </div>
-
-          <div class="rc-row">
-            <i class="fas fa-briefcase"></i>
-            {% if r.experience > 0 %}
-            <span class="bp bp-violet"><i class="fas fa-circle"></i> {{ r.experience }} Experience</span>
-            {% else %}<span class="bp bp-orange"><i class="fas fa-circle"></i> Fresher</span>{% endif %}
-          </div>
-
-          <div class="rc-row">
-            <i class="fas fa-code"></i>
-            <span>{{ r.projects }} Project(s)</span>
-          </div>
-
-          <div class="rc-actions">
-            <button class="btn btn-blue" onclick='openModal({{ r.raw|tojson|safe }})'><i class="fas fa-eye"></i> View</button>
-            <button class="btn btn-green" onclick='dlJSON({{ r.raw|tojson }},"{{ r.name }}_other_resume")'><i class="fas fa-download"></i> JSON</button>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% else %}
-      <div class="panel">
-        <div class="empty">
-          <i class="fas fa-folder-open"></i>
-          <p>No other resumes available</p>
-        </div>
-      </div>
-      {% endif %}
     </div>
-    <!-- ════════ END OTHER RESUMES ════════ -->
-
-    <!-- ════════ LOGIN INFO ════════ -->
-     <div id="sec-logininfo" class="section">
-      <div class="sec-hd"><h2>Login Activity</h2><p>All admin login attempts — success &amp; failed</p></div>
- 
-      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:11px;
-                  padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-        <i class="fas fa-envelope" style="color:#16a34a;font-size:16px"></i>
-        <span style="font-size:12.5px;color:#15803d">
-          A security notification email is automatically sent to <strong>{{ admin_email }}</strong>
-          every time an admin logs in successfully.
-        </span>
-      </div>
- 
-      <div class="panel">
-        <div class="fbar">
-          <div class="fi"><i class="fas fa-search"></i>
-            <input type="text" placeholder="Search by email or username…" oninput="filterRows('l-tbody',this.value)">
-          </div>
-        </div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Login Time</th><th>Status</th></tr></thead>
-            <tbody id="l-tbody">
-              {% for log in login_activity %}
-              <tr data-q="{{ (log.username+' '+log.email)|lower }}">
-                <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
-                <td><strong>{{ log.username }}</strong></td>
-                <td>{{ log.email }}</td>
-                <td style="font-size:11.5px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
-                <td>
-                  {% if log.username == 'FAILED' %}
-                  <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
-                  {% else %}
-                  <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% else %}
-              <tr><td colspan="5">
-                <div class="empty"><i class="fas fa-history"></i>
-                  <p>No login records yet.<br>Login activity will appear here after the next admin login.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Major</th><th>Status</th></tr></thead>
+        <tbody id="u-tbody">
+          {% for u in users %}
+          <tr data-q="{{ (u.name+' '+u.email)|lower }}">
+            <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
+            <td>
+              <div class="u-cell">
+                <div class="u-av" style="background:{{ loop.cycle('#eff6ff','#f0fdf4','#fff7ed','#faf5ff') }};color:{{ loop.cycle('#2563eb','#16a34a','#ea580c','#7c3aed') }}">
+                  {{ u.name[0]|upper if u.name else '?' }}
                 </div>
-              </td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+                <div><div class="u-name">{{ u.name }}</div><div class="u-sub">ID: {{ u.user_id }}</div></div>
+              </div>
+            </td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.mobile }}</td>
+            <td>{{ u.major }}</td>
+            <td><span class="bp bp-green"><i class="fas fa-circle"></i> Verified</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6"><div class="empty"><i class="fas fa-users-slash"></i><p>No users found</p></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ IT RESUMES ════════ -->
+<div id="sec-resumes" class="section">
+  <div class="sec-hd"><h2>IT Resume Management</h2><p>{{ total_resumes }} resumes generated</p></div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="fbar" style="border:none;padding:12px 20px">
+      <div class="fi"><i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by name…" oninput="filterCards(this.value)">
       </div>
     </div>
-    <!-- ════════ SUB-ADMINS ════════ -->
-    <div id="sec-admins" class="section">
-      <div class="sec-hd"><h2>Sub-Admin Management</h2><p>Manage all admin accounts — {{ admins|length }} total</p></div>
-
-      <div style="background:#fef3c7;border:1.5px solid #fcd34d;border-radius:11px;
-                  padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-        <i class="fas fa-exclamation-triangle" style="color:#d97706;font-size:16px"></i>
-        <span style="font-size:12.5px;color:#92400e">
-          <strong>Warning:</strong> Deleting a sub-admin removes their account and all OTP records permanently.
-          You cannot delete your own account.
-        </span>
+  </div>
+  {% if resumes %}
+  <div class="r-grid" id="r-grid">
+    {% for r in resumes %}
+    <div class="r-card" data-n="{{ r.name|lower }}">
+      <div class="rc-head">
+        <div class="rc-av">{{ r.name[0]|upper if r.name else '?' }}</div>
+        <div><div class="rc-name">{{ r.name }}</div><div class="rc-mail">{{ r.email }}</div></div>
       </div>
-
-      <div class="panel">
-        <div class="fbar">
-          <div class="fi"><i class="fas fa-search"></i>
-            <input type="text" placeholder="Search by name or email…" oninput="filterRows('a-tbody',this.value)">
+      <div class="rc-row">
+        <i class="fas fa-tools"></i>
+        <div>
+          <div style="font-size:9.5px;color:#94a3b8;margin-bottom:3px">SKILLS</div>
+          <div class="chips">
+            {% set sl = r.skills.split(',') if r.skills else [] %}
+            {% for s in sl[:4] %}<span class="chip">{{ s.strip() }}</span>{% endfor %}
+            {% if sl|length > 4 %}<span class="chip more">+{{ sl|length-4 }}</span>{% endif %}
+            {% if not r.skills %}<span style="font-size:11px;color:#94a3b8">None listed</span>{% endif %}
           </div>
         </div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Verified</th><th>Registered At</th><th>Action</th></tr></thead>
-            <tbody id="a-tbody">
-              {% for a in admins %}
-              <tr id="admin-row-{{ a.id }}" data-q="{{ (a.username+' '+a.email)|lower }}"
-                  {% if a.is_self %}class="self-row"{% endif %}>
-                <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
-                <td>
-                  <div class="u-cell">
-                    <div class="u-av" style="background:#faf5ff;color:#7c3aed">{{ a.username[0]|upper if a.username else 'A' }}</div>
-                    <div>
-                      <div class="u-name">
-                        {{ a.username }}
-                        {% if a.is_self %}<span class="self-badge">YOU</span>{% endif %}
-                      </div>
-                      <div class="u-sub">ID: {{ a.id }}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>{{ a.email }}</td>
-                <td>
-                  {% if a.is_verified %}
-                  <span class="bp bp-green"><i class="fas fa-circle"></i> Verified</span>
-                  {% else %}
-                  <span class="bp bp-red"><i class="fas fa-circle"></i> Not Verified</span>
-                  {% endif %}
-                </td>
-                <td style="font-size:11.5px;color:#64748b;white-space:nowrap">{{ a.created_at }}</td>
-                <td>
-                  {% if a.is_self %}
-                  <button class="btn btn-gray" disabled title="Cannot delete your own account">
-                    <i class="fas fa-lock"></i> Protected
-                  </button>
-                  {% else %}
-                  <button class="btn btn-red"
-                    onclick="confirmDelete({{ a.id }}, '{{ a.username }}', '{{ a.email }}')">
-                    <i class="fas fa-trash"></i> Delete
-                  </button>
-                  {% endif %}
-                </td>
-              </tr>
-              {% else %}
-              <tr><td colspan="6"><div class="empty"><i class="fas fa-user-shield"></i><p>No admin accounts found</p></div></td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+      </div>
+      <div class="rc-row">
+        <i class="fas fa-briefcase"></i>
+        {% if r.experience > 0 %}
+        <span class="bp bp-blue"><i class="fas fa-circle"></i> {{ r.experience }} Experience</span>
+        {% else %}<span class="bp bp-orange"><i class="fas fa-circle"></i> Fresher</span>{% endif %}
+      </div>
+      <div class="rc-row"><i class="fas fa-code"></i><span>{{ r.projects }} Project(s)</span></div>
+      <div class="rc-actions">
+        <button class="btn btn-blue" onclick='openModal({{ r|tojson|safe }})'><i class="fas fa-eye"></i> View</button>
       </div>
     </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel"><div class="empty"><i class="fas fa-folder-open"></i><p>No resumes available</p></div></div>
+  {% endif %}
+</div>
 
+<!-- ════════ OTHER RESUMES ════════ -->
+<div id="sec-other_resumes" class="section">
+  <div class="sec-hd">
+    <h2>Other Resume Management</h2>
+    <p>{{ total_other_resumes }} other resumes generated</p>
+  </div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="fbar" style="border:none;padding:12px 20px">
+      <div class="fi"><i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by name, email or career…" oninput="filterOtherCards(this.value)">
+      </div>
+    </div>
+  </div>
+  {% if other_resumes %}
+  <div class="r-grid" id="other-r-grid">
+    {% for r in other_resumes %}
+    <div class="r-card other-card" data-n="{{ (r.name+' '+r.email+' '+(r.career or ''))|lower }}">
+      <div class="rc-head">
+        <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">
+          {{ r.name[0]|upper if r.name else '?' }}
+        </div>
+        <div>
+          <div class="rc-name">{{ r.name }}</div>
+          <div class="rc-mail">{{ r.email }}</div>
+        </div>
+      </div>
+
+      {% if r.career %}
+      <div class="rc-row">
+        <i class="fas fa-briefcase"></i>
+        <span class="bp bp-violet"><i class="fas fa-circle"></i> {{ r.career }}</span>
+      </div>
+      {% endif %}
+
+      <div class="rc-row">
+        <i class="fas fa-tools"></i>
+        <div>
+          <div style="font-size:9.5px;color:#94a3b8;margin-bottom:3px">SKILLS</div>
+          <div class="chips">
+            {% set sl = r.skills.split(',') if r.skills else [] %}
+            {% for s in sl[:4] %}<span class="chip">{{ s.strip() }}</span>{% endfor %}
+            {% if sl|length > 4 %}<span class="chip more">+{{ sl|length-4 }}</span>{% endif %}
+            {% if not r.skills %}<span style="font-size:11px;color:#94a3b8">None listed</span>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="rc-row">
+        <i class="fas fa-briefcase"></i>
+        {% if r.experience > 0 %}
+        <span class="bp bp-violet"><i class="fas fa-circle"></i> {{ r.experience }} Experience</span>
+        {% else %}<span class="bp bp-orange"><i class="fas fa-circle"></i> Fresher</span>{% endif %}
+      </div>
+
+      <div class="rc-row">
+        <i class="fas fa-code"></i>
+        <span>{{ r.projects }} Project(s)</span>
+      </div>
+
+      <div class="rc-actions">
+        <button class="btn btn-blue" onclick='openModal({{ r|tojson|safe }})'><i class="fas fa-eye"></i> View</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel">
+    <div class="empty">
+      <i class="fas fa-folder-open"></i>
+      <p>No other resumes available</p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ════════ LOGIN INFO ════════ -->
+<div id="sec-logininfo" class="section">
+  <div class="sec-hd"><h2>Login Activity</h2><p>All admin login attempts</p></div>
+
+  <div class="panel">
+    <div class="fbar">
+      <div class="fi"><i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by email or username…" oninput="filterRows('l-tbody',this.value)">
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Login Time</th><th>Status</th></tr></thead>
+        <tbody id="l-tbody">
+          {% for log in login_activity %}
+          <tr data-q="{{ (log.username+' '+log.email)|lower }}">
+            <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
+            <td><strong>{{ log.username }}</strong></td>
+            <td>{{ log.email }}</td>
+            <td style="font-size:11.5px;color:#64748b;white-space:nowrap">{{ log.login_time }}</td>
+            <td>
+              {% if 'FAILED' in log.username %}
+              <span class="bp bp-red"><i class="fas fa-circle"></i> Failed</span>
+              {% else %}
+              <span class="bp bp-green"><i class="fas fa-circle"></i> Success</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5">
+            <div class="empty"><i class="fas fa-history"></i>
+              <p>No login records yet</p>
+            </div>
+          </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SUB-ADMINS ════════ -->
+<div id="sec-admins" class="section">
+  <div class="sec-hd"><h2>Sub-Admin Management</h2><p>Manage all admin accounts — {{ admins|length }} total</p></div>
+
+  <div class="panel">
+    <div class="fbar">
+      <div class="fi"><i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by name or email…" oninput="filterRows('a-tbody',this.value)">
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Verified</th><th>Registered At</th><th>Action</th></tr></thead>
+        <tbody id="a-tbody">
+          {% for a in admins %}
+          <tr id="admin-row-{{ a.id }}" data-q="{{ (a.username+' '+a.email)|lower }}"
+              {% if a.is_self %}class="self-row"{% endif %}>
+            <td style="color:#94a3b8;font-size:11px">{{ loop.index }}</td>
+            <td>
+              <div class="u-cell">
+                <div class="u-av" style="background:#faf5ff;color:#7c3aed">{{ a.username[0]|upper if a.username else 'A' }}</div>
+                <div>
+                  <div class="u-name">
+                    {{ a.username }}
+                    {% if a.is_self %}<span class="self-badge">YOU</span>{% endif %}
+                  </div>
+                  <div class="u-sub">ID: {{ a.id }}</div>
+                </div>
+              </div>
+            </td>
+            <td>{{ a.email }}</td>
+            <td>
+              {% if a.is_verified %}
+              <span class="bp bp-green"><i class="fas fa-circle"></i> Verified</span>
+              {% else %}
+              <span class="bp bp-red"><i class="fas fa-circle"></i> Not Verified</span>
+              {% endif %}
+            </td>
+            <td style="font-size:11.5px;color:#64748b;white-space:nowrap">{{ a.created_at }}</td>
+            <td>
+              {% if a.is_self %}
+              <button class="btn btn-gray" disabled title="Cannot delete your own account">
+                <i class="fas fa-lock"></i> Protected
+              </button>
+              {% else %}
+              <button class="btn btn-red"
+                onclick="confirmDelete({{ a.id }}, '{{ a.username }}', '{{ a.email }}')">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6"><div class="empty"><i class="fas fa-user-shield"></i><p>No admin accounts found</p></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
   </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /wrapper -->
-
 <!-- ══════════════════ RESUME MODAL ══════════════════ -->
 <div class="m-overlay" id="m-overlay">
   <div class="modal">
@@ -790,7 +667,6 @@ display:none;
     <div id="m-body"></div>
   </div>
 </div>
-
 <!-- ══════════════════ DELETE CONFIRM DIALOG ══════════════════ -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
@@ -800,152 +676,206 @@ display:none;
       <i class="fas fa-trash"></i>
     </div>
     <h3>Delete Sub-Admin?</h3>
-    <p id="confirm-text">This action cannot be undone. The admin account and all their OTP records will be permanently deleted.</p>
+    <p id="confirm-text">This action cannot be undone.</p>
     <div class="confirm-actions">
       <button class="btn btn-gray" onclick="closeConfirm()"><i class="fas fa-times"></i> Cancel</button>
       <button class="btn btn-red" id="confirm-yes" onclick="executeDelete()"><i class="fas fa-trash"></i> Yes, Delete</button>
     </div>
   </div>
 </div>
-
 <!-- ══════════════════ TOAST ══════════════════ -->
 <div class="toast" id="toast">
   <i class="fas fa-info-circle" id="toast-icon"></i>
   <span id="toast-msg">Message</span>
 </div>
-
 <script>
+// ══════════════════════════════════════════════
+// MOBILE MENU TOGGLE
+// ══════════════════════════════════════════════
 function toggleMenu(){
-document.querySelector('.sidebar').classList.toggle('show');
+  var sidebar = document.querySelector('.sidebar');
+  if(sidebar) sidebar.classList.toggle('show');
 }
 
-document.querySelectorAll('.nav-link').forEach(item=>{
-item.onclick=()=>{
-document.querySelector('.sidebar').classList.remove('show');
-}
-});
-
-
-const ALL_USERS = JSON.parse('{{ users|tojson|safe }}');
-const ALL_RESUMES = JSON.parse('{{ resumes|tojson|safe }}');
-
-/* ── Date ── */
+// ══════════════════════════════════════════════
+// DATE DISPLAY
+// ══════════════════════════════════════════════
 (function(){
-  const d = new Date();
-  const el = document.getElementById('tb-date');
-  if(el) el.textContent = d.toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  var d = new Date();
+  var el = document.getElementById('tb-date');
+  if(el) {
+    el.textContent = d.toLocaleDateString('en-IN', {
+      weekday:'short',
+      year:'numeric',
+      month:'short',
+      day:'numeric'
+    });
+  }
 })();
 
-/* ── Section switcher ── */
-// ★ CHANGED: added 'other_resumes' to the list
-const SECS = ['dashboard','users','resumes','other_resumes','logininfo','admins'];
-function show(name, el){
-  SECS.forEach(s => document.getElementById('sec-'+s).classList.toggle('active', s===name));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+// ══════════════════════════════════════════════
+// SECTION SWITCHER
+// ══════════════════════════════════════════════
+var SECS = ['dashboard','users','resumes','other_resumes','logininfo','admins'];
+
+function switchSection(name, el){
+  console.log('Switching to:', name);
+  
+  // Hide all sections
+  for(var i=0; i<SECS.length; i++){
+    var sec = document.getElementById('sec-'+SECS[i]);
+    if(sec) sec.classList.remove('active');
+  }
+  
+  // Show target section
+  var target = document.getElementById('sec-'+name);
+  if(target){
+    target.classList.add('active');
+  } else {
+    console.error('Section not found:', 'sec-'+name);
+  }
+  
+  // Update nav links
+  var links = document.querySelectorAll('.nav-link');
+  for(var j=0; j<links.length; j++){
+    links[j].classList.remove('active');
+  }
   if(el) el.classList.add('active');
+  
+  // Close mobile menu
+  if(window.innerWidth <= 720){
+    var sidebar = document.querySelector('.sidebar');
+    if(sidebar) sidebar.classList.remove('show');
+  }
 }
 
-/* ── Filter table rows ── */
+// ══════════════════════════════════════════════
+// FILTER FUNCTIONS
+// ══════════════════════════════════════════════
 function filterRows(tbodyId, q){
   q = q.toLowerCase().trim();
-  document.querySelectorAll('#'+tbodyId+' tr').forEach(tr=>{
-    const v = (tr.dataset.q||'').toLowerCase();
-    tr.style.display = (!q || v.includes(q)) ? '' : 'none';
-  });
+  var tbody = document.getElementById(tbodyId);
+  if(!tbody) return;
+  
+  var rows = tbody.querySelectorAll('tr');
+  for(var i=0; i<rows.length; i++){
+    var tr = rows[i];
+    var v = (tr.dataset.q || '').toLowerCase();
+    tr.style.display = (!q || v.indexOf(q) !== -1) ? '' : 'none';
+  }
 }
 
-/* ── Filter IT resume cards ── */
 function filterCards(q){
   q = q.toLowerCase().trim();
-  document.querySelectorAll('#r-grid .r-card').forEach(c=>{
-    c.style.display = (!q||(c.dataset.n||'').includes(q)) ? '' : 'none';
-  });
+  var grid = document.getElementById('r-grid');
+  if(!grid) return;
+  
+  var cards = grid.querySelectorAll('.r-card');
+  for(var i=0; i<cards.length; i++){
+    var c = cards[i];
+    var n = (c.dataset.n || '').toLowerCase();
+    c.style.display = (!q || n.indexOf(q) !== -1) ? '' : 'none';
+  }
 }
 
-/* ── Filter Other resume cards ── */  // ★ NEW FUNCTION
 function filterOtherCards(q){
   q = q.toLowerCase().trim();
-  document.querySelectorAll('#other-r-grid .r-card').forEach(c=>{
-    c.style.display = (!q||(c.dataset.n||'').includes(q)) ? '' : 'none';
-  });
+  var grid = document.getElementById('other-r-grid');
+  if(!grid) return;
+  
+  var cards = grid.querySelectorAll('.r-card');
+  for(var i=0; i<cards.length; i++){
+    var c = cards[i];
+    var n = (c.dataset.n || '').toLowerCase();
+    c.style.display = (!q || n.indexOf(q) !== -1) ? '' : 'none';
+  }
 }
 
-/* ── Global search ── */
 function globalSearch(q){
-  filterRows('u-tbody',q);
-  filterRows('l-tbody',q);
-  filterRows('a-tbody',q);
+  filterRows('u-tbody', q);
+  filterRows('l-tbody', q);
+  filterRows('a-tbody', q);
   filterCards(q);
-  filterOtherCards(q);  // ★ NEW: include other resumes in global search
+  filterOtherCards(q);
 }
 
-/* ── Download JSON ── */
-function dlJSON(data, fname){
-  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (fname||'data')+'.json';
-  a.click();
-}
-
-/* ── Toast ── */
-let toastTimer;
-function showToast(msg, type='info'){
-  const t   = document.getElementById('toast');
-  const ico = document.getElementById('toast-icon');
-  document.getElementById('toast-msg').textContent = msg;
-  t.className = `toast ${type} show`;
-  const icons = {success:'fa-check-circle',error:'fa-times-circle',info:'fa-info-circle'};
-  ico.className = `fas ${icons[type]||'fa-info-circle'}`;
+// ══════════════════════════════════════════════
+// TOAST NOTIFICATIONS
+// ══════════════════════════════════════════════
+var toastTimer;
+function showToast(msg, type){
+  type = type || 'info';
+  var t = document.getElementById('toast');
+  var ico = document.getElementById('toast-icon');
+  var msgEl = document.getElementById('toast-msg');
+  
+  if(!t || !ico || !msgEl) return;
+  
+  msgEl.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  
+  var icons = {
+    success:'fa-check-circle',
+    error:'fa-times-circle',
+    info:'fa-info-circle'
+  };
+  ico.className = 'fas ' + (icons[type] || 'fa-info-circle');
+  
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> t.classList.remove('show'), 3500);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3500);
 }
 
-/* ── Confirm Delete ── */
-let pendingDeleteId = null;
+// ══════════════════════════════════════════════
+// ADMIN DELETE
+// ══════════════════════════════════════════════
+var pendingDeleteId = null;
+
 function confirmDelete(adminId, username, email){
   pendingDeleteId = adminId;
-  document.getElementById('confirm-text').innerHTML =
-    `Are you sure you want to delete admin <strong>"${username}"</strong> (${email})?<br>
-    This will permanently remove their account and all OTP records.`;
+  var confirmText = document.getElementById('confirm-text');
+  if(confirmText){
+    confirmText.innerHTML =
+      'Are you sure you want to delete admin <strong>"' + username + '"</strong> (' + email + ')?<br>' +
+      'This will permanently remove their account and all OTP records.';
+  }
   document.getElementById('confirm-overlay').classList.add('open');
 }
+
 function closeConfirm(){
   pendingDeleteId = null;
   document.getElementById('confirm-overlay').classList.remove('open');
 }
 
-/* ── Execute Delete via fetch ── */
 function executeDelete(){
   if(!pendingDeleteId) return;
 
-  const btn = document.getElementById('confirm-yes');
+  var btn = document.getElementById('confirm-yes');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting…';
 
-  fetch(`/delete_admin/${pendingDeleteId}`, {
+  fetch('/delete_admin/' + pendingDeleteId, {
     method: 'POST',
     headers: {'Content-Type':'application/json'}
   })
-  .then(r => r.json())
-  .then(data => {
+  .then(function(r){ return r.json(); })
+  .then(function(data){
     closeConfirm();
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
 
     if(data.success){
-      const row = document.getElementById(`admin-row-${pendingDeleteId}`);
+      var row = document.getElementById('admin-row-' + pendingDeleteId);
       if(row){
         row.style.transition = 'opacity .3s, transform .3s';
         row.style.opacity = '0';
         row.style.transform = 'translateX(20px)';
-        setTimeout(()=> row.remove(), 320);
+        setTimeout(function(){ row.remove(); }, 320);
       }
       showToast(data.message || 'Admin deleted successfully', 'success');
 
-      const nb = document.querySelector('[onclick*="admins"] .nb');
+      var nb = document.querySelector('[onclick*="admins"] .nb');
       if(nb){
-        const cur = parseInt(nb.textContent)||0;
+        var cur = parseInt(nb.textContent) || 0;
         nb.textContent = Math.max(0, cur-1);
       }
     } else {
@@ -953,7 +883,8 @@ function executeDelete(){
     }
     pendingDeleteId = null;
   })
-  .catch(()=>{
+  .catch(function(err){
+    console.error('Delete error:', err);
     closeConfirm();
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
@@ -962,107 +893,121 @@ function executeDelete(){
   });
 }
 
-/* ── Close confirm on overlay click ── */
 document.getElementById('confirm-overlay').addEventListener('click', function(e){
   if(e.target===this) closeConfirm();
 });
 
-/* ── Resume Modal ── */
+// ══════════════════════════════════════════════
+// RESUME MODAL
+// ══════════════════════════════════════════════
 function openModal(r){
-
   try {
-
-    const name = ((r.first_name || '') + ' ' + (r.last_name || '')).trim() || r.name || 'No Name';
+    var name = '';
+    if(r.first_name || r.last_name){
+      name = ((r.first_name || '') + ' ' + (r.last_name || '')).trim();
+    }
+    if(!name) name = r.name || 'No Name';
+    
     document.getElementById('m-title').textContent = name + ' — Resume';
 
-    // ✅ SAFE ARRAY HANDLING
-    const skills     = Array.isArray(r.skills) ? r.skills : (r.skills ? r.skills.split(',') : []);
-    const education  = Array.isArray(r.education) ? r.education : [];
-    const experience = Array.isArray(r.experience) ? r.experience : (Array.isArray(r.experience_data) ? r.experience_data : []);
-    const projects   = Array.isArray(r.projects) ? r.projects : (Array.isArray(r.project_data) ? r.project_data : []);
-    const langs      = Array.isArray(r.languages) ? r.languages : (r.languages ? r.languages.split(',') : []);
-    const langLvl    = Array.isArray(r.language_levels) ? r.language_levels : [];
-
-    let html = `
-      <div class="m-sec">Personal Information</div>
-      <div class="m-row"><i class="fas fa-user"></i><strong>Full Name</strong><span>${name}</span></div>
-      <div class="m-row"><i class="fas fa-envelope"></i><strong>Email</strong><span>${r.email || 'Not Provided'}</span></div>
-      <div class="m-row"><i class="fas fa-phone"></i><strong>Mobile</strong><span>${r.mobile || 'Not Provided'}</span></div>
-
-      ${r.career ? `<div class="m-row"><i class="fas fa-briefcase"></i><strong>Career</strong><span>${r.career}</span></div>` : ''}
-      ${r.github ? `<div class="m-row"><i class="fab fa-github"></i><strong>GitHub</strong><span>${r.github}</span></div>` : ''}
-      ${r.linkedin ? `<div class="m-row"><i class="fab fa-linkedin"></i><strong>LinkedIn</strong><span>${r.linkedin}</span></div>` : ''}
-      ${r.summary ? `<div class="m-row" style="align-items:flex-start"><i class="fas fa-align-left"></i><strong>Summary</strong><span>${r.summary}</span></div>` : ''}
-    `;
-
-    // ✅ SKILLS
-    html += `
-      <div class="m-sec">Skills</div>
-      <div class="chips">
-        ${skills.length ? skills.map(s => `<span class="chip">${s}</span>`).join('') : '<span style="color:#94a3b8">No skills</span>'}
-      </div>
-    `;
-
-    // ✅ EDUCATION
-    if (education.length){
-      html += `<div class="m-sec">Education</div>`;
-      education.forEach(e => {
-        html += `
-          <div class="m-card">
-            <strong>${e.degree || 'Degree'}</strong>
-            <p>${e.college || ''} ${e.start ? '· ' + e.start : ''} ${e.end ? ' - ' + e.end : ''}</p>
-            ${e.cgpa ? `<p>Score: ${e.cgpa}</p>` : ''}
-          </div>
-        `;
-      });
+    // Safe array handling
+    var skills = [];
+    if(Array.isArray(r.skills)){
+      skills = r.skills;
+    } else if(r.skills && typeof r.skills === 'string'){
+      skills = r.skills.split(',').map(function(s){ return s.trim(); });
     }
 
-    // ✅ EXPERIENCE
-    if (experience.length){
-      html += `<div class="m-sec">Experience</div>`;
-      experience.forEach(e => {
+    var education = Array.isArray(r.education) ? r.education : [];
+    var experience = Array.isArray(r.experience) ? r.experience : (Array.isArray(r.experience_data) ? r.experience_data : []);
+    var projects = Array.isArray(r.projects) ? r.projects : (Array.isArray(r.project_data) ? r.project_data : []);
+    
+    var langs = [];
+    if(Array.isArray(r.languages)){
+      langs = r.languages;
+    } else if(r.languages && typeof r.languages === 'string'){
+      langs = r.languages.split(',').map(function(l){ return l.trim(); });
+    }
 
-        // 🔥 BULLET FIX
-        let desc = e.description || e.desc || '';
-        if (desc.includes("•")) {
-          desc = `<ul>${desc.split("•").filter(i => i.trim()).map(i => `<li>${i.trim()}</li>`).join('')}</ul>`;
-        } else {
-          desc = `<p>${desc}</p>`;
+    var html = '<div class="m-sec">Personal Information</div>';
+    html += '<div class="m-row"><i class="fas fa-user"></i><strong>Full Name</strong><span>' + name + '</span></div>';
+    html += '<div class="m-row"><i class="fas fa-envelope"></i><strong>Email</strong><span>' + (r.email || 'Not Provided') + '</span></div>';
+    html += '<div class="m-row"><i class="fas fa-phone"></i><strong>Mobile</strong><span>' + (r.mobile || 'Not Provided') + '</span></div>';
+
+    if(r.career) html += '<div class="m-row"><i class="fas fa-briefcase"></i><strong>Career</strong><span>' + r.career + '</span></div>';
+    if(r.github) html += '<div class="m-row"><i class="fab fa-github"></i><strong>GitHub</strong><span>' + r.github + '</span></div>';
+    if(r.linkedin) html += '<div class="m-row"><i class="fab fa-linkedin"></i><strong>LinkedIn</strong><span>' + r.linkedin + '</span></div>';
+    if(r.summary) html += '<div class="m-row" style="align-items:flex-start"><i class="fas fa-align-left"></i><strong>Summary</strong><span>' + r.summary + '</span></div>';
+
+    // Skills
+    html += '<div class="m-sec">Skills</div><div class="chips">';
+    if(skills.length){
+      for(var i=0; i<skills.length; i++){
+        html += '<span class="chip">' + skills[i] + '</span>';
+      }
+    } else {
+      html += '<span style="color:#94a3b8">No skills</span>';
+    }
+    html += '</div>';
+
+    // Education
+    if(education.length){
+      html += '<div class="m-sec">Education</div>';
+      for(var i=0; i<education.length; i++){
+        var e = education[i];
+        html += '<div class="m-card">';
+        html += '<strong>' + (e.degree || 'Degree') + '</strong>';
+        html += '<p>' + (e.college || '') + (e.start ? ' · ' + e.start : '') + (e.end ? ' - ' + e.end : '') + '</p>';
+        if(e.cgpa) html += '<p>Score: ' + e.cgpa + '</p>';
+        html += '</div>';
+      }
+    }
+
+    // Experience
+    if(experience.length){
+      html += '<div class="m-sec">Experience</div>';
+      for(var i=0; i<experience.length; i++){
+        var e = experience[i];
+        var desc = e.description || e.desc || '';
+        if(desc.indexOf("•") !== -1){
+          var bullets = desc.split("•").filter(function(item){ return item.trim(); });
+          desc = '<ul>';
+          for(var j=0; j<bullets.length; j++){
+            desc += '<li>' + bullets[j].trim() + '</li>';
+          }
+          desc += '</ul>';
+        } else if(desc) {
+          desc = '<p>' + desc + '</p>';
         }
 
-        html += `
-          <div class="m-card">
-            <strong>${e.role || ''} — ${e.company || ''}</strong>
-            <p>${e.duration || ''}</p>
-            ${desc}
-          </div>
-        `;
-      });
+        html += '<div class="m-card">';
+        html += '<strong>' + (e.role || '') + ' — ' + (e.company || '') + '</strong>';
+        html += '<p>' + (e.duration || '') + '</p>';
+        html += desc;
+        html += '</div>';
+      }
     }
 
-    // ✅ PROJECTS (SAFE FIX)
-    if (projects.length){
-      html += `<div class="m-sec">Projects</div>`;
-
-      projects.forEach(p => {
-        html += `
-          <div class="m-card">
-            <strong>${p.title || p.name || 'Project'}</strong>
-            ${p.tech ? `<p>Tech: ${p.tech}</p>` : ''}
-            ${(p.desc || p.description) ? `<p>${p.desc || p.description}</p>` : ''}
-          </div>
-        `;
-      });
+    // Projects
+    if(projects.length){
+      html += '<div class="m-sec">Projects</div>';
+      for(var i=0; i<projects.length; i++){
+        var p = projects[i];
+        html += '<div class="m-card">';
+        html += '<strong>' + (p.title || p.name || 'Project') + '</strong>';
+        if(p.tech) html += '<p>Tech: ' + p.tech + '</p>';
+        if(p.desc || p.description) html += '<p>' + (p.desc || p.description) + '</p>';
+        html += '</div>';
+      }
     }
 
-    // ✅ LANGUAGES
-    if (langs.length){
-      html += `
-        <div class="m-sec">Languages</div>
-        <div class="chips">
-          ${langs.map(l => `<span class="chip">${l}</span>`).join('')}
-        </div>
-      `;
+    // Languages
+    if(langs.length){
+      html += '<div class="m-sec">Languages</div><div class="chips">';
+      for(var i=0; i<langs.length; i++){
+        html += '<span class="chip">' + langs[i] + '</span>';
+      }
+      html += '</div>';
     }
 
     document.getElementById('m-body').innerHTML = html;
@@ -1070,11 +1015,20 @@ function openModal(r){
 
   } catch (error) {
     console.error("Modal Error:", error);
-    alert("Error opening resume. Check data format.");
+    showToast('Error opening resume. Check console.', 'error');
   }
 }
-function closeModal(){document.getElementById('m-overlay').classList.remove('open')}
-document.getElementById('m-overlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+function closeModal(){
+  document.getElementById('m-overlay').classList.remove('open');
+}
+
+document.getElementById('m-overlay').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+
+// Initialize
+console.log('Admin dashboard loaded');
 </script>
 </body>
 </html>
