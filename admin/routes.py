@@ -399,7 +399,71 @@ def forgot_admin_otp():
 
     return render_template("forgot_admin_otp.html")
 
-
+ 
+@admin.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    email = session.get("reset_email")
+    otp_verified = session.get("otp_verified", False)
+ 
+    # Check if user has verified OTP
+    if not email or not otp_verified:
+        return redirect(url_for("admin.forgot_admin"))
+ 
+    if request.method == "POST":
+        new_password = request.form.get("new_password", "").strip()
+        confirm_password = request.form.get("confirm_password", "").strip()
+ 
+        # Validation
+        if not new_password or not confirm_password:
+            return render_template(
+                "reset_password.html",
+                error="All fields are required"
+            )
+ 
+        if len(new_password) < 6:
+            return render_template(
+                "reset_password.html",
+                error="Password must be at least 6 characters"
+            )
+ 
+        if new_password != confirm_password:
+            return render_template(
+                "reset_password.html",
+                error="Passwords do not match"
+            )
+ 
+        db, cursor = get_db()
+ 
+        try:
+            # Update password
+            cursor.execute(
+                "UPDATE admin_signup SET password=%s WHERE email=%s",
+                (new_password, email)
+            )
+ 
+            # Clear session
+            session.pop("reset_email", None)
+            session.pop("otp_verified", None)
+ 
+            return render_template(
+                "reset_password.html",
+                success="Password reset successful! You can now login.",
+                redirect_login=True
+            )
+ 
+        except Exception as e:
+            print(f"❌ Reset password error: {e}")
+            return render_template(
+                "reset_password.html",
+                error="Password reset failed. Please try again."
+            )
+ 
+        finally:
+            cursor.close()
+            db.close()
+ 
+    return render_template("reset_password.html")
+ 
 # ══════════════════════════════════════
 #  DELETE ADMIN
 # ══════════════════════════════════════
