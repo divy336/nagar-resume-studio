@@ -29,195 +29,9 @@ def get_db_connection():
 
 # ---------------- PROFESSIONAL EMAIL TEMPLATES ----------------
 
-def get_otp_email_template(otp, purpose="verification"):
-    """Returns professional HTML email template"""
-    
-    if purpose == "verification":
-        title = "Verify Your Account"
-        message = "Thank you for signing up with Resume Studio! Please use the OTP below to verify your account."
-    else:
-        title = "Reset Your Password"
-        message = "You requested to reset your password. Please use the OTP below to proceed."
-    
-    html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            body {{
-                margin: 0;
-                padding: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f4f4f4;
-            }}
-            .email-container {{
-                max-width: 600px;
-                margin: 40px auto;
-                background-color: #ffffff;
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }}
-            .email-header {{
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                padding: 40px 20px;
-                text-align: center;
-            }}
-            .logo {{
-                font-size: 32px;
-                font-weight: bold;
-                color: #ffffff;
-                margin: 0;
-                letter-spacing: 1px;
-            }}
-            .tagline {{
-                color: #e0e7ff;
-                font-size: 14px;
-                margin-top: 5px;
-            }}
-            .email-body {{
-                padding: 40px 30px;
-                color: #333333;
-            }}
-            .email-title {{
-                font-size: 24px;
-                font-weight: 600;
-                color: #1a202c;
-                margin-bottom: 20px;
-                text-align: center;
-            }}
-            .email-message {{
-                font-size: 16px;
-                line-height: 1.6;
-                color: #4a5568;
-                margin-bottom: 30px;
-                text-align: center;
-            }}
-            .otp-container {{
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                border-radius: 8px;
-                padding: 25px;
-                text-align: center;
-                margin: 30px 0;
-            }}
-            .otp-label {{
-                color: #e0e7ff;
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                margin-bottom: 10px;
-            }}
-            .otp-code {{
-                font-size: 36px;
-                font-weight: bold;
-                color: #ffffff;
-                letter-spacing: 8px;
-                margin: 10px 0;
-                font-family: 'Courier New', monospace;
-            }}
-            .otp-validity {{
-                color: #e0e7ff;
-                font-size: 13px;
-                margin-top: 10px;
-            }}
-            .warning-box {{
-                background-color: #fff5f5;
-                border-left: 4px solid #fc8181;
-                padding: 15px;
-                margin: 20px 0;
-                border-radius: 4px;
-            }}
-            .warning-text {{
-                color: #742a2a;
-                font-size: 14px;
-                margin: 0;
-            }}
-            .email-footer {{
-                background-color: #f7fafc;
-                padding: 30px;
-                text-align: center;
-                border-top: 1px solid #e2e8f0;
-            }}
-            .footer-text {{
-                color: #718096;
-                font-size: 13px;
-                margin: 5px 0;
-            }}
-            .footer-link {{
-                color: #667eea;
-                text-decoration: none;
-            }}
-            .social-links {{
-                margin: 20px 0;
-            }}
-            .social-links a {{
-                display: inline-block;
-                margin: 0 10px;
-                color: #667eea;
-                text-decoration: none;
-                font-size: 14px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="email-container">
-            <div class="email-header">
-                <h1 class="logo">📄 Resume Studio</h1>
-                <p class="tagline">Build Your Perfect Resume</p>
-            </div>
-            
-            <div class="email-body">
-                <h2 class="email-title">{title}</h2>
-                <p class="email-message">{message}</p>
-                
-                <div class="otp-container">
-                    <div class="otp-label">Your One-Time Password</div>
-                    <div class="otp-code">{otp}</div>
-                    <div class="otp-validity">⏱ Valid for 10 minutes</div>
-                </div>
-                
-                <div class="warning-box">
-                    <p class="warning-text">
-                        🔒 <strong>Security Note:</strong> Never share this OTP with anyone. 
-                        Resume Studio will never ask for your OTP via phone or email.
-                    </p>
-                </div>
-                
-                <p class="email-message" style="font-size: 14px; margin-top: 30px;">
-                    If you didn't request this code, please ignore this email or contact our support team.
-                </p>
-            </div>
-            
-            <div class="email-footer">
-                <p class="footer-text"><strong>Resume Studio</strong></p>
-                <p class="footer-text">Your Professional Resume Builder</p>
-                
-                <div class="social-links">
-                    <a href="#">Help Center</a> • 
-                    <a href="#">Contact Support</a> • 
-                    <a href="#">Privacy Policy</a>
-                </div>
-                
-                <p class="footer-text" style="margin-top: 20px;">
-                    © 2026 Resume Studio. All rights reserved.
-                </p>
-                <p class="footer-text" style="font-size: 11px; color: #a0aec0;">
-                    This is an automated message, please do not reply to this email.
-                </p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    
-    return html
-
-
-# ---------------- ASYNC EMAIL SENDING ----------------
 
 import requests
+
 
 # ==========================================
 # OTP EMAIL TEMPLATE
@@ -234,19 +48,27 @@ def get_otp_email_template(otp, purpose="verification"):
     return f"""
     <html>
     <body style="font-family:Arial;background:#f4f4f4;padding:30px;">
+
         <div style="
             max-width:600px;
             margin:auto;
             background:white;
             padding:30px;
             border-radius:12px;
+            box-shadow:0 0 10px rgba(0,0,0,.08);
         ">
 
-            <h1 style="color:#4f46e5;">Resume Studio</h1>
+            <h1 style="color:#4f46e5;text-align:center;">
+                Resume Studio
+            </h1>
 
-            <h2>{title}</h2>
+            <h2 style="text-align:center;">
+                {title}
+            </h2>
 
-            <p>{msg}</p>
+            <p style="text-align:center;font-size:16px;">
+                {msg}
+            </p>
 
             <div style="
                 background:#4f46e5;
@@ -254,7 +76,7 @@ def get_otp_email_template(otp, purpose="verification"):
                 font-size:34px;
                 font-weight:bold;
                 text-align:center;
-                padding:20px;
+                padding:18px;
                 border-radius:10px;
                 letter-spacing:8px;
                 margin:25px 0;
@@ -262,19 +84,22 @@ def get_otp_email_template(otp, purpose="verification"):
                 {otp}
             </div>
 
-            <p>This OTP is valid for 10 minutes.</p>
-
-            <p style="color:#777;font-size:13px;">
-                If you did not request this, ignore this email.
+            <p style="text-align:center;">
+                OTP valid for 10 minutes.
             </p>
 
             <hr>
 
-            <p style="font-size:12px;color:#999;">
+            <p style="
+                text-align:center;
+                color:#888;
+                font-size:13px;
+            ">
                 © 2026 Resume Studio
             </p>
 
         </div>
+
     </body>
     </html>
     """
@@ -283,17 +108,15 @@ def get_otp_email_template(otp, purpose="verification"):
 # ==========================================
 # SEND EMAIL (BREVO)
 # ==========================================
-def send_email_async(to_email, otp, purpose="verification"):
+def send_email(to_email, otp, purpose="verification"):
 
     api_key = os.getenv("BREVO_API_KEY")
 
     if not api_key:
-        print("BREVO_API_KEY missing")
+        print("❌ BREVO_API_KEY missing")
         return
 
-    subject = "Resume Studio OTP"
-
-    html_content = get_otp_email_template(otp, purpose)
+    html = get_otp_email_template(otp, purpose)
 
     payload = {
         "sender": {
@@ -305,8 +128,8 @@ def send_email_async(to_email, otp, purpose="verification"):
                 "email": to_email
             }
         ],
-        "subject": subject,
-        "htmlContent": html_content
+        "subject": "Resume Studio OTP Code",
+        "htmlContent": html
     }
 
     headers = {
@@ -324,15 +147,16 @@ def send_email_async(to_email, otp, purpose="verification"):
         )
 
         print("Email Status:", response.status_code)
-        print(response.text)
+        print("Response:", response.text)
+
+        if response.status_code == 201:
+            print("✅ Email Sent Successfully")
+        else:
+            print("❌ Email Failed")
 
     except Exception as e:
-        print("Email Error:", e)
-
-
-def send_email(to_email, otp, purpose="verification"):
-    send_email_async(to_email, otp, purpose)
-
+        print("❌ Email Error:", e)
+# ---------------- SIGNUP ----------------
 # ---------------- SIGNUP ----------------
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
