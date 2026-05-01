@@ -1,5 +1,3 @@
-
-
 from flask import session, url_for, render_template, request, redirect, jsonify
 from admin import admin
 import mysql.connector
@@ -89,7 +87,26 @@ def send_otp_email(to_email, otp, subject="OTP Verification"):
         print("Response:", response.text)
 
     except Exception as e:
-        print("Email Error:", e)        
+        print("Email Error:", e)
+
+
+def log_login(username, email, ip, status):
+    """Helper function to log admin login attempts"""
+    try:
+        db, cursor = get_db()
+        cursor.execute(
+            """
+            INSERT INTO admin_login (username, email, ip_address, status)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (username, email, ip, status)
+        )
+        db.commit()
+        cursor.close()
+        db.close()
+    except Exception as e:
+        print(f"Login logging error: {e}")
+        
         
 @admin.route("/admin_signup", methods=["GET", "POST"])
 def admin_signup():
@@ -587,7 +604,7 @@ def admin_dashboard():
                 "username": row["username"],
                 "email": row["email"],
                 "is_verified": bool(row["is_verified"]),
-                "created_at": str(row["created_at"]),
+                "created_at": str(row["created_at"]) if row["created_at"] else "",
                 "is_self": row["id"] == session["admin_id"]
             })
 
@@ -608,9 +625,9 @@ def admin_dashboard():
         for row in login_rows:
             login_activity.append({
                 "id": row["id"],
-                "username": row["username"],
-                "email": row["email"],
-                "login_time": str(row["created_at"])
+                "username": row["username"] or "",
+                "email": row["email"] or "",
+                "login_time": str(row["created_at"]) if row["created_at"] else ""
             })
 
         # =====================================
@@ -629,29 +646,33 @@ def admin_dashboard():
         # RENDER PAGE
         # =====================================
         return render_template(
-   "admin/dashbord_admin.html",
-   users=users or [],
-   resumes=resumes or [],
-   other_resumes=other_resumes or [],
-   admins=admins or [],
-   login_activity=login_activity or [],
-   total_users=len(users),
-   total_resumes=len(resumes),
-   total_other_resumes=len(other_resumes),
-   successful_logins=successful_logins,
-   admin_name=session.get("admin_name","Admin"),
-   admin_email=session.get("admin_email",""),
-   current_admin_id=session.get("admin_id")
-)
+            "admin/dashbord_admin.html",
+            users=users or [],
+            resumes=resumes or [],
+            other_resumes=other_resumes or [],
+            admins=admins or [],
+            login_activity=login_activity or [],
+            total_users=len(users),
+            total_resumes=len(resumes),
+            total_other_resumes=len(other_resumes),
+            successful_logins=successful_logins,
+            admin_name=session.get("admin_name", "Admin"),
+            admin_email=session.get("admin_email", ""),
+            current_admin_id=session.get("admin_id")
+        )
+
     except Exception as e:
         print("ADMIN DASHBOARD ERROR:", e)
-    return render_template(
-        "admin/error.html",
-        error=str(e)
-    )
+        return render_template(
+            "admin/error.html",
+            error=str(e)
+        )
 
-    
-
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'db' in locals():
+            db.close()
 
 
 @admin.route("/admin_logout")
