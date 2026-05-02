@@ -293,7 +293,8 @@ def login():
             if user["is_verified"] == 0:
                 return render_template("login.html", error="Please verify your account first")
 
-            # Set session
+            session.clear()
+            session.permanent = True
             session["user_id"] = user["id"]
             session["username"] = user["username"]
 

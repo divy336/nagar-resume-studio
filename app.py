@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from datetime import timedelta
 from auth.routes import auth
 from resume.detail import resume
@@ -10,7 +10,11 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "resume_studio_secret_key")
 
 app.config["SESSION_PERMANENT"] = True
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+
+@app.before_request
+def keep_session():
+    session.permanent = True
 
 app.register_blueprint(auth)
 app.register_blueprint(resume)
@@ -18,4 +22,4 @@ app.register_blueprint(admin)
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=False) 
