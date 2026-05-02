@@ -376,7 +376,6 @@ def forgot_admin():
 
         except Exception as e:
             db.rollback()
-            print(f"❌ Forgot admin error: {e}")
             return render_template("forgot_admin.html", error="Request failed")
 
         finally:
@@ -443,51 +442,67 @@ def reset_password():
     email = session.get("reset_email")
     otp_verified = session.get("otp_verified")
 
-    if email is None or otp_verified is not True:
+    # Check if user has verified OTP
+    if not email or not otp_verified:
         return redirect(url_for("admin.forgot_admin"))
 
     if request.method == "POST":
         new_password = request.form.get("new_password", "").strip()
         confirm_password = request.form.get("confirm_password", "").strip()
 
+        # Validation
         if not new_password or not confirm_password:
-            return render_template("reset_password.html", error="All fields are required")
+            return render_template(
+                "reset_password.html", 
+                error="All fields are required"
+            )
 
         if len(new_password) < 6:
-            return render_template("reset_password.html", error="Password must be at least 6 characters")
+            return render_template(
+                "reset_password.html", 
+                error="Password must be at least 6 characters"
+            )
 
         if new_password != confirm_password:
-            return render_template("reset_password.html", error="Passwords do not match")
+            return render_template(
+                "reset_password.html", 
+                error="Passwords do not match"
+            )
 
         db, cursor = get_db()
 
         try:
-            cursor.execute("SELECT id, email FROM admin_signup WHERE email=%s", (email,))
+            # Verify user exists
+            cursor.execute(
+                "SELECT id FROM admin_signup WHERE email=%s", 
+                (email,)
+            )
             
             user = cursor.fetchone()
             
             if not user:
-                return render_template("reset_password.html", error="User not found")
+                return render_template(
+                    "reset_password.html", 
+                    error="Account not found"
+                )
 
+            # Update password
             cursor.execute(
-                """
-                UPDATE admin_signup
-                SET password=%s
-                WHERE email=%s
-                """,
+                "UPDATE admin_signup SET password=%s WHERE email=%s",
                 (new_password, email)
             )
             db.commit()
 
-            print(f"✅ Password updated successfully for {email}")
+            print(f"✅ Password reset successful for {email}")
 
+            # Clear session
             session.pop("reset_email", None)
             session.pop("otp_verified", None)
 
+            # Show success message with auto-redirect
             return render_template(
                 "reset_password.html",
-                success="Password reset successful! Redirecting to login...",
-                redirect_login=True
+                success="Password updated successfully! Redirecting to login..."
             )
 
         except Exception as e:
@@ -496,7 +511,10 @@ def reset_password():
             import traceback
             traceback.print_exc()
 
-            return render_template("reset_password.html", error="Password reset failed. Please try again.")
+            return render_template(
+                "reset_password.html", 
+                error="Password reset failed. Please try again."
+            )
 
         finally:
             if cursor:

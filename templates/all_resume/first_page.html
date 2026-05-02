@@ -8,229 +8,303 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --primary: #2563eb;
-    --primary-light: #dbeafe;
-    --bg: #f1f5f9;
+/* ===== RESET ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-body {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 30px;
+html,body{
+  width:100%;
+  overflow-x:hidden;
+  font-family:'Poppins',sans-serif;
+  background:#f1f5f9;
 }
 
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    width: 600px;
+/* ===== BODY ===== */
+body{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:20px;
+  min-height:100vh;
 }
 
-h2 { text-align: center; color: var(--primary); }
-
-.form-group { margin-bottom: 15px; }
-
-input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+/* ===== CARD ===== */
+.card{
+  width:100%;
+  max-width:650px;
+  background:#fff;
+  border-radius:16px;
+  padding:28px 24px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
 }
 
-textarea { resize: none; }
-
-button {
-    width: 100%;
-    background: var(--primary);
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+/* ===== TITLE ===== */
+h2{
+  text-align:center;
+  color:#2563eb;
+  font-size:28px;
+  margin-bottom:22px;
 }
 
-button:hover { background: #1d4ed8; }
-
-/* Suggestions */
-.suggestions {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+/* ===== STEP NAV ===== */
+.step-nav{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding-bottom:10px;
+  margin-bottom:25px;
+  scrollbar-width:none;
 }
 
-.suggest-badge {
-    background: var(--primary-light);
-    color: var(--primary);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
+.step-nav::-webkit-scrollbar{
+  display:none;
 }
 
-.suggest-badge:hover {
-    background: var(--primary);
-    color: white;
+.step{
+  text-align:center;
+  cursor:pointer;
+  min-width:65px;
+  flex-shrink:0;
 }
 
-.feedback {
-    font-size: 13px;
-    color: var(--primary);
-    margin-top: 5px;
-}
-.suggestions {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    max-height: 120px;   /* 🔥 control height */
-    overflow-y: auto;    /* 🔥 enable scroll */
-    padding-right: 5px;
+.step span{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-weight:700;
+  transition:.3s;
 }
 
-/* Optional scrollbar styling */
-.suggestions::-webkit-scrollbar {
-    width: 6px;
+.step.active span{
+  background:#2563eb;
+  color:#fff;
 }
 
-.suggestions::-webkit-scrollbar-thumb {
-    background: #2563eb;
-    border-radius: 10px;
-}
-.suggestions {
-    display: block;
-}
-@media (max-width: 600px) {
-
-    .suggestions {
-        max-height: 100px;   /* 🔽 smaller height */
-        overflow-y: auto;
-        gap: 5px;
-    }
-
-    .suggest-badge {
-        font-size: 11px;     /* 🔽 smaller text */
-        padding: 4px 8px;    /* 🔽 compact */
-        max-width: 140px;    /* 🔥 prevent big width */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-  /* keep single line */
-.suggest-badge {
-    background: #eef2ff;
-    color: #2563eb;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    cursor: pointer;
-
-    /* 🔥 IMPORTANT FIX */
-    white-space: normal;     /* allow next line */
-    word-break: break-word;  /* break long words */
-    max-width: 100%;
+.step p{
+  font-size:11px;
+  margin-top:6px;
+  white-space:nowrap;
 }
 
-.suggest-badge:hover {
-    background: #2563eb;
-    color: #fff;
-}
-.suggest-btn {
-    background: #eef2ff;
-    color: #2563eb;
-    border: none;
-    padding: 5px 10px;      /* 🔽 smaller */
-    border-radius: 6px;
-    font-size: 12px;        /* 🔽 smaller text */
-    cursor: pointer;
-    margin-top: 8px;
-    display: inline-block;  /* 🔥 prevent full width */
-    width: auto;            /* 🔥 auto size */
-    transition: all 0.2s ease;
+.line{
+  width:28px;
+  height:3px;
+  background:#e5e7eb;
+  flex-shrink:0;
 }
 
-.suggest-btn:hover {
-    background: #2563eb;
-   
-    color: white;
-}
-.linkedin-wrapper {
-    display: flex;
-    align-items: center;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f8fafc;
+/* ===== FORM ===== */
+.form-group{
+  margin-bottom:16px;
 }
 
-.linkedin-prefix {
-    padding: 0 10px;
-    font-size: 12px;
-    color: #64748b;
-    background: #f1f5f9;
-    border-right: 1px solid #e2e8f0;
-    height: 40px;
-    display: flex;
-    align-items: center;
+label{
+  display:block;
+  font-size:14px;
+  margin-bottom:7px;
+  font-weight:500;
+  color:#1e293b;
 }
 
-.linkedin-wrapper input {
-    border: none;
-    outline: none;
-    padding: 10px;
-    flex: 1;
-    background: transparent;
+input,
+select,
+textarea{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:14px;
+  outline:none;
+  transition:.2s;
+  background:#fff;
 }
 
-
-
-
-
-.step-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
 }
 
-.step {
-    text-align: center;
-    cursor: pointer;
+textarea{
+  resize:none;
 }
 
-.step span {
-    display: flex;
-    width: 35px;
-    height: 35px;
-    background: #e5e7eb;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    font-weight: bold;
-    transition: 0.3s;
+/* ===== LINKEDIN ===== */
+.linkedin-wrapper{
+  display:flex;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  overflow:hidden;
 }
 
-.step.active span {
-    background: #3b82f6;
-    color: white;
+.linkedin-prefix{
+  background:#f8fafc;
+  padding:12px;
+  font-size:12px;
+  color:#64748b;
+  border-right:1px solid #e5e7eb;
+  white-space:nowrap;
 }
 
-.step p {
-    font-size: 12px;
-    margin-top: 5px;
+.linkedin-wrapper input{
+  border:none;
+  border-radius:0;
 }
 
-.line {
-    width: 50px;
-    height: 3px;
-    background: #e5e7eb;
+/* ===== BUTTON ===== */
+button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+  margin-top:14px;
+  transition:.2s;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+/* ===== SUGGESTIONS ===== */
+.suggestions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+  max-height:120px;
+  overflow-y:auto;
+}
+
+.suggestions::-webkit-scrollbar{
+  width:6px;
+}
+
+.suggestions::-webkit-scrollbar-thumb{
+  background:#2563eb;
+  border-radius:8px;
+}
+
+.suggest-badge{
+  background:#dbeafe;
+  color:#2563eb;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:12px;
+  cursor:pointer;
+  word-break:break-word;
+}
+
+.suggest-badge:hover{
+  background:#2563eb;
+  color:#fff;
+}
+
+.suggest-btn{
+  width:auto;
+  display:inline-block;
+  padding:7px 14px;
+  margin-top:10px;
+  background:#eef2ff;
+  color:#2563eb;
+  font-size:13px;
+}
+
+.suggest-btn:hover{
+  background:#2563eb;
+  color:#fff;
+}
+
+/* ===== FEEDBACK ===== */
+.feedback{
+  font-size:13px;
+  color:#2563eb;
+  margin-top:6px;
+}
+
+#charCount{
+  font-weight:600;
+  color:#2563eb;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:600px){
+
+body{
+  padding:10px;
+}
+
+.card{
+  padding:18px 14px;
+  border-radius:12px;
+}
+
+h2{
+  font-size:22px;
+  margin-bottom:18px;
+}
+
+.step{
+  min-width:58px;
+}
+
+.step span{
+  width:32px;
+  height:32px;
+  font-size:13px;
+}
+
+.step p{
+  font-size:10px;
+}
+
+.line{
+  width:22px;
+}
+
+input,
+select,
+textarea,
+button{
+  padding:10px;
+  font-size:14px;
+}
+
+.linkedin-wrapper{
+  flex-direction:column;
+}
+
+.linkedin-prefix{
+  border-right:none;
+  border-bottom:1px solid #e5e7eb;
+  padding:8px;
+  font-size:11px;
+}
+
+.suggestions{
+  max-height:90px;
+}
+
+.suggest-badge{
+  font-size:11px;
+  padding:5px 8px;
+}
+
 }
 </style>
 </head>
