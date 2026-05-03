@@ -250,6 +250,7 @@ def verify_otp():
 
             # Verify user
             cursor.execute("UPDATE register SET is_verified=1 WHERE email=%s", (email,))
+            db.commit()
 
             return redirect(url_for("auth.login"))
 
